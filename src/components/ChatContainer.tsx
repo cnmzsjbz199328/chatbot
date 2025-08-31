@@ -2,12 +2,18 @@
 
 import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from 'ai'; // 导入正确的类型
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 
 const ChatContainer = () => {
     // 1. 使用正确的返回属性: messages, sendMessage, status
     const { messages, sendMessage, status } = useChat();
+
+    const endRef = React.useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        // Scroll to the bottom of the chat container whenever messages change
+        endRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
     // 手动管理 input 状态 (这部分是正确的)
     const [input, setInput] = React.useState("");
@@ -60,6 +66,7 @@ const ChatContainer = () => {
                         </div>
                     </div>
                 ))}
+                <div ref={endRef} />
             </div>
 
             {/* input */}
