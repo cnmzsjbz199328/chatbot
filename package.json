@@ -11,14 +11,21 @@
   "dependencies": {
     "@ai-sdk/cohere": "^2.0.7",
     "@ai-sdk/react": "^2.0.28",
+    "@langchain/community": "^0.3.53",
+    "@langchain/core": "^0.3.72",
     "@radix-ui/react-slot": "^1.2.3",
+    "@tanstack/react-query": "^5.85.6",
     "ai": "^5.0.28",
+    "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "langchain": "^0.3.31",
     "lucide-react": "^0.542.0",
     "next": "15.5.2",
+    "pdf-parse": "^1.1.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-dropzone": "^14.3.8",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
