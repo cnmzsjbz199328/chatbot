@@ -1,25 +1,41 @@
-[{
-	"resource": "/c:/learn-git/chatbot/src/components/ChatContainer.tsx",
+Received file: File {
+  size: 149711,
+  type: 'application/pdf',
+  name: 'Cover Letter.pdf',
+  lastModified: 1756715986328
+}
+Error uploading file: TypeError: Cannot read properties of undefined (reading 'map')
+    at embedChunks (src\app\api\upload\route.ts:22:43)
+    at POST (src\app\api\upload\route.ts:70:27)
+  20 |     const model = 'multilingual-e5-large';
+  21 |
+> 22 |     const embeddings = await pc.inference.embed({
+     |                                           ^
+  23 |         model: model,
+  24 |         inputs: chunks,
+  25 |         parameters: {
+ POST /api/upload 500 in 879ms
+
+ [{
+	"resource": "/c:/learn-git/chatbot/src/app/api/upload/route.ts",
 	"owner": "typescript",
-	"code": "2339",
+	"code": "2554",
 	"severity": 8,
-	"message": "Property 'append' does not exist on type 'UseChatHelpers<UIMessage<unknown, UIDataTypes, UITools>>'.",
+	"message": "Expected 2-3 arguments, but got 1.",
 	"source": "ts",
-	"startLineNumber": 9,
-	"startColumn": 23,
-	"endLineNumber": 9,
-	"endColumn": 29,
-	"origin": "extHost1"
-},{
-	"resource": "/c:/learn-git/chatbot/src/components/ChatContainer.tsx",
-	"owner": "typescript",
-	"code": "2339",
-	"severity": 8,
-	"message": "Property 'content' does not exist on type 'UIMessage<unknown, UIDataTypes, UITools>'.",
-	"source": "ts",
-	"startLineNumber": 29,
-	"startColumn": 38,
-	"endLineNumber": 29,
-	"endColumn": 45,
+	"startLineNumber": 22,
+	"startColumn": 43,
+	"endLineNumber": 22,
+	"endColumn": 48,
+	"relatedInformation": [
+		{
+			"startLineNumber": 49,
+			"startColumn": 26,
+			"endLineNumber": 49,
+			"endColumn": 47,
+			"message": "An argument for 'inputs' was not provided.",
+			"resource": "/c:/learn-git/chatbot/node_modules/@pinecone-database/pinecone/dist/inference/inference.d.ts"
+		}
+	],
 	"origin": "extHost1"
 }]
