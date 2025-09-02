@@ -6,6 +6,7 @@ import { pc } from "@/lib/pinecone";
 import { Md5 } from 'ts-md5';
 // Import our new, robust pipeline getter function
 import { getEmbeddingPipeline } from "@/lib/pipeline";
+import { insertFile } from "@/db";
 
 // splitDoc function remains the same
 const splitDoc = async (doc: Document) => {
@@ -20,7 +21,7 @@ const splitDoc = async (doc: Document) => {
 // The Singleton class is no longer needed and has been removed.
 
 // The main processing function now uses the new pipeline getter
-const processAndEmbedChunks = async (chunks: string[]) => {
+const processAndEmbedChunks = async (chunks: string[], fileName: string) => {
     const EMBEDDING_BATCH_SIZE = 6;
     const PINECONE_UPSERT_BATCH_SIZE = 100;
     const allVectors: number[][] = [];
@@ -60,7 +61,10 @@ const processAndEmbedChunks = async (chunks: string[]) => {
         console.log(`Upserting batch of ${batch.length} records to Pinecone...`);
         await pc.index('chatbot').upsert(batch);
     }
-    
+
+    // 5. Upsert to database
+    await insertFile(fileName, Md5.hashStr(fileName)); 
+
     return { upsertedCount: records.length };
 }
 
@@ -70,7 +74,7 @@ export async function POST(request: Request) {
         const formData = await request.formData();
         const file = formData.get('file');
         console.log('Received file:', file);
-        if (!file || !(file instanceof Blob)) {
+        if (!file || !(file instanceof File)) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
@@ -85,7 +89,7 @@ export async function POST(request: Request) {
 
         console.log(`Successfully split PDF into ${allChunks.length} chunks.`);
 
-        const res = await processAndEmbedChunks(allChunks);
+        const res = await processAndEmbedChunks(allChunks, file.name);
         console.log("Upsert result:", res);
 
         return NextResponse.json({ message: `File uploaded and processed successfully. ${res.upsertedCount} vectors upserted.` });

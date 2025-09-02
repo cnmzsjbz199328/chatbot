@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
         const index = pc.index('chatbot');
         const queryResult = await index.query({
-            topK: 1,
+            topK: 3,
             vector: queryVector,
             includeMetadata: true,
         });
@@ -48,8 +48,7 @@ export async function POST(req: Request) {
         const finalPayload = {
             model: cohere('command-r'),
             system: systemPrompt,
-            // By sending only the last message, we force the AI to focus on the current question and context.
-            messages: convertToModelMessages([lastUserMessage]),
+            messages: convertToModelMessages(messages),
         };
 
         // --- THE DECISIVE LOG --- 
