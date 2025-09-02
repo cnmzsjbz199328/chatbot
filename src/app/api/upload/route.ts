@@ -10,8 +10,8 @@ import { getEmbeddingPipeline } from "@/lib/pipeline";
 // splitDoc function remains the same
 const splitDoc = async (doc: Document) => {
     const textSplitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 100,
-        chunkOverlap: 0,
+        chunkSize: 400,
+        chunkOverlap: 50,
     });
     const texts = await textSplitter.splitText(doc.pageContent);
     return texts;
