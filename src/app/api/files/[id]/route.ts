@@ -2,9 +2,14 @@ import { NextResponse } from "next/server";
 import { pc } from "@/lib/pinecone";
 import { deleteFileById } from "@/db";
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+    request: Request,
+    context: { params: Promise<{ id: string }> }
+) {
     try {
-        const fileId = parseInt(params.id, 10);
+        // Await params before using its properties
+        const { id } = await context.params;
+        const fileId = parseInt(id, 10);
 
         if (isNaN(fileId)) {
             return NextResponse.json({ error: 'Invalid file ID' }, { status: 400 });
