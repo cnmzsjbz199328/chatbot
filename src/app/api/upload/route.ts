@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { NextResponse } from 'next/server';
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";

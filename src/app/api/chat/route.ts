@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 import { cohere } from '@ai-sdk/cohere';
 import { streamText, UIMessage, convertToModelMessages } from 'ai';
 import { pc } from '@/lib/pinecone';
