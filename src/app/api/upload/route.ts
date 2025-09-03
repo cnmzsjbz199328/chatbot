@@ -21,7 +21,8 @@ const splitDoc = async (doc: Document) => {
 // The Singleton class is no longer needed and has been removed.
 
 // The main processing function now uses the new pipeline getter
-const processAndEmbedChunks = async (chunks: string[], fileName: string) => {
+// The main processing function now uses the new pipeline getter
+const processAndEmbedChunks = async (chunks: string[], fileId: number) => {
     const EMBEDDING_BATCH_SIZE = 6;
     const PINECONE_UPSERT_BATCH_SIZE = 100;
     const allVectors: number[][] = [];
@@ -48,11 +49,14 @@ const processAndEmbedChunks = async (chunks: string[], fileName: string) => {
         throw new Error("Mismatch between number of chunks and number of embeddings.");
     }
 
-    // 3. Prepare records for Pinecone
+    // 3. Prepare records for Pinecone with file_id in metadata
     const records = chunks.map((c, i) => ({
         id: Md5.hashStr(c),
         values: allVectors[i],
-        metadata: { text: c }
+        metadata: { 
+            text: c,
+            file_id: fileId // Inject the file_id
+        }
     }));
 
     // 4. Upsert records to Pinecone in batches
@@ -61,9 +65,6 @@ const processAndEmbedChunks = async (chunks: string[], fileName: string) => {
         console.log(`Upserting batch of ${batch.length} records to Pinecone...`);
         await pc.index('chatbot').upsert(batch);
     }
-
-    // 5. Upsert to database
-    await insertFile(fileName, Md5.hashStr(fileName)); 
 
     return { upsertedCount: records.length };
 }
@@ -78,6 +79,11 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
+        // First, insert the file record into the database to get an ID
+        const newFile = await insertFile(file.name, Md5.hashStr(file.name));
+        const fileId = newFile[0].id;
+        console.log(`File record created in DB with ID: ${fileId}`);
+
         const buffer = await file.arrayBuffer();
         const blob = new Blob([buffer], { type: "application/pdf" });
 
@@ -89,7 +95,8 @@ export async function POST(request: Request) {
 
         console.log(`Successfully split PDF into ${allChunks.length} chunks.`);
 
-        const res = await processAndEmbedChunks(allChunks, file.name);
+        // Pass the fileId to the processing function
+        const res = await processAndEmbedChunks(allChunks, fileId);
         console.log("Upsert result:", res);
 
         return NextResponse.json({ message: `File uploaded and processed successfully. ${res.upsertedCount} vectors upserted.` });
@@ -98,3 +105,5 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
     }
 }
+
+

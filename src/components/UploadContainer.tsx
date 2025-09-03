@@ -9,30 +9,38 @@ import { FileModel } from '@/db/schema';
 
 const UploadContainer = () => {
     const queryClient = useQueryClient()
-    //query
+    
+    // Query to fetch the list of files
     const { data: files, isLoading } = useQuery({
         queryKey: ['files'],
-        queryFn: () => {
-            return axios.get('/api/get-files')
-        }
+        queryFn: () => axios.get('/api/get-files')
     })
 
-    const { mutate, isPending } = useMutation({
+    // Mutation to handle file uploads
+    const { mutate: uploadFile, isPending } = useMutation({
         mutationFn: (file: File) => {
             const formData = new FormData()
             formData.append('file', file)
             return axios.post('/api/upload', formData)
         },
         onSuccess: () => {
-            // Invalidate and refetch
-            //queryClient.invalidateQueries({ queryKey: ['todos'] })
+            // Invalidate and refetch the files list
+            queryClient.invalidateQueries({ queryKey: ['files'] })
         },
     })
 
+    // Mutation to handle file deletions
+    const { mutate: deleteFile } = useMutation({
+        mutationFn: (fileId: number) => axios.delete(`/api/files/${fileId}`),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['files'] });
+        },
+    });
+
     const onDrop = useCallback((acceptedFiles: File[]) => {
-        // Do something with the files
-        mutate(acceptedFiles[0])
-    }, [mutate])
+        uploadFile(acceptedFiles[0])
+    }, [uploadFile])
+    
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
     return (
@@ -41,7 +49,6 @@ const UploadContainer = () => {
                 <input {...getInputProps()} />
                 {
                     isPending ? <p className='text-center text-gray-500 text-sm'>Uploading...</p> :
-
                         <p className='text-center text-gray-500 text-sm'>
                             Drop the files here Or Click to select files
                         </p>
@@ -49,9 +56,17 @@ const UploadContainer = () => {
             </div>
             {
                 isLoading ? <p className='text-center text-gray-500 text-sm mt-20'>Loading files...</p> : (
-                    <ul>
+                    <ul className="mt-4 w-full max-w-md">
                         {files?.data.map((file: FileModel) => (
-                            <p key={file.id} className='text-center text-sm mt-2 w-[80%] border-b-2 border-dashed'>{file.file_name}</p>
+                            <li key={file.id} className="flex justify-between items-center p-2 border-b border-gray-200">
+                                <span className="truncate">{file.file_name}</span>
+                                <button 
+                                    onClick={() => deleteFile(file.id)}
+                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs"
+                                >
+                                    Delete
+                                </button>
+                            </li>
                         ))}
                     </ul>
                 )
