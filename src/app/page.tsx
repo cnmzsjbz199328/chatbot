@@ -3,16 +3,18 @@ import UploadContainer from "@/components/UploadContainer";
 
 export default function Home() {
   return (
-    <div className="h-screen w-screen bg-gradient-to-r from-blue-100 to-yellow-50">
-      <div className="flex flex-row h-full w-full">
-        <div className="w-1/3 border-r-2 border-gray-200 border-dashed h-full">
+    <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 via-white to-yellow-50">
+      {/* 移动端：垂直布局，桌面端：水平布局 */}
+      <div className="flex flex-col lg:flex-row h-screen w-full max-w-7xl mx-auto">
+        {/* 上传区域 */}
+        <div className="w-full lg:w-1/3 border-b-2 lg:border-b-0 lg:border-r-2 border-gray-200 border-dashed h-1/2 lg:h-full">
           <UploadContainer />
         </div>
-        <div className="w-2/3 h-full">
+        {/* 聊天区域 */}
+        <div className="w-full lg:w-2/3 h-1/2 lg:h-full">
           <ChatContainer />
         </div>
       </div>
-
     </div>
   );
 }
