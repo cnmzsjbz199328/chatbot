@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { pc } from "@/lib/pinecone";
+import { getIndex } from "@/lib/pinecone";
 import { deleteFileById } from "@/db";
 
 export async function DELETE(
@@ -16,13 +16,13 @@ export async function DELETE(
         }
 
         console.log(`Attempting to delete file with ID: ${fileId}`);
-        const index = pc.index('chatbot');
+        const index = getIndex(); // 使用动态索引（chatbot-384）
         const ns = index.namespace('__default__');
 
         // Step 1: Query Pinecone to get the IDs of vectors to delete.
         // We must provide a vector for a query, so we use a dummy one of zeros.
-        // The model multilingual-e5-large has a dimension of 1024.
-        const dummyVector = new Array(1024).fill(0);
+        // The current model all-MiniLM-L6-v2 has a dimension of 384.
+        const dummyVector = new Array(384).fill(0);
         const queryResult = await ns.query({
             vector: dummyVector,
             topK: 1000, // Use a high topK to fetch all possible chunks for the file
@@ -31,7 +31,7 @@ export async function DELETE(
             }
         });
 
-        const vectorIdsToDelete = queryResult.matches.map(match => match.id);
+        const vectorIdsToDelete = queryResult.matches.map((match: { id: string }) => match.id);
 
         // Step 2: Delete the vectors by their specific IDs.
         if (vectorIdsToDelete.length > 0) {
