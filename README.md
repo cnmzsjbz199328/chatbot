@@ -115,6 +115,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 -   `POST /api/chat`: Manages the chat logic, including context retrieval and LLM interaction.
 -   `GET /api/get-files`: Retrieves a list of all uploaded files from the PostgreSQL database.
 -   `DELETE /api/files/[id]`: Deletes a specific file and all its associated vectors from the databases.
+-   `DELETE /api/files/[id]`: Deletes a specific file and all its associated vectors from the databases.
 
 ## Code Summaries
 

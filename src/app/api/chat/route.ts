@@ -2,9 +2,10 @@ export const runtime = 'nodejs';
 
 import { cohere } from '@ai-sdk/cohere';
 import { streamText, UIMessage, convertToModelMessages } from 'ai';
-import { pc } from '@/lib/pinecone';
+import { getIndex } from '@/lib/pinecone';
 import { NextResponse } from 'next/server';
-import { getEmbeddingPipeline } from '@/lib/pipeline';
+// 替换本地pipeline为云端embedding服务
+import { getEmbedding } from '@/lib/custom-embedding';
 
 export const maxDuration = 30;
 
@@ -26,12 +27,11 @@ export async function POST(req: Request) {
 
         console.log(`\n[RAG Flow] 1. Received user query: "${queryText}"`);
 
-        const extractor = await getEmbeddingPipeline();
-        const queryEmbedding = await extractor(queryText, { pooling: 'mean', normalize: true });
-        const queryVector = Array.from(queryEmbedding.data);
+        // 使用云端embedding服务
+        const queryVector = await getEmbedding(queryText);
         console.log("[RAG Flow] 2. Query embedded into vector (first 5 dims):", queryVector.slice(0, 5));
 
-        const index = pc.index('chatbot');
+        const index = getIndex(); // 使用新的384维索引
         const queryResult = await index.query({
             topK: 3,
             vector: queryVector,

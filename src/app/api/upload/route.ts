@@ -4,10 +4,10 @@ import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { NextResponse } from 'next/server';
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Document } from "@langchain/core/documents";
-import { pc } from "@/lib/pinecone";
+import { getIndex } from "@/lib/pinecone";
 import { Md5 } from 'ts-md5';
-// Import our new, robust pipeline getter function
-import { getEmbeddingPipeline } from "@/lib/pipeline";
+// 替换本地pipeline为云端embedding服务
+import { getCustomEmbedding } from "@/lib/custom-embedding";
 import { insertFile } from "@/db";
 
 // splitDoc function remains the same
@@ -22,28 +22,23 @@ const splitDoc = async (doc: Document) => {
 
 // The Singleton class is no longer needed and has been removed.
 
-// The main processing function now uses the new pipeline getter
-// The main processing function now uses the new pipeline getter
+// 使用云端embedding服务的处理函数
 const processAndEmbedChunks = async (chunks: string[], fileId: number) => {
-    const EMBEDDING_BATCH_SIZE = 6;
     const PINECONE_UPSERT_BATCH_SIZE = 100;
     const allVectors: number[][] = [];
 
-    // 1. Get the embedding model instance (will be cached after the first run)
-    console.log(`Requesting embedding model...`);
-    const embedder = await getEmbeddingPipeline((p) => {
-        // This callback will show progress only on the very first download
-        console.log(`Model loading progress: ${p.progress?.toFixed(2)}%`);
-    });
-    console.log(`Model is ready. Starting embedding process for ${chunks.length} chunks...`);
+    console.log(`Starting cloud embedding process for ${chunks.length} chunks...`);
 
-    // 2. Generate embeddings in batches
-    for (let i = 0; i < chunks.length; i += EMBEDDING_BATCH_SIZE) {
-        const batch = chunks.slice(i, i + EMBEDDING_BATCH_SIZE);
-        console.log(`Embedding batch ${Math.floor(i / EMBEDDING_BATCH_SIZE) + 1}...`);
+    // 使用云端embedding服务的批量API（性能更好）
+    try {
+        // 直接使用批量API处理所有文档块
+        console.log(`Processing all ${chunks.length} chunks in one batch...`);
         
-        const embeddings = await embedder(batch, { pooling: 'mean', normalize: true });
-        allVectors.push(...embeddings.tolist());
+        const embeddings = await getCustomEmbedding(chunks);
+        allVectors.push(...embeddings);
+    } catch (error) {
+        console.error('Cloud embedding service failed:', error);
+        throw new Error(`Embedding service error: ${error}`);
     }
 
     console.log(`Embedding process finished. Total vectors created: ${allVectors.length}`);
@@ -62,10 +57,11 @@ const processAndEmbedChunks = async (chunks: string[], fileId: number) => {
     }));
 
     // 4. Upsert records to Pinecone in batches
+    const index = getIndex(); // 使用新的384维索引
     for (let i = 0; i < records.length; i += PINECONE_UPSERT_BATCH_SIZE) {
         const batch = records.slice(i, i + PINECONE_UPSERT_BATCH_SIZE);
-        console.log(`Upserting batch of ${batch.length} records to Pinecone...`);
-        await pc.index('chatbot').upsert(batch);
+        console.log(`Upserting batch of ${batch.length} records to Pinecone (384d)...`);
+        await index.upsert(batch);
     }
 
     return { upsertedCount: records.length };
