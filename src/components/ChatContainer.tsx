@@ -118,7 +118,7 @@ const ChatContainer = () => {
             {/* 输入区域 */}
             <div className="border-t border-gray-200 bg-white p-4">
                 <form
-                    className='flex flex-row gap-3'
+                    className='flex flex-row items-center gap-3'
                     onSubmit={handleFormSubmit}
                 >
                     <input
