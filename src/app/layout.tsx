@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PDF Chat AI - Ask Questions About Your Documents",
+  title: "RAG Chatbot",
   description: "Upload PDF documents and chat with them using AI. Get instant answers from your documents with our intelligent document assistant.",
   keywords: "PDF chat, document AI, RAG, question answering, document analysis",
   authors: [{ name: "Your Name" }],
