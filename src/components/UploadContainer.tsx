@@ -1,27 +1,51 @@
 'use client'
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 
 import { FileModel } from '@/db/schema';
+import { sessionManager } from '@/lib/session-manager';
 
 const UploadContainer = () => {
     const queryClient = useQueryClient()
     
-    // Query to fetch the list of files
+    // Initialize session on component mount
+    useEffect(() => {
+        sessionManager.getSessionId(); // This will create session if not exists
+        
+        // 监听会话变更
+        const handleSessionChange = () => {
+            queryClient.invalidateQueries({ queryKey: ['files'] }); // 重新获取文件列表
+        };
+        
+        sessionManager.addSessionChangeListener(handleSessionChange);
+        
+        return () => {
+            sessionManager.removeSessionChangeListener(handleSessionChange);
+        };
+    }, [queryClient]);
+    
+    // Query to fetch the list of files (with session headers)
     const { data: files, isLoading } = useQuery({
         queryKey: ['files'],
-        queryFn: () => axios.get('/api/get-files')
+        queryFn: () => axios.get('/api/get-files', {
+            headers: sessionManager.getSessionHeaders()
+        })
     })
 
-    // Mutation to handle file uploads
+    // Mutation to handle file uploads (with session headers)
     const { mutate: uploadFile, isPending } = useMutation({
         mutationFn: (file: File) => {
             const formData = new FormData()
             formData.append('file', file)
-            return axios.post('/api/upload', formData)
+            return axios.post('/api/upload', formData, {
+                headers: {
+                    ...sessionManager.getSessionHeaders(),
+                    // Note: Don't set Content-Type for FormData, let axios handle it
+                }
+            })
         },
         onSuccess: () => {
             // Invalidate and refetch the files list
@@ -29,9 +53,11 @@ const UploadContainer = () => {
         },
     })
 
-    // Mutation to handle file deletions with optimistic updates
+    // Mutation to handle file deletions with optimistic updates (with session headers)
     const { mutate: deleteFile } = useMutation({
-        mutationFn: (fileId: number) => axios.delete(`/api/files/${fileId}`),
+        mutationFn: (fileId: number) => axios.delete(`/api/files/${fileId}`, {
+            headers: sessionManager.getSessionHeaders()
+        }),
         onMutate: async (deletedFileId) => {
             // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
             await queryClient.cancelQueries({ queryKey: ['files'] })

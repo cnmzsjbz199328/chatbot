@@ -11,6 +11,15 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
     try {
+        // 1. 获取session_id从请求头
+        const sessionId = req.headers.get('X-Session-Id');
+        if (!sessionId) {
+            return NextResponse.json(
+                { error: 'X-Session-Id header is required' }, 
+                { status: 400 }
+            );
+        }
+
         const { messages }: { messages: UIMessage[] } = await req.json();
 
         const lastUserMessage = messages[messages.length - 1];
@@ -25,7 +34,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'No text content found in user message' }, { status: 400 });
         }
 
-        console.log(`\n[RAG Flow] 1. Received user query: "${queryText}"`);
+        console.log(`\n[RAG Flow] 1. Received user query: "${queryText}" for session: ${sessionId}`);
 
         // 使用云端embedding服务
         const queryVector = await getEmbedding(queryText);
@@ -36,8 +45,12 @@ export async function POST(req: Request) {
             topK: 3,
             vector: queryVector,
             includeMetadata: true,
+            // 添加session过滤条件
+            filter: {
+                session_id: { '$eq': sessionId }
+            }
         });
-        console.log("[RAG Flow] 3. Pinecone returned matches:", queryResult.matches.length);
+        console.log(`[RAG Flow] 3. Pinecone returned ${queryResult.matches.length} matches for session ${sessionId}`);
 
         const context = queryResult.matches
             .map(match => match.metadata?.text)

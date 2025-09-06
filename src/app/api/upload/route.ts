@@ -23,7 +23,7 @@ const splitDoc = async (doc: Document) => {
 // The Singleton class is no longer needed and has been removed.
 
 // 使用云端embedding服务的处理函数
-const processAndEmbedChunks = async (chunks: string[], fileId: number) => {
+const processAndEmbedChunks = async (chunks: string[], fileId: number, sessionId: string) => {
     const PINECONE_UPSERT_BATCH_SIZE = 100;
     const allVectors: number[][] = [];
 
@@ -46,13 +46,14 @@ const processAndEmbedChunks = async (chunks: string[], fileId: number) => {
         throw new Error("Mismatch between number of chunks and number of embeddings.");
     }
 
-    // 3. Prepare records for Pinecone with file_id in metadata
+    // 3. Prepare records for Pinecone with file_id and session_id in metadata
     const records = chunks.map((c, i) => ({
-        id: Md5.hashStr(c),
+        id: Md5.hashStr(c + sessionId), // 加入sessionId确保唯一性
         values: allVectors[i],
         metadata: { 
             text: c,
-            file_id: fileId // Inject the file_id
+            file_id: fileId,
+            session_id: sessionId // 添加session_id到元数据
         }
     }));
 
@@ -70,6 +71,15 @@ const processAndEmbedChunks = async (chunks: string[], fileId: number) => {
 
 export async function POST(request: Request) {
     try {
+        // 1. 获取session_id从请求头
+        const sessionId = request.headers.get('X-Session-Id');
+        if (!sessionId) {
+            return NextResponse.json(
+                { error: 'X-Session-Id header is required' }, 
+                { status: 400 }
+            );
+        }
+
         const formData = await request.formData();
         const file = formData.get('file');
         console.log('Received file:', file);
@@ -77,10 +87,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        // First, insert the file record into the database to get an ID
-        const newFile = await insertFile(file.name, Md5.hashStr(file.name));
+        // 2. Insert the file record into the database with session_id
+        const newFile = await insertFile(file.name, Md5.hashStr(file.name), sessionId);
         const fileId = newFile[0].id;
-        console.log(`File record created in DB with ID: ${fileId}`);
+        console.log(`File record created in DB with ID: ${fileId}, Session: ${sessionId}`);
 
         const buffer = await file.arrayBuffer();
         const blob = new Blob([buffer], { type: "application/pdf" });
@@ -93,11 +103,15 @@ export async function POST(request: Request) {
 
         console.log(`Successfully split PDF into ${allChunks.length} chunks.`);
 
-        // Pass the fileId to the processing function
-        const res = await processAndEmbedChunks(allChunks, fileId);
+        // 3. Pass the fileId and sessionId to the processing function
+        const res = await processAndEmbedChunks(allChunks, fileId, sessionId);
         console.log("Upsert result:", res);
 
-        return NextResponse.json({ message: `File uploaded and processed successfully. ${res.upsertedCount} vectors upserted.` });
+        return NextResponse.json({ 
+            message: `File uploaded and processed successfully. ${res.upsertedCount} vectors upserted.`,
+            fileId,
+            sessionId 
+        });
     } catch (error) {
         console.error('Error uploading file:', error);
         return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });

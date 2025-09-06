@@ -1,12 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getIndex } from "@/lib/pinecone";
 import { deleteFileById } from "@/db";
 
 export async function DELETE(
-    request: Request,
+    request: NextRequest,
     context: { params: Promise<{ id: string }> }
 ) {
     try {
+        // 获取session_id从请求头
+        const sessionId = request.headers.get('X-Session-Id');
+        if (!sessionId) {
+            return NextResponse.json(
+                { error: 'X-Session-Id header is required' }, 
+                { status: 400 }
+            );
+        }
+
         // Await params before using its properties
         const { id } = await context.params;
         const fileId = parseInt(id, 10);
@@ -15,7 +24,7 @@ export async function DELETE(
             return NextResponse.json({ error: 'Invalid file ID' }, { status: 400 });
         }
 
-        console.log(`Attempting to delete file with ID: ${fileId}`);
+        console.log(`Attempting to delete file with ID: ${fileId} for session: ${sessionId}`);
         const index = getIndex(); // 使用动态索引（chatbot-384）
         const ns = index.namespace('__default__');
 
@@ -27,7 +36,8 @@ export async function DELETE(
             vector: dummyVector,
             topK: 1000, // Use a high topK to fetch all possible chunks for the file
             filter: {
-                file_id: { '$eq': fileId }
+                file_id: { '$eq': fileId },
+                session_id: { '$eq': sessionId } // 添加session过滤
             }
         });
 
@@ -38,12 +48,12 @@ export async function DELETE(
             await ns.deleteMany(vectorIdsToDelete);
             console.log(`Pinecone deletion successful for ${vectorIdsToDelete.length} vectors.`);
         } else {
-            console.log(`No vectors found in Pinecone for file_id: ${fileId}. Nothing to delete.`);
+            console.log(`No vectors found in Pinecone for file_id: ${fileId}, session: ${sessionId}. Nothing to delete.`);
         }
 
-        // Step 3: Delete the file record from PostgreSQL.
-        console.log(`Deleting record from PostgreSQL with ID: ${fileId}`);
-        await deleteFileById(fileId);
+        // Step 3: Delete the file record from PostgreSQL (with session validation).
+        console.log(`Deleting record from PostgreSQL with ID: ${fileId}, session: ${sessionId}`);
+        await deleteFileById(fileId, sessionId);
         console.log(`PostgreSQL deletion successful.`);
 
         return NextResponse.json({ success: true });

@@ -2,10 +2,12 @@
 
 This is a [Next.js](https://nextjs.org) project that implements a Retrieval-Augmented Generation (RAG) chatbot. Users can upload PDF documents, and the application will process and embed them into a vector database. Subsequently, users can ask questions, and the chatbot will use the content of the uploaded documents as context to provide accurate answers.
 
+**Key Feature**: This project features a decoupled, high-performance **Embedding Microservice**. Instead of running the embedding model within the main application (which is inefficient in Serverless environments), it calls a dedicated, independently deployed API for all text-to-vector conversion tasks. This improves performance by over 10x and makes the overall architecture more robust and scalable.
+
 ## Features
 
 -   **PDF Upload:** Users can upload PDF files through a drag-and-drop interface.
--   **Document Processing:** Uploaded PDFs are parsed, chunked, and converted into vector embeddings.
+-   **Decoupled Document Processing:** Uploaded PDFs are parsed, chunked, and then sent to a dedicated microservice for vector embedding.
 -   **Vector Storage:** Embeddings are stored in a [Pinecone](https://www.pinecone.io/) vector database for efficient similarity search.
 -   **Database Integration:** File metadata is stored in a PostgreSQL database using [Drizzle ORM](https://orm.drizzle.team/).
 -   **RAG Chat Interface:** A chat interface allows users to ask questions related to the document content.
@@ -32,26 +34,27 @@ This is a [Next.js](https://nextjs.org) project that implements a Retrieval-Augm
 -   **Document Processing:**
     -   **PDF Parsing:** [@langchain/community](https://js.langchain.com/docs/integrations/document_loaders/web_loaders/pdf) (`WebPDFLoader`)
     -   **Text Chunking:** [@langchain/textsplitters](https://js.langchain.com/docs/modules/data_connection/document_transformers/)
--   **Embeddings Model:** [@xenova/transformers](https://github.com/xenova/transformers.js) (`Xenova/multilingual-e5-large` model)
+-   **Embeddings Model:** **Custom-deployed microservice** using `sentence-transformers/all-MiniLM-L6-v2`.
 
 ## Workflows
 
 ### 1. File Upload & Processing
 
 1.  A user uploads a PDF file via the `UploadContainer` component.
-2.  The file is sent to the `/api/upload` API endpoint.
+2.  The file is sent to the `/api/upload` API endpoint in the Next.js application.
 3.  The API route uses `WebPDFLoader` to load the PDF's content.
 4.  The text is split into smaller, overlapping chunks using `RecursiveCharacterTextSplitter`.
-5.  The `@xenova/transformers` library loads the `multilingual-e5-large` model to convert each text chunk into a vector embedding.
-6.  The file metadata (name, hash) is stored in the PostgreSQL database via the `insertFile` Drizzle function.
-7.  The text chunks and their corresponding vectors are upserted into the `chatbot` index in Pinecone.
+5.  The Next.js backend makes a **batch API call** to the external **Embedding Service**, sending all text chunks at once.
+6.  The Embedding Service converts each text chunk into a vector and returns them to the Next.js backend.
+7.  The file metadata (name, hash) is stored in the PostgreSQL database via Drizzle.
+8.  The text chunks and their corresponding vectors are upserted into the `chatbot` index in Pinecone.
 
 ### 2. Chat & Retrieval-Augmented Generation (RAG)
 
 1.  A user submits a question through the chat interface.
 2.  The question is sent to the `/api/chat` API endpoint.
-3.  The API route uses the same embeddings model to convert the user's question into a query vector.
-4.  This query vector is used to search the Pinecone index, retrieving the single most relevant text chunk (`topK: 1`).
+3.  The Next.js backend calls the **Embedding Service** to convert the user's question into a query vector.
+4.  This query vector is used to search the Pinecone index, retrieving the most relevant text chunk(s).
 5.  This retrieved chunk is inserted into a system prompt that instructs the LLM to answer the user's question based on the provided context.
 6.  The prompt, conversation history, and the user's latest question are sent to the Cohere `command-r` model via the Vercel AI SDK.
 7.  The response from the LLM is streamed back to the user in the chat interface.
@@ -64,28 +67,30 @@ This is a [Next.js](https://nextjs.org) project that implements a Retrieval-Augm
 -   npm, yarn, or pnpm
 -   A PostgreSQL database
 -   A Pinecone account and API key
--   A Cohere account and API key (for use with the Vercel AI SDK)
+-   A Cohere account and API key
+-   A running instance of the Embedding Service.
 
 ### 1. Setup Environment Variables
 
-Create a `.env` file in the root of the project and add the following variables. Replace the placeholder values with your actual credentials.
+Create a `.env` file in the root of the project and add the following variables.
 
 ```
 # Example .env file
 
 # Connection string for your PostgreSQL database
-DATABASE_URL=\'postgresql://USER:PASSWORD@HOST:PORT/DATABASE\'
+DATABASE_URL='postgresql://USER:PASSWORD@HOST:PORT/DATABASE'
 
 # Pinecone credentials
-PINECONE_API_KEY=\'YOUR_PINECONE_API_KEY\'
+PINECONE_API_KEY='YOUR_PINECONE_API_KEY'
 
 # The Vercel AI SDK uses this for Cohere
-COHERE_API_KEY=\'YOUR_COHERE_API_KEY\'
+COHERE_API_KEY='YOUR_COHERE_API_KEY'
+
+# URL for your deployed embedding service
+EMBEDDING_SERVICE_URL='https://embedding.badtom.dpdns.org'
 ```
 
 ### 2. Install Dependencies
-
-Install the project dependencies using your preferred package manager:
 
 ```bash
 npm install
@@ -93,7 +98,7 @@ npm install
 
 ### 3. Push Database Schema
 
-Apply the schema defined in `src/db/schema.ts` to your PostgreSQL database using Drizzle Kit:
+Apply the schema defined in `src/db/schema.ts` to your PostgreSQL database:
 
 ```bash
 npx drizzle-kit push
@@ -101,20 +106,59 @@ npx drizzle-kit push
 
 ### 4. Run the Development Server
 
-Start the Next.js development server:
-
 ```bash
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Deployment to Vercel
+
+Follow these steps to deploy your application to Vercel.
+
+### 1. Import Project
+
+-   Fork this repository to your GitHub account.
+-   Go to your [Vercel Dashboard](https://vercel.com/new) and import the forked repository.
+-   Vercel will automatically detect that it is a Next.js project and configure the build settings.
+
+### 2. Connect Database
+
+-   In the project creation wizard, navigate to the **Storage** tab.
+-   Select **Postgres** and click **Create & Connect**.
+-   This will create a new Vercel Postgres database and automatically set the `DATABASE_URL` environment variable in your project.
+
+### 3. Configure Environment Variables
+
+-   In your Vercel project settings, go to **Settings -> Environment Variables**.
+-   Add the following secrets:
+    -   `PINECONE_API_KEY`: Your API key for Pinecone.
+    -   `COHERE_API_KEY`: Your API key for Cohere.
+    -   `EMBEDDING_SERVICE_URL`: The full URL to your deployed embedding service (e.g., `https://embedding.badtom.dpdns.org`).
+
+### 4. Configure Build Command for Database Schema
+
+-   To ensure the database schema is up-to-date with every deployment, you need to run `drizzle-kit push` as part of the build process.
+-   In your Vercel project settings, go to **Settings -> General**.
+-   Find the **Build & Development Settings** section and override the **Build Command**.
+-   Set it to the following:
+
+    ```bash
+    npx drizzle-kit push && next build
+    ```
+
+-   This command will first apply any schema changes to your Vercel Postgres database and then build the Next.js application.
+
+### 5. Deploy
+
+-   After configuring the database and environment variables, trigger a new deployment from your Vercel project dashboard.
+-   Your application will be built and deployed. Vercel will provide you with a public URL.
+
 ## API Endpoints
 
 -   `POST /api/upload`: Handles PDF file uploads, processing, and embedding.
 -   `POST /api/chat`: Manages the chat logic, including context retrieval and LLM interaction.
 -   `GET /api/get-files`: Retrieves a list of all uploaded files from the PostgreSQL database.
--   `DELETE /api/files/[id]`: Deletes a specific file and all its associated vectors from the databases.
 -   `DELETE /api/files/[id]`: Deletes a specific file and all its associated vectors from the databases.
 
 ## Code Summaries
@@ -140,15 +184,15 @@ export type FileModel =  typeof fileTable.$inferSelect;
 
 ### File Upload API (`src/app/api/upload/route.ts`)
 
-This API route handles the entire file processing pipeline. It receives a file, loads its content, splits it into chunks, generates embeddings, and stores the results in both PostgreSQL and Pinecone.
+This API route handles the entire file processing pipeline. It receives a file, loads its content, splits it into chunks, **calls the embedding service**, and stores the results in both PostgreSQL and Pinecone.
 
 ```typescript
 import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { NextResponse } from 'next/server';
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { pc } from "@/lib/pinecone";
-import { getEmbeddingPipeline } from "@/lib/pipeline";
 import { insertFile } from "@/db";
+import axios from "axios";
 // ... other imports
 
 // Main function to handle POST requests
@@ -157,9 +201,7 @@ export async function POST(request: Request) {
         // 1. Receive file from FormData
         const formData = await request.formData();
         const file = formData.get('file');
-        if (!file || !(file instanceof File)) {
-            return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
-        }
+        // ... file validation ...
 
         // 2. Load PDF content
         const blob = new Blob([await file.arrayBuffer()], { type: "application/pdf" });
@@ -173,39 +215,31 @@ export async function POST(request: Request) {
         });
         const allChunks = await textSplitter.splitText(docs[0].pageContent);
 
-        // 4. Process chunks (embed and store)
-        await processAndEmbedChunks(allChunks, file.name);
+        // 4. Call Embedding Service for all chunks
+        const embeddingResponse = await axios.post(process.env.EMBEDDING_SERVICE_URL + '/embed/batch', {
+            texts: allChunks
+        });
+        const vectors = embeddingResponse.data.embeddings;
+
+        // 5. Upsert to Pinecone and store metadata in PostgreSQL
+        // ...
 
         return NextResponse.json({ message: `File processed successfully.` });
     } catch (error) {
         // ... error handling
     }
 }
-
-// Helper function to process chunks
-async function processAndEmbedChunks(chunks: string[], fileName: string) {
-    // ... gets embedding model
-
-    // ... generates embeddings for chunks
-
-    // ... prepares records for Pinecone
-
-    // ... upserts records to Pinecone
-
-    // 5. Store file metadata in PostgreSQL
-    await insertFile(fileName, Md5.hashStr(fileName));
-}
 ```
 
 ### Chat API (`src/app/api/chat/route.ts`)
 
-This route powers the RAG functionality. It takes a user's query, finds relevant context from Pinecone, and streams a response from the Cohere LLM.
+This route powers the RAG functionality. It takes a user's query, **calls the embedding service**, finds relevant context from Pinecone, and streams a response from the Cohere LLM.
 
 ```typescript
 import { cohere } from '@ai-sdk/cohere';
 import { streamText, UIMessage, convertToModelMessages } from 'ai';
 import { pc } from '@/lib/pinecone';
-import { getEmbeddingPipeline } from '@/lib/pipeline';
+import axios from "axios";
 // ... other imports
 
 export async function POST(req: Request) {
@@ -214,10 +248,11 @@ export async function POST(req: Request) {
         const lastUserMessage = messages[messages.length - 1];
         const queryText = lastUserMessage.content as string;
 
-        // 1. Embed the user's query
-        const extractor = await getEmbeddingPipeline();
-        const queryEmbedding = await extractor(queryText, { pooling: 'mean', normalize: true });
-        const queryVector = Array.from(queryEmbedding.data);
+        // 1. Embed the user's query via Embedding Service
+        const embeddingResponse = await axios.post(process.env.EMBEDDING_SERVICE_URL + '/embed', {
+            text: queryText
+        });
+        const queryVector = embeddingResponse.data.embedding;
 
         // 2. Query Pinecone for context
         const queryResult = await pc.index('chatbot').query({
@@ -228,10 +263,7 @@ export async function POST(req: Request) {
         const context = queryResult.matches[0].metadata?.text;
 
         // 3. Construct the system prompt with context
-        const systemPrompt = `You are a helpful assistant. Please answer the user's question based on the following context. If the context does not contain the answer, say that you don't know.
-
-Context:
-${context}`;
+        const systemPrompt = `...`;
 
         // 4. Stream response from Cohere LLM
         const result = await streamText({

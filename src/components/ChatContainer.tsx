@@ -1,40 +1,149 @@
 'use client';
 
-import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from 'ai'; // 导入正确的类型
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
+import { sessionManager } from '@/lib/session-manager';
 
 const ChatContainer = () => {
-    // 1. 使用正确的返回属性: messages, sendMessage
-    const { messages, sendMessage } = useChat();
+    // 手动管理消息状态以支持会话
+    const [localMessages, setLocalMessages] = React.useState<UIMessage[]>([]);
+    const [input, setInput] = React.useState("");
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+    // Initialize session on component mount
+    useEffect(() => {
+        sessionManager.getSessionId(); // This will create session if not exists
+        
+        // 监听会话变更
+        const handleSessionChange = () => {
+            setLocalMessages([]); // 清空消息历史
+        };
+        
+        sessionManager.addSessionChangeListener(handleSessionChange);
+        
+        return () => {
+            sessionManager.removeSessionChangeListener(handleSessionChange);
+        };
+    }, []);
+
+    // 清除对话历史的函数
+    const clearConversation = () => {
+        setLocalMessages([]);
+    };
 
     const endRef = React.useRef<HTMLDivElement>(null);
     useEffect(() => {
         // Scroll to the bottom of the chat container whenever messages change
         endRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+    }, [localMessages]);
 
-    // 手动管理 input 状态和 loading 状态
-    const [input, setInput] = React.useState("");
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-    // This function is called when the user submits the form (by clicking Send or pressing Enter).
+    // 手动发送消息到 API
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        // Prevent the default browser action for form submission, which is to reload the page.
         event.preventDefault();
-
-        // If the input is empty or just whitespace, do nothing.
         if (!input.trim()) return;
 
+        // 添加用户消息到本地状态
+        const userMessage: UIMessage = {
+            id: Date.now().toString(),
+            role: 'user',
+            parts: [{ type: 'text', text: input }]
+        };
+        
+        setLocalMessages(prev => [...prev, userMessage]);
         setIsSubmitting(true);
+        
         try {
-            // Call the sendMessage function from the useChat hook.
-            // It's CRITICAL to pass an object with 'role' and 'content'.
-            await sendMessage({ role: 'user', parts: [{ type: 'text', text: input }] });
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Session-Id': sessionManager.getSessionId(),
+                },
+                body: JSON.stringify({
+                    messages: [...localMessages, userMessage]
+                })
+            });
 
-            // Clear the input field after the message has been sent.
+            if (!response.ok) {
+                throw new Error('Failed to get response');
+            }
+
+            // 处理流式响应
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            
+            if (!reader) {
+                throw new Error('No reader available');
+            }
+
+            let assistantMessage: UIMessage = {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                parts: [{ type: 'text', text: '' }]
+            };
+            let hasContent = false;
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\n');
+                
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const jsonStr = line.slice(6).trim(); // 移除 'data: ' 前缀并清除空白
+                            if (jsonStr === '[DONE]') break;
+                            
+                            const data = JSON.parse(jsonStr);
+                            
+                            // 处理文本增量
+                            if (data.type === 'text-delta' && data.delta) {
+                                const currentTextPart = assistantMessage.parts[0];
+                                if (currentTextPart.type === 'text') {
+                                    assistantMessage = {
+                                        ...assistantMessage,
+                                        parts: [{ type: 'text', text: currentTextPart.text + data.delta }]
+                                    };
+                                    
+                                    if (!hasContent) {
+                                        // 第一次接收到内容时才添加消息
+                                        hasContent = true;
+                                        setLocalMessages(prev => [...prev, assistantMessage]);
+                                    } else {
+                                        // 更新现有消息
+                                        setLocalMessages(prev => {
+                                            const newMessages = [...prev];
+                                            newMessages[newMessages.length - 1] = assistantMessage;
+                                            return newMessages;
+                                        });
+                                    }
+                                }
+                            }
+                        } catch (parseError) {
+                            console.warn('Failed to parse streaming data:', line, parseError);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            // 如果没有收到任何内容，添加一个默认回应
+            if (!hasContent) {
+                assistantMessage = {
+                    ...assistantMessage,
+                    parts: [{ type: 'text', text: '抱歉，我无法处理您的请求。请稍后再试。' }]
+                };
+                setLocalMessages(prev => [...prev, assistantMessage]);
+            }
+
             setInput("");
+        } catch (error) {
+            console.error('Error sending message:', error);
+            // 移除失败的消息
+            setLocalMessages(prev => prev.slice(0, -1));
         } finally {
             setIsSubmitting(false);
         }
@@ -65,13 +174,23 @@ const ChatContainer = () => {
         <div className="h-full w-full flex flex-col bg-white">
             {/* 聊天头部 */}
             <div className="border-b border-gray-200 p-4 bg-white">
-                <h2 className="text-lg font-semibold text-gray-800">Chat with your documents</h2>
-                <p className="text-sm text-gray-500">Ask questions about your uploaded PDFs</p>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-800">Chat with your documents</h2>
+                        <p className="text-sm text-gray-500">Ask questions about your uploaded PDFs</p>
+                    </div>
+                    <Button
+                        onClick={clearConversation}
+                        className="text-sm px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-md"
+                    >
+                        Clear Chat
+                    </Button>
+                </div>
             </div>
 
             {/* 消息区域 */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-                {messages.length === 0 ? (
+                {localMessages.length === 0 ? (
                     <div className="flex items-center justify-center h-full">
                         <div className="text-center space-y-3">
                             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
@@ -84,7 +203,7 @@ const ChatContainer = () => {
                         </div>
                     </div>
                 ) : (
-                    messages.map(message => (
+                    localMessages.map(message => (
                         <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                             <div className={`
                                 max-w-[80%] lg:max-w-[70%] p-4 rounded-2xl text-sm leading-relaxed
