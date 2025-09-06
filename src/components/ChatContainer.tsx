@@ -4,6 +4,7 @@ import type { UIMessage } from 'ai'; // 导入正确的类型
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { sessionManager } from '@/lib/session-manager';
+import SessionControl from './SessionControl';
 
 const ChatContainer = () => {
     // 手动管理消息状态以支持会话
@@ -28,7 +29,27 @@ const ChatContainer = () => {
     }, []);
 
     // 清除对话历史的函数
-    const clearConversation = () => {
+    const clearConversation = async () => {
+        try {
+            // 先调用服务器端清除上下文
+            const response = await fetch('/api/session/clear-context', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...sessionManager.getSessionHeaders()
+                }
+            });
+            
+            if (response.ok) {
+                console.log('Server-side context cleared successfully');
+            } else {
+                console.warn('Failed to clear server-side context');
+            }
+        } catch (error) {
+            console.error('Error clearing server-side context:', error);
+        }
+        
+        // 清除本地消息历史
         setLocalMessages([]);
     };
 
@@ -179,12 +200,21 @@ const ChatContainer = () => {
                         <h2 className="text-lg font-semibold text-gray-800">Chat with your documents</h2>
                         <p className="text-sm text-gray-500">Ask questions about your uploaded PDFs</p>
                     </div>
-                    <Button
-                        onClick={clearConversation}
-                        className="text-sm px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-md"
-                    >
-                        Clear Chat
-                    </Button>
+                    <div className="flex items-center space-x-4">
+                        <SessionControl 
+                            compact 
+                            onRetentionChange={(hours) => {
+                                console.log(`Data retention set to ${hours} hours`);
+                                // 这里可以添加保存设置的逻辑
+                            }}
+                        />
+                        <Button
+                            onClick={clearConversation}
+                            className="text-sm px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-md"
+                        >
+                            Clear Chat
+                        </Button>
+                    </div>
                 </div>
             </div>
 
