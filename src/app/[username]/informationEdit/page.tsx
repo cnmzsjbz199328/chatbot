@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import UserProfileForm from '@/components/UserProfileForm';
 
 interface InformationEditPageProps {
   params: {
@@ -39,14 +40,10 @@ export default async function InformationEditPage({ params }: InformationEditPag
         <header className="sticky top-0 z-10 w-full border-b border-gray-700 bg-gray-900/80 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">个人信息编辑</h2>
-            <button className="flex items-center gap-2 rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-semibold text-white hover:bg-opacity-80">
-              <span className="material-symbols-outlined"> save </span>
-              <span>保存更改</span>
-            </button>
           </div>
         </header>
         <div className="p-8">
-          <div className="space-y-8">
+          <UserProfileForm />
             <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
               <h3 className="mb-6 text-xl font-bold">文件上传</h3>
               <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-600 bg-gray-700/50 hover:bg-gray-700">

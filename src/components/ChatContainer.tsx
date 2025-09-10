@@ -3,12 +3,14 @@
 import type { UIMessage } from 'ai'; // 导入正确的类型
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
+import { useAuth } from "./AuthProvider";
 
 const ChatContainer = () => {
     // 手动管理消息状态以支持会话
     const [localMessages, setLocalMessages] = React.useState<UIMessage[]>([]);
     const [input, setInput] = React.useState("");
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const { user } = useAuth();
 
     // Initialize component
     useEffect(() => {
@@ -43,11 +45,24 @@ const ChatContainer = () => {
         setIsSubmitting(true);
         
         try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
+            
+            // 如果用户未登录，使用 session ID（兼容模式）
+            if (!user) {
+                const sessionId = localStorage.getItem('sessionId') || 
+                    (() => {
+                        const newId = crypto.randomUUID();
+                        localStorage.setItem('sessionId', newId);
+                        return newId;
+                    })();
+                headers['X-Session-Id'] = sessionId;
+            }
+            
             const response = await fetch('/api/chat', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers,
                 body: JSON.stringify({
                     messages: [...localMessages, userMessage]
                 })
