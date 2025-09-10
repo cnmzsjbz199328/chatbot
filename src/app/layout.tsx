@@ -1,23 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import QueryClientProvider from "@/QueryClientProvider"
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "RAG Chatbot",
-  description: "Upload PDF documents and chat with them using AI. Get instant answers from your documents with our intelligent document assistant.",
-  keywords: "PDF chat, document AI, RAG, question answering, document analysis",
-  authors: [{ name: "Your Name" }],
+  title: "个人网站 | AI助手",
+  description: "个人作品集网站，展示项目经验，提供AI智能助手服务。支持文档上传、智能对话等功能。",
+  keywords: "个人网站, 作品集, AI助手, 全栈开发, 项目展示",
+  authors: [{ name: "张三" }],
 };
 
 export const viewport: Viewport = {
@@ -31,9 +26,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
+      <head>
+        <link 
+          href="https://fonts.googleapis.com/icon?family=Material+Icons" 
+          rel="stylesheet"
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} font-inter antialiased`}
       >
         <QueryClientProvider>
           {children}

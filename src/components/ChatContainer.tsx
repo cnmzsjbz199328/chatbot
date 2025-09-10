@@ -3,8 +3,6 @@
 import type { UIMessage } from 'ai'; // 导入正确的类型
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
-import { sessionManager } from '@/lib/session-manager';
-import SessionControl from './SessionControl';
 
 const ChatContainer = () => {
     // 手动管理消息状态以支持会话
@@ -12,44 +10,14 @@ const ChatContainer = () => {
     const [input, setInput] = React.useState("");
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-    // Initialize session on component mount
+    // Initialize component
     useEffect(() => {
-        sessionManager.getSessionId(); // This will create session if not exists
-        
-        // 监听会话变更
-        const handleSessionChange = () => {
-            setLocalMessages([]); // 清空消息历史
-        };
-        
-        sessionManager.addSessionChangeListener(handleSessionChange);
-        
-        return () => {
-            sessionManager.removeSessionChangeListener(handleSessionChange);
-        };
+        // 组件初始化，无需session管理
     }, []);
 
     // 清除对话历史的函数
     const clearConversation = async () => {
-        try {
-            // 先调用服务器端清除上下文
-            const response = await fetch('/api/session/clear-context', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...sessionManager.getSessionHeaders()
-                }
-            });
-            
-            if (response.ok) {
-                console.log('Server-side context cleared successfully');
-            } else {
-                console.warn('Failed to clear server-side context');
-            }
-        } catch (error) {
-            console.error('Error clearing server-side context:', error);
-        }
-        
-        // 清除本地消息历史
+        // 直接清空本地消息，用户手动管理
         setLocalMessages([]);
     };
 
@@ -79,7 +47,6 @@ const ChatContainer = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Session-Id': sessionManager.getSessionId(),
                 },
                 body: JSON.stringify({
                     messages: [...localMessages, userMessage]
@@ -192,60 +159,40 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className="h-full w-full flex flex-col bg-white">
+        <div className="h-full w-full flex flex-col">
             {/* 聊天头部 */}
-            <div className="border-b border-gray-200 p-4 bg-white">
+            <div className="mb-4">
                 <div className="flex justify-between items-center">
-                    <div>
-                        <h2 className="text-lg font-semibold text-gray-800">Chat with your documents</h2>
-                        <p className="text-sm text-gray-500">Ask questions about your uploaded PDFs</p>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <SessionControl 
-                            compact 
-                            onRetentionChange={(hours) => {
-                                console.log(`Data retention set to ${hours} hours`);
-                                // 这里可以添加保存设置的逻辑
-                            }}
-                        />
-                        <Button
-                            onClick={clearConversation}
-                            className="text-sm px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-md"
-                        >
-                            Clear Chat
-                        </Button>
-                    </div>
+                    <Button
+                        onClick={clearConversation}
+                        className="text-xs px-2 py-1 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded-md transition-colors"
+                    >
+                        清空
+                    </Button>
                 </div>
             </div>
 
             {/* 消息区域 */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <div className="mb-4 space-y-4">
                 {localMessages.length === 0 ? (
-                    <div className="flex items-center justify-center h-full">
-                        <div className="text-center space-y-3">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                                💬
-                            </div>
-                            <div>
-                                <p className="text-gray-600 font-medium">Start a conversation</p>
-                                <p className="text-gray-500 text-sm">Upload a PDF and ask questions about it</p>
-                            </div>
-                        </div>
+                    <div className="text-center">
                     </div>
                 ) : (
-                    localMessages.map(message => (
-                        <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`
-                                max-w-[80%] lg:max-w-[70%] p-4 rounded-2xl text-sm leading-relaxed
-                                ${message.role === 'user' 
-                                    ? 'bg-blue-500 text-white rounded-br-md' 
-                                    : 'bg-white text-gray-800 border border-gray-200 rounded-bl-md shadow-sm'
-                                }
-                            `}>
-                                {renderMessageContent(message)}
+                    <div className="max-h-96 overflow-y-auto space-y-3">
+                        {localMessages.map(message => (
+                            <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`
+                                    max-w-[85%] p-3 rounded-lg text-sm leading-relaxed
+                                    ${message.role === 'user' 
+                                        ? 'bg-[var(--primary-color)] text-white' 
+                                        : 'bg-gray-700/50 text-gray-100 border border-gray-600'
+                                    }
+                                `}>
+                                    {renderMessageContent(message)}
+                                </div>
                             </div>
-                        </div>
-                    ))
+                        ))}
+                    </div>
                 )}
                 
                 {/* 加载指示器 */}
@@ -265,35 +212,38 @@ const ChatContainer = () => {
             </div>
 
             {/* 输入区域 */}
-            <div className="border-t border-gray-200 bg-white p-4">
+            <div className="space-y-3">
                 <form
-                    className='flex flex-row items-center gap-3'
+                    className='flex gap-3'
                     onSubmit={handleFormSubmit}
                 >
-                    <input
-                        className='flex-1 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500'
-                        name="prompt"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask a question about your documents..."
-                        disabled={isSubmitting}
-                    />
+                    <div className="relative flex-1">
+                        <input
+                            className='w-full rounded-md border-gray-600 bg-gray-700/50 py-2 pl-10 pr-4 text-white focus:border-primary-500 focus:ring-primary-500 placeholder-gray-400'
+                            name="prompt"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="询问我的项目..."
+                            disabled={isSubmitting}
+                            type="text"
+                        />
+                    </div>
 
                     <Button 
                         type="submit" 
                         disabled={isSubmitting || !input.trim()}
                         className={`
-                            px-6 py-3 rounded-xl font-medium transition-all duration-200
+                            px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 shrink-0
                             ${isSubmitting || !input.trim()
-                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                : 'bg-blue-500 hover:bg-blue-600 text-white shadow-sm hover:shadow-md'
+                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                : 'bg-[var(--primary-color)] hover:bg-opacity-80 text-white'
                             }
                         `}
                     >
                         {isSubmitting ? (
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
                         ) : (
-                            'Send'
+                            '发送'
                         )}
                     </Button>
                 </form>

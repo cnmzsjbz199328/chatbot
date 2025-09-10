@@ -4,11 +4,12 @@ import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { NextResponse } from 'next/server';
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Document } from "@langchain/core/documents";
-import { getIndex } from "@/lib/pinecone";
+import { getIndex, getIndexForUser } from "@/lib/pinecone";
 import { Md5 } from 'ts-md5';
 // 替换本地pipeline为云端embedding服务
 import { getCustomEmbedding } from "@/lib/custom-embedding";
 import { insertFile } from "@/db";
+import { getAuthenticatedUser, unauthorizedResponse } from '@/lib/auth';
 
 // splitDoc function remains the same
 const splitDoc = async (doc: Document) => {
@@ -22,12 +23,13 @@ const splitDoc = async (doc: Document) => {
 
 // The Singleton class is no longer needed and has been removed.
 
-// 使用云端embedding服务的处理函数
-const processAndEmbedChunks = async (chunks: string[], fileId: number, sessionId: string) => {
+// 使用云端embedding服务的处理函数 - 支持用户和session双模式
+const processAndEmbedChunks = async (chunks: string[], fileId: number, userId?: string, sessionId?: string) => {
     const PINECONE_UPSERT_BATCH_SIZE = 100;
     const allVectors: number[][] = [];
 
-    console.log(`Starting cloud embedding process for ${chunks.length} chunks...`);
+    const identifier = userId ? `user: ${userId}` : `session: ${sessionId}`;
+    console.log(`Starting cloud embedding process for ${chunks.length} chunks for ${identifier}...`);
 
     // 使用云端embedding服务的批量API（性能更好）
     try {
@@ -46,23 +48,48 @@ const processAndEmbedChunks = async (chunks: string[], fileId: number, sessionId
         throw new Error("Mismatch between number of chunks and number of embeddings.");
     }
 
-    // 3. Prepare records for Pinecone with file_id and session_id in metadata
-    const records = chunks.map((c, i) => ({
-        id: Md5.hashStr(c + sessionId), // 加入sessionId确保唯一性
-        values: allVectors[i],
-        metadata: { 
+    // 3. Prepare records for Pinecone with metadata
+    const uniqueId = userId || sessionId || 'unknown';
+    const records = chunks.map((c, i) => {
+        const metadata: Record<string, string | number> = { 
             text: c,
             file_id: fileId,
-            session_id: sessionId // 添加session_id到元数据
+        };
+        
+        // 添加用户或session标识
+        if (userId) {
+            metadata.user_id = userId;
         }
-    }));
+        if (sessionId) {
+            metadata.session_id = sessionId;
+        }
+        
+        return {
+            id: Md5.hashStr(c + uniqueId + fileId), // 确保唯一性
+            values: allVectors[i],
+            metadata
+        };
+    });
 
-    // 4. Upsert records to Pinecone in batches
-    const index = getIndex(); // 使用新的384维索引
-    for (let i = 0; i < records.length; i += PINECONE_UPSERT_BATCH_SIZE) {
-        const batch = records.slice(i, i + PINECONE_UPSERT_BATCH_SIZE);
-        console.log(`Upserting batch of ${batch.length} records to Pinecone (384d)...`);
-        await index.upsert(batch);
+    // 4. 根据配置选择上传策略
+    const useNamespace = process.env.PINECONE_USE_NAMESPACE === 'true' && userId;
+    
+    if (useNamespace && userId) {
+        // 使用namespace隔离
+        const userIndex = getIndexForUser(userId);
+        for (let i = 0; i < records.length; i += PINECONE_UPSERT_BATCH_SIZE) {
+            const batch = records.slice(i, i + PINECONE_UPSERT_BATCH_SIZE);
+            console.log(`Upserting batch of ${batch.length} records to user namespace ${userId}...`);
+            await userIndex.upsert(batch);
+        }
+    } else {
+        // 使用metadata过滤
+        const index = getIndex();
+        for (let i = 0; i < records.length; i += PINECONE_UPSERT_BATCH_SIZE) {
+            const batch = records.slice(i, i + PINECONE_UPSERT_BATCH_SIZE);
+            console.log(`Upserting batch of ${batch.length} records to main index with metadata...`);
+            await index.upsert(batch);
+        }
     }
 
     return { upsertedCount: records.length };
@@ -71,13 +98,15 @@ const processAndEmbedChunks = async (chunks: string[], fileId: number, sessionId
 
 export async function POST(request: Request) {
     try {
-        // 1. 获取session_id从请求头
+        // 1. 验证用户认证（新）
+        const user = await getAuthenticatedUser();
+        
+        // 2. 获取session_id（兼容模式）
         const sessionId = request.headers.get('X-Session-Id');
-        if (!sessionId) {
-            return NextResponse.json(
-                { error: 'X-Session-Id header is required' }, 
-                { status: 400 }
-            );
+        
+        // 3. 如果有用户认证，优先使用用户ID；否则回退到session模式
+        if (!user && !sessionId) {
+            return unauthorizedResponse();
         }
 
         const formData = await request.formData();
@@ -87,10 +116,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
-        // 2. Insert the file record into the database with session_id
-        const newFile = await insertFile(file.name, Md5.hashStr(file.name), sessionId);
+        // 2. Insert the file record into the database
+        const newFile = await insertFile(file.name, Md5.hashStr(file.name), sessionId || undefined, user?.id);
         const fileId = newFile[0].id;
-        console.log(`File record created in DB with ID: ${fileId}, Session: ${sessionId}`);
+        
+        const identifier = user ? `User: ${user.id}` : `Session: ${sessionId}`;
+        console.log(`File record created in DB with ID: ${fileId}, ${identifier}`);
 
         const buffer = await file.arrayBuffer();
         const blob = new Blob([buffer], { type: "application/pdf" });
@@ -103,13 +134,14 @@ export async function POST(request: Request) {
 
         console.log(`Successfully split PDF into ${allChunks.length} chunks.`);
 
-        // 3. Pass the fileId and sessionId to the processing function
-        const res = await processAndEmbedChunks(allChunks, fileId, sessionId);
+        // 3. Process and embed chunks with user/session support
+        const res = await processAndEmbedChunks(allChunks, fileId, user?.id, sessionId || undefined);
         console.log("Upsert result:", res);
 
         return NextResponse.json({ 
             message: `File uploaded and processed successfully. ${res.upsertedCount} vectors upserted.`,
             fileId,
+            userId: user?.id,
             sessionId 
         });
     } catch (error) {

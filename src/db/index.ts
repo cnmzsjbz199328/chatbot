@@ -31,15 +31,21 @@ export const deleteExpiredSessions = async () => {
 };
 
 // 文件管理函数 (添加session_id支持)
-export const insertFile = async (file_name: string, file_key: string, sessionId: string): Promise<{ id: number }[]> => {
-  return await db.insert(fileTable).values({
+export const insertFile = async (file_name: string, file_key: string, sessionId?: string, userId?: string): Promise<{ id: number }[]> => {
+  const values = {
     file_name,
     file_key,
-    sessionId
-  }).returning({ id: fileTable.id });
+    sessionId: sessionId || null,
+    userId: userId || null,
+  };
+  
+  return await db.insert(fileTable).values(values).returning({ id: fileTable.id });
 };
 
-export const getFile = async (sessionId?: string) => {
+export const getFile = async (sessionId?: string, userId?: string) => {
+  if (userId) {
+    return await db.select().from(fileTable).where(eq(fileTable.userId, userId));
+  }
   if (sessionId) {
     return await db.select().from(fileTable).where(eq(fileTable.sessionId, sessionId));
   }
