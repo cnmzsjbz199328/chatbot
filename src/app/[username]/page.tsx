@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import ChatContainer from "@/components/ChatContainer";
+import ProjectGrid from "@/components/ProjectGrid";
+import { UserProjectModel, UserProfileModel } from '@/db/schema';
 
 interface DashboardPageProps {
   params: Promise<{
@@ -7,8 +9,42 @@ interface DashboardPageProps {
   }>;
 }
 
+// 获取用户资料
+async function getUserProfile(username: string): Promise<UserProfileModel | null> {
+  try {
+    const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/profile/${username}`);
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return null;
+  }
+}
+
+// 获取用户项目
+async function getUserProjects(username: string): Promise<UserProjectModel[]> {
+  try {
+    const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/projects/${username}`);
+    if (response.ok) {
+      return await response.json();
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching user projects:', error);
+    return [];
+  }
+}
+
 export default async function DashboardPage({ params }: DashboardPageProps) {
   const { username } = await params;
+  
+  // 获取用户数据
+  const [profile, projects] = await Promise.all([
+    getUserProfile(username),
+    getUserProjects(username)
+  ]);
 
   return (
     <div className="relative flex size-full min-h-screen flex-col overflow-x-hidden bg-gray-900 font-sans text-white" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
@@ -45,114 +81,15 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             {/* 主要内容区域 */}
             <div className="flex-1 lg:max-w-3xl">
               <div className="mb-12 text-center lg:text-left">
-                <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">精选项目</h2>
-                <p className="mt-4 text-lg text-gray-400">一系列展示我的IT技能和经验的项目。</p>
+                <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+                  {profile ? `${profile.displayName || username} 的项目` : '精选项目'}
+                </h2>
+                <p className="mt-4 text-lg text-gray-400">
+                  {profile?.bio || '一系列展示我的IT技能和经验的项目。'}
+                </p>
               </div>
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                {/* Project 1 */}
-                <div className="group transform-gpu overflow-hidden rounded-lg bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-500/30">
-                  <div className="relative">
-                    <div className="h-56 w-full bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-6xl text-white">shopping_cart</span>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 p-4">
-                      <h3 className="text-xl font-bold">电子商务平台</h3>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <p className="mb-4 text-gray-400">一个功能齐全的电子商务平台，具有用户身份验证、产品目录、购物车和支付网关集成。</p>
-                    <div className="flex justify-between">
-                      <a className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline" href="#">
-                        查看项目 <span className="material-symbols-outlined text-base">arrow_forward</span>
-                      </a>
-                      <a className="text-gray-400 hover:text-white" href="#">
-                        <svg fill="currentColor" height="24px" viewBox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Project 2 */}
-                <div className="group transform-gpu overflow-hidden rounded-lg bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-500/30">
-                  <div className="relative">
-                    <div className="h-56 w-full bg-gradient-to-br from-green-600 to-teal-700 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-6xl text-white">analytics</span>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 p-4">
-                      <h3 className="text-xl font-bold">数据分析仪表板</h3>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <p className="mb-4 text-gray-400">一个实时数据可视化和分析仪表板，用于监控业务指标和生成深入的报告。</p>
-                    <div className="flex justify-between">
-                      <a className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline" href="#">
-                        查看项目 <span className="material-symbols-outlined text-base">arrow_forward</span>
-                      </a>
-                      <a className="text-gray-400 hover:text-white" href="#">
-                        <svg fill="currentColor" height="24px" viewBox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Project 3 */}
-                <div className="group transform-gpu overflow-hidden rounded-lg bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-500/30">
-                  <div className="relative">
-                    <div className="h-56 w-full bg-gradient-to-br from-purple-600 to-pink-700 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-6xl text-white">chat</span>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 p-4">
-                      <h3 className="text-xl font-bold">AI智能助手</h3>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <p className="mb-4 text-gray-400">基于大语言模型的智能对话系统，支持文档上传和智能问答功能。</p>
-                    <div className="flex justify-between">
-                      <a className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline" href="#">
-                        查看项目 <span className="material-symbols-outlined text-base">arrow_forward</span>
-                      </a>
-                      <a className="text-gray-400 hover:text-white" href="#">
-                        <svg fill="currentColor" height="24px" viewBox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Project 4 */}
-                <div className="group transform-gpu overflow-hidden rounded-lg bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-500/30">
-                  <div className="relative">
-                    <div className="h-56 w-full bg-gradient-to-br from-orange-600 to-red-700 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-6xl text-white">mobile_friendly</span>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 p-4">
-                      <h3 className="text-xl font-bold">移动应用</h3>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <p className="mb-4 text-gray-400">一个跨平台的移动应用程序，提供直观的用户界面和丰富的功能体验。</p>
-                    <div className="flex justify-between">
-                      <a className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline" href="#">
-                        查看项目 <span className="material-symbols-outlined text-base">arrow_forward</span>
-                      </a>
-                      <a className="text-gray-400 hover:text-white" href="#">
-                        <svg fill="currentColor" height="24px" viewBox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* 动态项目列表 */}
+              <ProjectGrid projects={projects} />
             </div>
             
             {/* 右侧AI助手边栏 */}

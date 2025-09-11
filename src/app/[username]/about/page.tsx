@@ -1,16 +1,39 @@
 import Link from 'next/link';
+import Skills from '@/components/Skills';
+import ContactInfo from '@/components/ContactInfo';
+import Education from '@/components/Education';
+import WorkExperience from '@/components/WorkExperience';
+import Hobbies from '@/components/Hobbies';
+import { UserProfileModel } from '@/db/schema';
 
 interface AboutPageProps {
-  params: {
+  params: Promise<{
     username: string;
-  };
+  }>;
+}
+
+// 获取用户资料
+async function getUserProfile(username: string): Promise<UserProfileModel | null> {
+  try {
+    const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/profile/${username}`, {
+      cache: 'no-store' // 确保每次都获取最新数据
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return null;
+  }
 }
 
 export default async function AboutPage({ params }: AboutPageProps) {
   const { username } = await params;
+  const profile = await getUserProfile(username);
 
   return (
-    <div className="relative flex size-full min-h-screen flex-col overflow-x-hidden bg-gray-900 font-sans text-white" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
+    <div className="relative flex size-full min-h-screen flex-col overflow-x-hidden" style={{fontFamily: 'Inter, "Noto Sans", sans-serif'}}>
       <div className="flex h-full grow flex-col">
         <header className="sticky top-0 z-20 w-full bg-gray-900/80 backdrop-blur-md">
           <div className="container mx-auto flex items-center justify-between whitespace-nowrap px-4 py-4 sm:px-6 lg:px-8">
@@ -25,7 +48,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
             <nav className="hidden items-center gap-8 md:flex">
               <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href={`/${username}`}>项目</Link>
               <Link className="text-sm font-medium text-[var(--primary-color)]" href={`/${username}/about`}>关于</Link>
-              <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="#">联系</Link>
+              <a className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="#contact">联系</a>
             </nav>
             <button className="md:hidden">
               <span className="material-symbols-outlined"> menu </span>
@@ -37,182 +60,25 @@ export default async function AboutPage({ params }: AboutPageProps) {
             <div className="mx-auto max-w-4xl">
               <div className="text-center">
                 <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">关于我</h2>
-                <p className="mt-4 text-lg text-gray-400">一位充满激情、注重结果的IT专业人士，在软件开发和项目管理方面拥有丰富的经验。</p>
+                <p className="mt-4 text-lg text-gray-400">
+                  {profile?.bio || '一位充满激情、注重结果的IT专业人士，在软件开发和项目管理方面拥有丰富的经验。'}
+                </p>
               </div>
               <div className="mt-16 space-y-16">
-                <section>
-                  <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-                    <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> school </span>
-                    教育经历
-                  </h3>
-                  <div className="rounded-lg bg-gray-800 p-6">
-                    <div className="mb-4 flex items-center justify-between">
-                      <h4 className="text-xl font-semibold">计算机科学学士学位</h4>
-                      <span className="text-gray-400">2018 - 2022</span>
-                    </div>
-                    <p className="mb-2 text-[var(--primary-color)]">北京理工大学</p>
-                    <p className="text-gray-400">专注于软件工程、数据结构与算法、人工智能等核心课程，以优异成绩毕业。</p>
-                  </div>
-                </section>
+                {/* 教育经历组件 */}
+                <Education education={profile?.education || undefined} />
 
-                <section>
-                  <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-                    <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> work </span>
-                    工作经历
-                  </h3>
-                  <div className="space-y-6">
-                    <div className="rounded-lg bg-gray-800 p-6">
-                      <div className="mb-4 flex items-center justify-between">
-                        <h4 className="text-xl font-semibold">高级全栈开发工程师</h4>
-                        <span className="text-gray-400">2022 - 至今</span>
-                      </div>
-                      <p className="mb-3 text-[var(--primary-color)]">创新科技有限公司</p>
-                      <ul className="space-y-2 text-gray-400">
-                        <li>• 负责多个大型Web应用的前后端开发和架构设计</li>
-                        <li>• 带领5人开发团队，提升项目交付效率30%</li>
-                        <li>• 主导公司AI智能客服系统的开发，提升客户满意度25%</li>
-                        <li>• 优化系统性能，减少页面加载时间50%</li>
-                      </ul>
-                    </div>
+                {/* 工作经历组件 */}
+                <WorkExperience workExperience={profile?.workExperience || undefined} />
 
-                    <div className="rounded-lg bg-gray-800 p-6">
-                      <div className="mb-4 flex items-center justify-between">
-                        <h4 className="text-xl font-semibold">前端开发工程师</h4>
-                        <span className="text-gray-400">2020 - 2022</span>
-                      </div>
-                      <p className="mb-3 text-[var(--primary-color)]">数字未来科技</p>
-                      <ul className="space-y-2 text-gray-400">
-                        <li>• 参与开发多个企业级SaaS平台的前端界面</li>
-                        <li>• 使用React、Vue.js等技术栈构建响应式Web应用</li>
-                        <li>• 与UI/UX团队紧密合作，提升用户体验</li>
-                      </ul>
-                    </div>
-                  </div>
-                </section>
+                {/* 技能组件 */}
+                <Skills skills={profile?.skills} />
 
-                <section>
-                  <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-                    <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> code </span>
-                    技能专长
-                  </h3>
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div className="rounded-lg bg-gray-800 p-6">
-                      <h4 className="mb-4 text-lg font-semibold text-[var(--primary-color)]">前端技术</h4>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">React</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Vue.js</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Next.js</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">TypeScript</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Tailwind CSS</span>
-                      </div>
-                    </div>
+                {/* 兴趣爱好组件 */}
+                <Hobbies hobbies={profile?.hobbies || undefined} />
 
-                    <div className="rounded-lg bg-gray-800 p-6">
-                      <h4 className="mb-4 text-lg font-semibold text-[var(--primary-color)]">后端技术</h4>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Node.js</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Python</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">PostgreSQL</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">MongoDB</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Redis</span>
-                      </div>
-                    </div>
-
-                    <div className="rounded-lg bg-gray-800 p-6">
-                      <h4 className="mb-4 text-lg font-semibold text-[var(--primary-color)]">云服务与工具</h4>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">AWS</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Docker</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Kubernetes</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">Git</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">CI/CD</span>
-                      </div>
-                    </div>
-
-                    <div className="rounded-lg bg-gray-800 p-6">
-                      <h4 className="mb-4 text-lg font-semibold text-[var(--primary-color)]">AI技术</h4>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">机器学习</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">NLP</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">RAG系统</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">LangChain</span>
-                        <span className="rounded-full bg-gray-700 px-3 py-1 text-sm">向量数据库</span>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                <section>
-                  <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-                    <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> emoji_events </span>
-                    成就与认证
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-4">
-                      <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">verified</span>
-                      <div>
-                        <h4 className="font-semibold">AWS认证解决方案架构师</h4>
-                        <p className="text-sm text-gray-400">获得AWS云服务专业认证，熟练掌握云架构设计</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-4">
-                      <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">verified</span>
-                      <div>
-                        <h4 className="font-semibold">阿里云高级架构师</h4>
-                        <p className="text-sm text-gray-400">通过阿里云架构师认证，具备大规模系统设计能力</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-4">
-                      <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">star</span>
-                      <div>
-                        <h4 className="font-semibold">年度最佳员工</h4>
-                        <p className="text-sm text-gray-400">因出色的技术贡献和团队协作能力获得公司表彰</p>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                <section>
-                  <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-                    <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> contact_mail </span>
-                    联系方式
-                  </h3>
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
-                      <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">email</span>
-                      <div>
-                        <h4 className="font-semibold">邮箱</h4>
-                        <p className="text-gray-400">contact@techportfolio.com</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
-                      <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">phone</span>
-                      <div>
-                        <h4 className="font-semibold">电话</h4>
-                        <p className="text-gray-400">+86 138-0000-0000</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
-                      <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">location_on</span>
-                      <div>
-                        <h4 className="font-semibold">位置</h4>
-                        <p className="text-gray-400">北京，中国</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
-                      <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">language</span>
-                      <div>
-                        <h4 className="font-semibold">网站</h4>
-                        <p className="text-gray-400">www.techportfolio.com</p>
-                      </div>
-                    </div>
-                  </div>
-                </section>
+                {/* 联系信息组件 */}
+                <ContactInfo profile={profile} />
               </div>
             </div>
           </div>

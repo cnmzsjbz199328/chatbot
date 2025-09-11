@@ -7,7 +7,7 @@ export default function ProjectsPage() {
     {
       id: 1,
       title: "电子商务平台",
-      description: "一个功能齐全的电子商务平台，具有用户身份验证、产品目录、购物车和支付网关集成。",
+      description: "一个功狗付网关集成。",
       image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=300&fit=crop",
       projectUrl: "#",
       githubUrl: "#",
@@ -16,7 +16,7 @@ export default function ProjectsPage() {
     {
       id: 2,
       title: "数据分析仪表板",
-      description: "一个用于可视化和分析大型数据集的交互式仪表板，具有过滤和下钻功能。",
+      description: "一个用于可视化和分析狗式仪表板，具有过滤和下钻功能。",
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
       projectUrl: "#",
       githubUrl: "#",

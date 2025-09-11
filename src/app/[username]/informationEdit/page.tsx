@@ -10,6 +10,11 @@ const UserProfileForm = dynamic(() => import('@/components/UserProfileForm'), {
   loading: () => <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div></div>
 });
 
+const FileUploadComponent = dynamic(() => import('@/components/FileUploadComponent'), {
+  ssr: false,
+  loading: () => <div className="flex justify-center items-center h-32"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div>
+});
+
 export default function InformationEditPage() {
   const params = useParams();
   const username = params?.username as string;
@@ -80,11 +85,24 @@ export default function InformationEditPage() {
           </div>
         </header>
         <div className="p-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-white">个人信息管理</h2>
-            <p className="text-gray-400 mt-2">编辑您的个人资料和联系信息</p>
+          <div className="space-y-8">
+            {/* 文件上传模块 */}
+            <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
+              <h3 className="mb-6 text-xl font-bold">个人资料文档上传</h3>
+              <div className="mb-4">
+                <p className="text-sm text-gray-400 mb-2">
+                  上传您的简历、个人介绍等PDF文档，AI将学习您的背景信息，访客可以通过聊天了解您的经历。
+                </p>
+              </div>
+              <FileUploadComponent />
+            </div>
+
+            {/* 个人信息编辑 */}
+            <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
+              <h3 className="mb-6 text-xl font-bold">基本信息编辑</h3>
+              <UserProfileForm />
+            </div>
           </div>
-          <UserProfileForm />
         </div>
       </main>
     </div>

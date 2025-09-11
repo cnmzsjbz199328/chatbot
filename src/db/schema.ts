@@ -34,6 +34,26 @@ export const userProfilesTable = pgTable("user_profiles", {
   github: text('github'),
   linkedin: text('linkedin'),
   skills: json('skills').$type<string[]>(),
+  // 教育信息
+  education: json('education').$type<{
+    school: string;
+    degree: string;
+    startYear: number;
+    endYear: number;
+  }[]>(),
+  // 工作经历
+  workExperience: json('work_experience').$type<{
+    company: string;
+    position: string;
+    startDate: string;
+    endDate: string;
+    description: string[];
+  }[]>(),
+  // 兴趣爱好
+  hobbies: json('hobbies').$type<{
+    name: string;
+    icon: string;
+  }[]>(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
