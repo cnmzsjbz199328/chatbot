@@ -1,20 +1,17 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase';
+import { NextRequest, NextResponse } from 'next/server';
 import { getOrCreateUserProfile } from '@/lib/userProfile';
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const body = await request.json();
+    const { userId, email } = body;
     
-    // Get the current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!userId || !email) {
+      return NextResponse.json({ error: 'Missing userId or email' }, { status: 400 });
     }
 
     // Create or get user profile
-    const profile = await getOrCreateUserProfile(user.id, user.email!);
+    const profile = await getOrCreateUserProfile(userId, email);
     
     return NextResponse.json({ 
       success: true, 

@@ -33,6 +33,10 @@ export default function LoginForm() {
             headers: {
               'Content-Type': 'application/json',
             },
+            body: JSON.stringify({
+              userId: data.user.id,
+              email: data.user.email,
+            }),
           });
           
           if (profileResponse.ok) {
@@ -40,6 +44,7 @@ export default function LoginForm() {
             router.push(`/${profile.username}`);
             router.refresh();
           } else {
+            console.error('Profile API failed:', await profileResponse.text());
             throw new Error('Profile creation failed');
           }
         } catch (profileError) {
