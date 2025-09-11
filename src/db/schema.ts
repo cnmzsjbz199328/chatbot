@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, timestamp, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, serial, varchar, timestamp, text, uuid, json } from "drizzle-orm/pg-core";
 
 // 1. 改造现有 sessions 表，支持渐进式迁移
 export const sessionsTable = pgTable("sessions", {
@@ -26,6 +26,31 @@ export const userProfilesTable = pgTable("user_profiles", {
   id: uuid('id').primaryKey(), // 对应 Supabase auth.users.id
   displayName: text('display_name'),
   avatar: text('avatar'),
+  bio: text('bio'),
+  location: text('location'),
+  phone: text('phone'),
+  website: text('website'),
+  github: text('github'),
+  linkedin: text('linkedin'),
+  skills: json('skills').$type<string[]>(),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+// 4. 用户项目表
+export const userProjectsTable = pgTable("user_projects", {
+  id: serial('id').primaryKey(),
+  userId: uuid('user_id').notNull(), // 关联到 Supabase 用户
+  title: varchar('title', { length: 255 }).notNull(),
+  description: text('description'),
+  technologies: json('technologies').$type<string[]>(),
+  status: varchar('status', { length: 50 }).default('active'), // active, completed, archived
+  progress: varchar('progress', { length: 10 }).default('0'), // 进度百分比
+  startDate: timestamp('start_date'),
+  endDate: timestamp('end_date'),
+  githubUrl: text('github_url'),
+  liveUrl: text('live_url'),
+  imageUrl: text('image_url'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
@@ -33,3 +58,4 @@ export const userProfilesTable = pgTable("user_profiles", {
 export type SessionModel = typeof sessionsTable.$inferSelect;
 export type FileModel = typeof fileTable.$inferSelect;
 export type UserProfileModel = typeof userProfilesTable.$inferSelect;
+export type UserProjectModel = typeof userProjectsTable.$inferSelect;

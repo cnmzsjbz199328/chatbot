@@ -1,14 +1,32 @@
+'use client';
+
 import Link from 'next/link';
-import UserProfileForm from '@/components/UserProfileForm';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+const UserProfileForm = dynamic(() => import('@/components/UserProfileForm'), {
+  ssr: false,
+  loading: () => <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div></div>
+});
 
 interface InformationEditPageProps {
-  params: {
+  params: Promise<{
     username: string;
-  };
+  }>;
 }
 
-export default async function InformationEditPage({ params }: InformationEditPageProps) {
-  const { username } = await params;
+export default function InformationEditPage({ params }: InformationEditPageProps) {
+  const router = useRouter();
+  const [username, setUsername] = useState<string>('');
+
+  useEffect(() => {
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setUsername(resolvedParams.username);
+    };
+    resolveParams();
+  }, [params]);
 
   return (
     <div className="relative flex size-full min-h-screen flex-row overflow-x-hidden bg-gray-900 font-sans text-white" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
@@ -30,10 +48,13 @@ export default async function InformationEditPage({ params }: InformationEditPag
           </Link>
         </nav>
         <div className="mt-auto">
-          <a className="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white" href="#">
+          <Link 
+            href="/"
+            className="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
+          >
             <span className="material-symbols-outlined"> logout </span>
-            <span>退出登录</span>
-          </a>
+            <span>返回首页</span>
+          </Link>
         </div>
       </aside>
       <main className="flex-1 overflow-y-auto">
@@ -43,153 +64,11 @@ export default async function InformationEditPage({ params }: InformationEditPag
           </div>
         </header>
         <div className="p-8">
-          <UserProfileForm />
-            <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
-              <h3 className="mb-6 text-xl font-bold">文件上传</h3>
-              <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-600 bg-gray-700/50 hover:bg-gray-700">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <span className="material-symbols-outlined text-4xl text-gray-400"> cloud_upload </span>
-                  <p className="mb-2 text-sm text-gray-400"><span className="font-semibold">点击上传</span> 或拖拽文件至此</p>
-                  <p className="text-xs text-gray-500">支持PDF、DOCX、MD等文件格式</p>
-                </div>
-              </div>
-              <p className="mt-4 text-sm text-gray-400">已上传文件：</p>
-              <ul className="mt-2 list-disc list-inside space-y-1 text-gray-300">
-                <li>my_resume_v3.pdf <button className="ml-2 text-red-500 hover:text-red-400"><span className="material-symbols-outlined text-sm">delete</span></button></li>
-              </ul>
-            </div>
-
-            <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold">教育经历</h3>
-                <button className="flex items-center gap-2 rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600">
-                  <span className="material-symbols-outlined"> add </span>
-                  <span>添加教育经历</span>
-                </button>
-              </div>
-              <div className="mt-6 space-y-6">
-                <div className="rounded-md border border-gray-700 p-4">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="school-1">学校</label>
-                      <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="school-1" type="text" defaultValue="北京理工大学"/>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="degree-1">学位</label>
-                      <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="degree-1" type="text" defaultValue="计算机科学学士"/>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="start-date-1">开始日期</label>
-                      <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="start-date-1" type="date" defaultValue="2018-09-01"/>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="end-date-1">结束日期</label>
-                      <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="end-date-1" type="date" defaultValue="2022-06-30"/>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="description-1">描述</label>
-                    <textarea className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="description-1" rows={3} defaultValue="专注于软件工程、数据结构与算法、人工智能等核心课程，以优异成绩毕业。"></textarea>
-                  </div>
-                  <div className="mt-4 flex justify-end">
-                    <button className="text-red-500 hover:text-red-400">
-                      <span className="material-symbols-outlined">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold">工作经历</h3>
-                <button className="flex items-center gap-2 rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600">
-                  <span className="material-symbols-outlined"> add </span>
-                  <span>添加工作经历</span>
-                </button>
-              </div>
-              <div className="mt-6 space-y-6">
-                <div className="rounded-md border border-gray-700 p-4">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="company-1">公司</label>
-                      <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="company-1" type="text" defaultValue="创新科技有限公司"/>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="position-1">职位</label>
-                      <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="position-1" type="text" defaultValue="高级全栈开发工程师"/>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="work-start-1">开始日期</label>
-                      <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="work-start-1" type="date" defaultValue="2022-07-01"/>
-                    </div>
-                    <div>
-                      <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="work-end-1">结束日期</label>
-                      <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="work-end-1" type="date"/>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="work-desc-1">工作描述</label>
-                    <textarea className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="work-desc-1" rows={4} defaultValue="• 负责多个大型Web应用的前后端开发和架构设计&#10;• 带领5人开发团队，提升项目交付效率30%&#10;• 主导公司AI智能客服系统的开发，提升客户满意度25%&#10;• 优化系统性能，减少页面加载时间50%"></textarea>
-                  </div>
-                  <div className="mt-4 flex justify-end">
-                    <button className="text-red-500 hover:text-red-400">
-                      <span className="material-symbols-outlined">delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
-              <h3 className="mb-6 text-xl font-bold">技能专长</h3>
-              <div className="space-y-6">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="frontend-skills">前端技术</label>
-                  <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="frontend-skills" type="text" defaultValue="React, Vue.js, Next.js, TypeScript, Tailwind CSS"/>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="backend-skills">后端技术</label>
-                  <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="backend-skills" type="text" defaultValue="Node.js, Python, PostgreSQL, MongoDB, Redis"/>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="cloud-skills">云服务与工具</label>
-                  <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="cloud-skills" type="text" defaultValue="AWS, Docker, Kubernetes, Git, CI/CD"/>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="ai-skills">AI技术</label>
-                  <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="ai-skills" type="text" defaultValue="机器学习, NLP, RAG系统, LangChain, 向量数据库"/>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
-              <h3 className="mb-6 text-xl font-bold">联系信息</h3>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="email">邮箱</label>
-                  <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="email" type="email" defaultValue="contact@techportfolio.com"/>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="phone">电话</label>
-                  <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="phone" type="tel" defaultValue="+86 138-0000-0000"/>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="location">位置</label>
-                  <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="location" type="text" defaultValue="北京，中国"/>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="website">网站</label>
-                  <input className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="website" type="url" defaultValue="www.techportfolio.com"/>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
-              <h3 className="mb-6 text-xl font-bold">个人简介</h3>
-              <textarea className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" rows={6} defaultValue="一位充满激情、注重结果的IT专业人士，在软件开发和项目管理方面拥有丰富的经验。专注于创新技术解决方案的开发，致力于提升用户体验和系统性能。具备强烈的学习能力和团队协作精神，能够在快节奏的环境中高效工作。"></textarea>
-            </div>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-white">个人信息管理</h2>
+            <p className="text-gray-400 mt-2">编辑您的个人资料和联系信息</p>
           </div>
+          <UserProfileForm />
         </div>
       </main>
     </div>

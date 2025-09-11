@@ -2,9 +2,9 @@ import Link from 'next/link';
 import ChatContainer from "@/components/ChatContainer";
 
 interface DashboardPageProps {
-  params: {
+  params: Promise<{
     username: string;
-  };
+  }>;
 }
 
 export default async function DashboardPage({ params }: DashboardPageProps) {
