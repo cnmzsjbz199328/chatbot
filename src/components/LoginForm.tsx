@@ -41,7 +41,7 @@ export default function LoginForm() {
           
           if (profileResponse.ok) {
             const { profile } = await profileResponse.json();
-            router.push(`/${profile.username}`);
+            router.push(`/${profile.username}/projectManagement`);
             router.refresh();
           } else {
             console.error('Profile API failed:', await profileResponse.text());

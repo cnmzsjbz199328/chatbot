@@ -1,32 +1,41 @@
 'use client';
-
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/components/AuthProvider';
+import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 const UserProfileForm = dynamic(() => import('@/components/UserProfileForm'), {
   ssr: false,
   loading: () => <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div></div>
 });
 
-interface InformationEditPageProps {
-  params: Promise<{
-    username: string;
-  }>;
-}
-
-export default function InformationEditPage({ params }: InformationEditPageProps) {
+export default function InformationEditPage() {
+  const params = useParams();
+  const username = params?.username as string;
   const router = useRouter();
-  const [username, setUsername] = useState<string>('');
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    const resolveParams = async () => {
-      const resolvedParams = await params;
-      setUsername(resolvedParams.username);
-    };
-    resolveParams();
-  }, [params]);
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary-color)] mx-auto mb-4"></div>
+          <p>正在验证身份...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="relative flex size-full min-h-screen flex-row overflow-x-hidden bg-gray-900 font-sans text-white" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
@@ -48,12 +57,19 @@ export default function InformationEditPage({ params }: InformationEditPageProps
           </Link>
         </nav>
         <div className="mt-auto">
-          <Link 
-            href="/"
+          <Link
             className="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
+            href={`/${username}`}
           >
-            <span className="material-symbols-outlined"> logout </span>
-            <span>返回首页</span>
+            <span className="material-symbols-outlined">visibility</span>
+            <span>前台展示</span>
+          </Link>
+          <Link
+            className="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
+            href="/login"
+          >
+            <span className="material-symbols-outlined">logout</span>
+            <span>退出登录</span>
           </Link>
         </div>
       </aside>

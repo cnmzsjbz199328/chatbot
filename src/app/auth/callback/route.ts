@@ -13,9 +13,9 @@ export async function GET(request: NextRequest) {
     
     if (!error && data.user) {
       try {
-        // 创建用户profile并跳转到用户专属页面
+        // 创建用户profile并跳转到项目管理
         const profile = await getOrCreateUserProfile(data.user.id, data.user.email!);
-        return NextResponse.redirect(`${requestUrl.origin}/${profile.username}`);
+        return NextResponse.redirect(`${requestUrl.origin}/${profile.username}/projectManagement`);
       } catch (profileError) {
         console.error('Profile creation error in callback:', profileError);
         // 如果失败，跳转到主页
