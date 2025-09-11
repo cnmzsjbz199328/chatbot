@@ -24,6 +24,7 @@ export const fileTable = pgTable("files", {
 // 3. 新增：用户资料扩展表（可选）
 export const userProfilesTable = pgTable("user_profiles", {
   id: uuid('id').primaryKey(), // 对应 Supabase auth.users.id
+  username: varchar('username', { length: 50 }).unique(), // 唯一用户名，用于URL
   displayName: text('display_name'),
   avatar: text('avatar'),
   bio: text('bio'),

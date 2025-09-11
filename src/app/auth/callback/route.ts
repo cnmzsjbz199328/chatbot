@@ -1,25 +1,29 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { getOrCreateUserProfile } from '@/lib/userProfile';
 
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get('code');
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get('code');
 
   if (code) {
     const supabase = createRouteHandlerClient({ cookies });
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     
-    try {
-      await supabase.auth.exchangeCodeForSession(code);
-      
-      // 验证成功后跳转到用户页面
-      return NextResponse.redirect(`${origin}/demo`);
-    } catch (error) {
-      console.error('Auth callback error:', error);
-      return NextResponse.redirect(`${origin}/login?error=auth_error`);
+    if (!error && data.user) {
+      try {
+        // 创建用户profile并跳转到用户专属页面
+        const profile = await getOrCreateUserProfile(data.user.id, data.user.email!);
+        return NextResponse.redirect(`${requestUrl.origin}/${profile.username}`);
+      } catch (profileError) {
+        console.error('Profile creation error in callback:', profileError);
+        // 如果失败，跳转到主页
+        return NextResponse.redirect(requestUrl.origin);
+      }
     }
   }
 
-  // 如果没有code参数，跳转到登录页面
-  return NextResponse.redirect(`${origin}/login`);
+  // 默认重定向到主页
+  return NextResponse.redirect(requestUrl.origin);
 }

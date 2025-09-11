@@ -1,9 +1,10 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import type { Database } from './supabase';
 
 export async function getAuthenticatedUser() {
-  const supabase = createRouteHandlerClient({ cookies });
+  const { cookies } = await import('next/headers');
+  const supabase = createRouteHandlerClient<Database>({ cookies });
   const { data: { session }, error } = await supabase.auth.getSession();
   
   if (error || !session) {
@@ -23,4 +24,12 @@ export async function requireAuth() {
     throw new Error('Authentication required');
   }
   return user;
+}
+
+// 用于服务端组件的认证检查
+export async function getServerUser() {
+  const { cookies } = await import('next/headers');
+  const supabase = createRouteHandlerClient<Database>({ cookies });
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.user || null;
 }

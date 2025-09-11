@@ -26,8 +26,28 @@ export default function LoginForm() {
       if (error) {
         setError(error.message);
       } else if (data.user) {
-        router.push('/demo'); // 登录成功后跳转到示例用户页面
-        router.refresh();
+        // 获取或创建用户profile，然后跳转到用户专属页面
+        try {
+          const profileResponse = await fetch('/api/auth/profile', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (profileResponse.ok) {
+            const { profile } = await profileResponse.json();
+            router.push(`/${profile.username}`);
+            router.refresh();
+          } else {
+            throw new Error('Profile creation failed');
+          }
+        } catch (profileError) {
+          console.error('Profile creation error:', profileError);
+          // 如果profile创建失败，跳转到demo页面
+          router.push('/demo');
+          router.refresh();
+        }
       }
     } catch {
       setError('登录时发生错误，请稍后重试');
@@ -61,23 +81,21 @@ export default function LoginForm() {
         
         <main className="flex flex-1 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="w-full max-w-md space-y-8">
-            <div>
-              <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight">Welcome back</h2>
-              <p className="mt-2 text-center text-sm text-gray-400">
-                Don&apos;t have an account?{' '}
-                <Link className="font-medium text-[var(--primary-color)] hover:text-[#3b8ef2] transition-colors" href="/register">
-                  Sign up
-                </Link>
+            <div className="text-center">
+              <h2 className="text-3xl font-extrabold tracking-tight">Admin Login</h2>
+              <p className="mt-2 text-sm text-[var(--text-secondary)]">
+                Welcome back! Please enter your credentials.
               </p>
             </div>
             
-            {error && (
-              <div className="bg-red-900/20 border border-red-600 text-red-400 px-4 py-3 rounded-md text-sm">
-                {error}
-              </div>
-            )}
-            
-            <form onSubmit={handleSignIn} className="mt-8 space-y-6">
+            <div className="card space-y-6">
+              {error && (
+                <div className="bg-red-900/20 border border-red-600 text-red-400 px-4 py-3 rounded-md text-sm">
+                  {error}
+                </div>
+              )}
+              
+              <form onSubmit={handleSignIn} className="space-y-6">
               <div className="space-y-4 rounded-md shadow-sm">
                 <div>
                   <label className="sr-only" htmlFor="email">Email address</label>
@@ -132,7 +150,23 @@ export default function LoginForm() {
                   )}
                 </button>
               </div>
+              
+              <div className="flex items-center justify-end">
+                <div className="text-sm">
+                  <a className="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors" href="#">
+                    Forgot your password?
+                  </a>
+                </div>
+              </div>
+              
+              <div className="text-center text-sm text-[var(--text-secondary)]">
+                Don&apos;t have an account?{' '}
+                <Link className="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors" href="/register">
+                  Register here
+                </Link>
+              </div>
             </form>
+            </div>
           </div>
         </main>
       </div>

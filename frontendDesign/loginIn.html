@@ -51,9 +51,9 @@
 <h1 class="text-2xl font-bold">TechPortfolio</h1>
 </div>
 <nav class="hidden md:flex items-center gap-8">
-<a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#">Home</a>
-<a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#">Projects</a>
-<a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#">About</a>
+<a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="project.html">Home</a>
+<a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="projectManagement.html">Projects</a>
+<a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="aboutMe.html">About</a>
 <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors" href="#">Contact</a>
 </nav>
 </div>
@@ -70,11 +70,11 @@
 <div class="bg-[var(--accent-color)] p-8 rounded-lg shadow-lg space-y-6">
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">person</span>
-<input class="form-input w-full rounded-md h-12 pl-12 text-sm" placeholder="Username or Email" type="text"/>
+<input id="username" name="username" class="form-input w-full rounded-md h-12 pl-12 text-sm" placeholder="Username or Email" type="text"/>
 </div>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">lock</span>
-<input class="form-input w-full rounded-md h-12 pl-12 text-sm" placeholder="Password" type="password"/>
+<input id="password" name="password" class="form-input w-full rounded-md h-12 pl-12 text-sm" placeholder="Password" type="password"/>
 </div>
 <div class="flex items-center justify-end">
 <div class="text-sm">
@@ -84,13 +84,13 @@
 </div>
 </div>
 <div>
-<button class="btn-primary flex w-full justify-center rounded-md border border-transparent py-3 px-4 text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2 focus:ring-offset-[var(--secondary-color)] transition-all">
+<button id="loginBtn" class="btn-primary flex w-full justify-center rounded-md border border-transparent py-3 px-4 text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2 focus:ring-offset-[var(--secondary-color)] transition-all">
                 Sign in
               </button>
 </div>
 <div class="text-center text-sm text-[var(--text-secondary)]">
                 Don't have an account? 
-                <a class="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors" href="#">
+                <a class="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors" href="register.html">
                   Register here
                 </a>
 </div>
@@ -98,5 +98,42 @@
 </div>
 </main>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loginBtn = document.getElementById('loginBtn');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+
+    loginBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        
+        // 简单验证
+        if (!username || !password) {
+            alert('请输入用户名和密码');
+            return;
+        }
+        
+        // 模拟登录验证（实际项目中应该调用后端API）
+        if (username === 'admin' && password === 'admin123') {
+            alert('登录成功！');
+            // 跳转到个人页面
+            window.location.href = 'aboutMe.html';
+        } else {
+            alert('用户名或密码错误');
+        }
+    });
+    
+    // 回车键登录
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            loginBtn.click();
+        }
+    });
+});
+</script>
 
 </body></html>
