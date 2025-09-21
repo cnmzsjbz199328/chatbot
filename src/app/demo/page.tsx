@@ -8,8 +8,8 @@ export default function DemoPage() {
         <div className="mx-auto max-w-4xl">
                 {/* Hero Section */}
                 <div className="text-center">
-                  <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">演示作品集</h2>
-                  <p className="mt-4 text-lg text-gray-400">查看我们平台创建的真实作品集示例</p>
+                  <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Demo Portfolio</h2>
+                  <p className="mt-4 text-lg text-gray-400">Check out real portfolio examples created on our platform</p>
                 </div>
 
                 {/* Demo Cards */}
@@ -21,15 +21,15 @@ export default function DemoPage() {
                         <span className="material-symbols-outlined text-white"> person </span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">个人简介页面</h3>
+                    <h3 className="text-xl font-semibold mb-2">About Me Page</h3>
                     <p className="text-gray-400 mb-4">
-                      展示个人背景、教育经历、工作经验和技能专长的完整页面
+                      A complete page showcasing personal background, education, work experience, and skills.
                     </p>
-                    <Link 
-                      href="/about" 
+                    <Link
+                      href="/about"
                       className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline"
                     >
-                      查看示例 <span className="material-symbols-outlined text-base">arrow_forward</span>
+                      View Example <span className="material-symbols-outlined text-base">arrow_forward</span>
                     </Link>
                   </div>
 
@@ -40,15 +40,15 @@ export default function DemoPage() {
                         <span className="material-symbols-outlined text-white"> work </span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">项目展示页面</h3>
+                    <h3 className="text-xl font-semibold mb-2">Projects Page</h3>
                     <p className="text-gray-400 mb-4">
-                      精美的项目展示页面，包含项目详情、技术栈和GitHub链接
+                      A beautiful project showcase page with project details, tech stack, and GitHub links.
                     </p>
-                    <Link 
-                      href="/projects" 
+                    <Link
+                      href="/projects"
                       className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline"
                     >
-                      查看示例 <span className="material-symbols-outlined text-base">arrow_forward</span>
+                      View Example <span className="material-symbols-outlined text-base">arrow_forward</span>
                     </Link>
                   </div>
 
@@ -59,22 +59,22 @@ export default function DemoPage() {
                         <span className="material-symbols-outlined text-white"> dashboard </span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">管理后台</h3>
+                    <h3 className="text-xl font-semibold mb-2">Admin Dashboard</h3>
                     <p className="text-gray-400 mb-4">
-                      强大的后台管理系统，轻松管理项目和个人信息
+                      A powerful admin system to easily manage your projects and personal information.
                     </p>
-                    <Link 
-                      href="/login" 
+                    <Link
+                      href="/login"
                       className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline"
                     >
-                      登录体验 <span className="material-symbols-outlined text-base">arrow_forward</span>
+                      Login to Experience <span className="material-symbols-outlined text-base">arrow_forward</span>
                     </Link>
                   </div>
                 </div>
 
                 {/* Features Showcase */}
                 <div className="mt-20">
-                  <h3 className="text-3xl font-bold text-center mb-12">平台特色功能</h3>
+                  <h3 className="text-3xl font-bold text-center mb-12">Platform Features</h3>
                   <div className="grid gap-12 lg:grid-cols-2">
                     {/* Feature 1 */}
                     <div className="flex gap-6">
@@ -84,9 +84,9 @@ export default function DemoPage() {
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-xl font-semibold mb-2">现代化设计</h4>
+                        <h4 className="text-xl font-semibold mb-2">Modern Design</h4>
                         <p className="text-gray-400">
-                          采用最新的设计趋势，暗色主题配合精美的动画效果，让您的作品集脱颖而出。
+                          Using the latest design trends, a dark theme with beautiful animations makes your portfolio stand out.
                         </p>
                       </div>
                     </div>
@@ -99,9 +99,9 @@ export default function DemoPage() {
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-xl font-semibold mb-2">高性能</h4>
+                        <h4 className="text-xl font-semibold mb-2">High Performance</h4>
                         <p className="text-gray-400">
-                          基于Next.js构建，优化的加载速度和SEO，确保您的作品集能被更多人发现。
+                          Built with Next.js for optimized loading speed and SEO, ensuring your portfolio is discovered by more people.
                         </p>
                       </div>
                     </div>
@@ -114,9 +114,9 @@ export default function DemoPage() {
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-xl font-semibold mb-2">易于管理</h4>
+                        <h4 className="text-xl font-semibold mb-2">Easy to Manage</h4>
                         <p className="text-gray-400">
-                          直观的管理界面，无需编程知识即可轻松更新项目信息和个人资料。
+                          An intuitive management interface allows you to easily update project information and personal profiles without programming knowledge.
                         </p>
                       </div>
                     </div>
@@ -129,9 +129,9 @@ export default function DemoPage() {
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-xl font-semibold mb-2">安全可靠</h4>
+                        <h4 className="text-xl font-semibold mb-2">Secure and Reliable</h4>
                         <p className="text-gray-400">
-                          采用Supabase认证系统，确保您的数据安全，支持多种登录方式。
+                          Uses the Supabase authentication system to ensure your data is secure and supports multiple login methods.
                         </p>
                       </div>
                     </div>
@@ -141,26 +141,27 @@ export default function DemoPage() {
                 {/* CTA Section */}
                 <div className="mt-20 text-center">
                   <div className="card">
-                    <h3 className="text-2xl font-bold mb-4">准备创建您的作品集了吗？</h3>
+                    <h3 className="text-2xl font-bold mb-4">Ready to create your portfolio?</h3>
                     <p className="text-gray-400 mb-6">
-                      加入我们的平台，几分钟内即可拥有专业的个人作品集网站
+                      Join our platform and have a professional personal portfolio website in minutes.
                     </p>
                     <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                       <Link
                         className="rounded-lg bg-[var(--primary-color)] px-8 py-3 text-lg font-semibold text-white transition-all hover:bg-opacity-80"
                         href="/register"
                       >
-                        免费注册
+                        Register for free
                       </Link>
                       <Link
                         className="text-sm font-medium text-gray-400 transition-colors hover:text-white"
                         href="/login"
                       >
-                        已有账户？立即登录
+                        Already have an account? Sign in
                       </Link>
                     </div>
                   </div>
         </div>
+      </div>
       </div>
     </Layout>
   );

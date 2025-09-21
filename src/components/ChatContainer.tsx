@@ -3,24 +3,46 @@
 import type { UIMessage } from 'ai'; // 导入正确的类型
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
-import { useAuth } from "./AuthProvider";
+import { UserProjectModel, UserProfileModel } from '@/db/schema';
 
-const ChatContainer = () => {
+interface ChatContainerProps {
+    targetUsername: string;
+    userProfile: UserProfileModel | null;
+    userProjects: UserProjectModel[];
+}
+
+const ChatContainer = ({ targetUsername, userProfile, userProjects }: ChatContainerProps) => {
     // 手动管理消息状态以支持会话
     const [localMessages, setLocalMessages] = React.useState<UIMessage[]>([]);
     const [input, setInput] = React.useState("");
     const [isSubmitting, setIsSubmitting] = React.useState(false);
-    const { user } = useAuth();
 
     // Initialize component
     useEffect(() => {
-        // 组件初始化，无需session管理
-    }, []);
+        // 显示欢迎消息，基于目标用户
+        const welcomeMessage: UIMessage = {
+            id: 'welcome',
+            role: 'assistant',
+            parts: [{ 
+                type: 'text', 
+                text: `你好！我是 ${userProfile?.displayName || targetUsername} 的智能助手。你可以询问关于 ${userProfile?.displayName || targetUsername} 的项目经验、技能背景或任何其他信息。我会基于他/她的作品集来回答你的问题。` 
+            }]
+        };
+        setLocalMessages([welcomeMessage]);
+    }, [targetUsername, userProfile]);
 
     // 清除对话历史的函数
     const clearConversation = async () => {
-        // 直接清空本地消息，用户手动管理
-        setLocalMessages([]);
+        // 重新显示欢迎消息
+        const welcomeMessage: UIMessage = {
+            id: 'welcome-' + Date.now(),
+            role: 'assistant',
+            parts: [{ 
+                type: 'text', 
+                text: `你好！我是 ${userProfile?.displayName || targetUsername} 的智能助手。你可以询问关于 ${userProfile?.displayName || targetUsername} 的项目经验、技能背景或任何其他信息。我会基于他/她的作品集来回答你的问题。` 
+            }]
+        };
+        setLocalMessages([welcomeMessage]);
     };
 
     const endRef = React.useRef<HTMLDivElement>(null);
@@ -47,24 +69,17 @@ const ChatContainer = () => {
         try {
             const headers: Record<string, string> = {
                 'Content-Type': 'application/json',
+                'X-Target-Username': targetUsername, // 告诉 API 这是关于哪个用户的查询
             };
-            
-            // 如果用户未登录，使用 session ID（兼容模式）
-            if (!user) {
-                const sessionId = localStorage.getItem('sessionId') || 
-                    (() => {
-                        const newId = crypto.randomUUID();
-                        localStorage.setItem('sessionId', newId);
-                        return newId;
-                    })();
-                headers['X-Session-Id'] = sessionId;
-            }
             
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({
-                    messages: [...localMessages, userMessage]
+                    messages: [...localMessages, userMessage],
+                    targetUsername: targetUsername, // 在 body 中也包含目标用户信息
+                    userProfile: userProfile,
+                    userProjects: userProjects
                 })
             });
 

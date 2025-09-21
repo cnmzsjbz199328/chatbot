@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "node scripts/clean-dev.js && next dev",
+    "dev:3001": "PORT=3001 next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check-ports": "netstat -ano | findstr :300",
+    "kill-node": "taskkill /F /IM node.exe /T"
   },
   "dependencies": {
     "@ai-sdk/cohere": "^2.0.7",

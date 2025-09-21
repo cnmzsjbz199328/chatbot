@@ -62,30 +62,8 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="bg-[var(--secondary-color)] text-[var(--text-primary)] min-h-screen">
-      <div className="flex flex-col min-h-screen">
-        <header className="w-full">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex h-20 items-center justify-between border-b border-[var(--border-color)]">
-              <div className="flex items-center gap-4">
-                <svg className="h-8 w-8 text-[var(--primary-color)]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z" fill="currentColor"></path>
-                </svg>
-                <h2 className="text-xl font-bold">TechPortfolio</h2>
-              </div>
-              <nav className="hidden md:flex items-center gap-8">
-                <Link className="text-sm font-medium text-gray-300 hover:text-white transition-colors" href="/">Home</Link>
-                <a className="text-sm font-medium text-gray-300 hover:text-white transition-colors" href="#">Projects</a>
-                <a className="text-sm font-medium text-gray-300 hover:text-white transition-colors" href="#">About</a>
-                <a className="text-sm font-medium text-gray-300 hover:text-white transition-colors" href="#">Contact</a>
-                <Link href="/register" className="rounded-md bg-[#21262d] px-4 py-2 text-sm font-semibold hover:bg-[#2c3138] transition-colors">Register</Link>
-              </nav>
-            </div>
-          </div>
-        </header>
-        
-        <main className="flex flex-1 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <div className="w-full max-w-md space-y-8">
+    <div className="flex flex-1 items-center justify-center py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
+      <div className="w-full max-w-md space-y-8">
             <div className="text-center">
               <h2 className="text-3xl font-extrabold tracking-tight">Admin Login</h2>
               <p className="mt-2 text-sm text-[var(--text-secondary)]">
@@ -170,11 +148,9 @@ export default function LoginForm() {
                   Register here
                 </Link>
               </div>
-            </form>
+              </form>
             </div>
           </div>
-        </main>
       </div>
-    </div>
   );
 }

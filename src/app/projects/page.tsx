@@ -3,12 +3,12 @@ import Image from 'next/image';
 import Layout from '@/components/Layout';
 
 export default function ProjectsPage() {
-  // 示例项目数据 - 在实际应用中这些数据会从数据库获取
+  // Sample project data - in a real application, this data would be fetched from a database
   const projects = [
     {
       id: 1,
-      title: "电子商务平台",
-      description: "一个功狗付网关集成。",
+      title: "E-commerce Platform",
+      description: "A full-featured e-commerce platform with gateway integration.",
       image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=300&fit=crop",
       projectUrl: "#",
       githubUrl: "#",
@@ -16,8 +16,8 @@ export default function ProjectsPage() {
     },
     {
       id: 2,
-      title: "数据分析仪表板",
-      description: "一个用于可视化和分析狗式仪表板，具有过滤和下钻功能。",
+      title: "Data Analysis Dashboard",
+      description: "An interactive dashboard for visualizing and analyzing large datasets, with filtering and drill-down capabilities.",
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
       projectUrl: "#",
       githubUrl: "#",
@@ -25,8 +25,8 @@ export default function ProjectsPage() {
     },
     {
       id: 3,
-      title: "任务管理移动应用",
-      description: "一款用于管理任务和待办事项的移动应用，具有提醒、分类和进度跟踪等功能。",
+      title: "Task Management Mobile App",
+      description: "A mobile app for managing tasks and to-do lists, with features like reminders, categories, and progress tracking.",
       image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&h=300&fit=crop",
       projectUrl: "#",
       githubUrl: "#",
@@ -34,8 +34,8 @@ export default function ProjectsPage() {
     },
     {
       id: 4,
-      title: "博客网站",
-      description: "一个使用现代框架构建的个人博客网站，具有响应式设计和内容管理系统集成。",
+      title: "Blog Website",
+      description: "A personal blog website built with a modern framework, featuring a responsive design and content management system integration.",
       image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=500&h=300&fit=crop",
       projectUrl: "#",
       githubUrl: "#",
@@ -43,8 +43,8 @@ export default function ProjectsPage() {
     },
     {
       id: 5,
-      title: "作品集网站",
-      description: "一个展示我的项目和技能的作品集网站，设计简洁专业。",
+      title: "Portfolio Website",
+      description: "A portfolio website to showcase my projects and skills, with a clean and professional design.",
       image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=500&h=300&fit=crop",
       projectUrl: "#",
       githubUrl: "#",
@@ -52,8 +52,8 @@ export default function ProjectsPage() {
     },
     {
       id: 6,
-      title: "API开发",
-      description: "为一个Web应用开发RESTful API，具有身份验证、数据验证和数据库集成等功能。",
+      title: "API Development",
+      description: "Developed a RESTful API for a web application, with features like authentication, data validation, and database integration.",
       image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&h=300&fit=crop",
       projectUrl: "#",
       githubUrl: "#",
@@ -67,10 +67,10 @@ export default function ProjectsPage() {
               {/* Projects Grid */}
               <div className="flex-1">
                 <div className="mb-12 text-center lg:text-left">
-                  <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">精选项目</h2>
-                  <p className="mt-4 text-lg text-gray-400">一系列展示我的IT技能和经验的项目。</p>
+                  <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">Featured Projects</h2>
+                  <p className="mt-4 text-lg text-gray-400">A series of projects showcasing my IT skills and experience.</p>
                 </div>
-                
+
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                   {projects.map((project) => (
                     <div key={project.id} className="group transform-gpu overflow-hidden rounded-lg bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-500/30">
@@ -91,7 +91,7 @@ export default function ProjectsPage() {
                       </div>
                       <div className="p-6">
                         <p className="mb-4 text-gray-400">{project.description}</p>
-                        
+
                         {/* Tags */}
                         <div className="mb-4 flex flex-wrap gap-2">
                           {project.tags.map((tag) => (
@@ -100,18 +100,18 @@ export default function ProjectsPage() {
                             </span>
                           ))}
                         </div>
-                        
+
                         <div className="flex justify-between">
-                          <a 
-                            className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline" 
+                          <a
+                            className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--primary-color)] hover:underline"
                             href={project.projectUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            查看项目 <span className="material-symbols-outlined text-base">arrow_forward</span>
+                            View Project <span className="material-symbols-outlined text-base">arrow_forward</span>
                           </a>
-                          <a 
-                            className="text-gray-400 hover:text-white transition-colors" 
+                          <a
+                            className="text-gray-400 hover:text-white transition-colors"
                             href={project.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -130,23 +130,23 @@ export default function ProjectsPage() {
               {/* Sidebar */}
               <aside className="w-full lg:w-96 lg:flex-shrink-0 mt-12 lg:mt-0">
                 <div className="sticky top-20 rounded-lg bg-gray-800/50 p-6 shadow-lg">
-                  <h3 className="mb-4 text-xl font-bold">搜索项目</h3>
+                  <h3 className="mb-4 text-xl font-bold">Search Projects</h3>
                   <div className="relative">
-                    <input 
-                      className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 pl-10 pr-4 text-white focus:border-primary-500 focus:ring-primary-500 placeholder-gray-400" 
-                      placeholder="搜索..." 
+                    <input
+                      className="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 pl-10 pr-4 text-white focus:border-primary-500 focus:ring-primary-500 placeholder-gray-400"
+                      placeholder="Search..."
                       type="text"
                     />
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3">
                       <span className="material-symbols-outlined text-gray-400"> search </span>
                     </div>
                   </div>
-                  
+
                   <div className="mt-6 space-y-4">
-                    <h4 className="font-semibold text-gray-300">技术栈筛选</h4>
+                    <h4 className="font-semibold text-gray-300">Filter by Tech Stack</h4>
                     <div className="flex flex-wrap gap-2">
                       {['React', 'Next.js', 'Vue.js', 'Node.js', 'Python', 'TypeScript', 'PostgreSQL', 'Docker'].map((tech) => (
-                        <button 
+                        <button
                           key={tech}
                           className="rounded-full border border-gray-600 px-3 py-1 text-xs font-medium text-gray-300 hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-colors"
                         >
@@ -157,18 +157,18 @@ export default function ProjectsPage() {
                   </div>
 
                   <div className="mt-6 space-y-4">
-                    <h4 className="font-semibold text-gray-300">项目统计</h4>
+                    <h4 className="font-semibold text-gray-300">Project Statistics</h4>
                     <div className="space-y-2 text-sm text-gray-400">
                       <div className="flex justify-between">
-                        <span>总项目数</span>
+                        <span>Total Projects</span>
                         <span className="font-medium text-white">{projects.length}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>开源项目</span>
+                        <span>Open Source Projects</span>
                         <span className="font-medium text-white">{projects.length}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>使用技术</span>
+                        <span>Technologies Used</span>
                         <span className="font-medium text-white">15+</span>
                       </div>
                     </div>

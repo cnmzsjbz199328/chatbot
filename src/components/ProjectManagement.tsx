@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/components/AuthProvider';
+import { Button } from '@/components/ui/button';
 
 interface UserProject {
   id?: number;
@@ -191,14 +192,12 @@ export default function ProjectManagement() {
     <div className="space-y-6">
       {/* 头部 */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">项目管理</h2>
-        <button
+        <Button
           onClick={openNewProjectModal}
-          className="flex items-center gap-2 rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-semibold text-white hover:bg-opacity-80"
+          className="flex items-center gap-2"
         >
-          <span className="material-symbols-outlined">add</span>
-          <span>添加新项目</span>
-        </button>
+          Add New Project
+        </Button>
       </div>
 
       {/* 消息提示 */}
@@ -209,12 +208,14 @@ export default function ProjectManagement() {
             : 'bg-red-900/20 border border-red-500 text-red-400'
         }`}>
           {message}
-          <button 
+          <Button 
             onClick={() => setMessage('')}
+            variant="ghost"
+            size="sm"
             className="ml-2 text-sm underline"
           >
             关闭
-          </button>
+          </Button>
         </div>
       )}
 
@@ -273,18 +274,21 @@ export default function ProjectManagement() {
 
             {/* 操作按钮 */}
             <div className="flex gap-2">
-              <button
+              <Button
                 onClick={() => handleEdit(project)}
-                className="flex-1 rounded-md bg-gray-700 px-3 py-2 text-sm font-medium text-white hover:bg-gray-600"
+                variant="secondary"
+                size="sm"
+                className="flex-1"
               >
                 编辑
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => project.id && handleDelete(project.id)}
-                className="rounded-md bg-red-900 px-3 py-2 text-sm font-medium text-red-200 hover:bg-red-800"
+                variant="destructive"
+                size="sm"
               >
                 删除
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -431,20 +435,21 @@ export default function ProjectManagement() {
               </div>
 
               <div className="flex gap-4">
-                <button
+                <Button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 rounded-md border border-gray-600 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700"
+                  variant="outline"
+                  className="flex-1"
                 >
                   取消
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
-                  disabled={isLoading}
-                  className="flex-1 rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white hover:bg-opacity-80 disabled:opacity-50"
+                  loading={isLoading}
+                  className="flex-1"
                 >
-                  {isLoading ? '保存中...' : (editingProject ? '更新项目' : '创建项目')}
-                </button>
+                  {editingProject ? '更新项目' : '创建项目'}
+                </Button>
               </div>
             </form>
           </div>

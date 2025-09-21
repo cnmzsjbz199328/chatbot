@@ -10,10 +10,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "个人网站 | AI助手",
-  description: "个人作品集网站，展示项目经验，提供AI智能助手服务。支持文档上传、智能对话等功能。",
-  keywords: "个人网站, 作品集, AI助手, 全栈开发, 项目展示",
-  authors: [{ name: "张三" }],
+  title: "Personal Website | AI Assistant",
+  description: "Personal portfolio website to showcase project experience and provide AI assistant services. Supports document uploading, intelligent conversation, and other features.",
+  keywords: "Personal Website, Portfolio, AI Assistant, Full-Stack Development, Project Showcase",
+  authors: [{ name: "Zhang San" }],
 };
 
 export const viewport: Viewport = {
@@ -27,10 +27,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en-US">
       <head>
-        <link 
-          href="https://fonts.googleapis.com/icon?family=Material+Icons" 
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"
         />
       </head>
