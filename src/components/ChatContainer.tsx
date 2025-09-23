@@ -98,9 +98,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                 headers,
                 body: JSON.stringify({
                     messages: [...localMessages, userMessage],
-                    targetUsername: targetUsername, // 在 body 中也包含目标用户信息
-                    userProfile: userProfile,
-                    userProjects: userProjects
+                    targetUsername: targetUsername
                 })
             });
 

@@ -52,18 +52,18 @@ export const getFile = async (sessionId?: string, userId?: string) => {
   return await db.select().from(fileTable);
 };
 
-export const deleteFileById = async (id: number, sessionId?: string) => {
+export const deleteFileById = async (id: number, sessionId?: string, userId?: string) => {
+  const conditions = [eq(fileTable.id, id)];
+
   if (sessionId) {
-    // 验证文件属于当前session
-    await db.delete(fileTable).where(
-      and(
-        eq(fileTable.id, id),
-        eq(fileTable.sessionId, sessionId)
-      )
-    );
-  } else {
-    await db.delete(fileTable).where(eq(fileTable.id, id));
+    conditions.push(eq(fileTable.sessionId, sessionId));
   }
+
+  if (userId) {
+    conditions.push(eq(fileTable.userId, userId));
+  }
+
+  await db.delete(fileTable).where(and(...conditions));
 };
 
 export { db };

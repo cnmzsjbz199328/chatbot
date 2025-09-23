@@ -3,6 +3,7 @@ export const runtime = 'nodejs';
 import { cohere } from '@ai-sdk/cohere';
 import { streamText, convertToModelMessages } from 'ai';
 import { NextResponse } from 'next/server';
+import { getAuthenticatedUser, unauthorizedResponse } from '@/lib/auth';
 
 export const maxDuration = 30;
 
@@ -11,6 +12,11 @@ export async function POST(req: Request) {
     console.log('[CHAT API] 收到个人作品集聊天请求');
     
     try {
+        const user = await getAuthenticatedUser();
+        if (!user) {
+          return unauthorizedResponse();
+        }
+
         const { messages, targetUsername, userProfile, userProjects } = await req.json();
         
         console.log('[CHAT API] 目标用户:', targetUsername);

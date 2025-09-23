@@ -1,6 +1,7 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/components/AuthProvider';
+import { Button } from './ui/button';
 
 interface UploadedFile {
   id: number;
@@ -11,11 +12,31 @@ interface UploadedFile {
 
 export default function FileUploadComponent() {
   const { user } = useAuth();
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [files, setFiles] = useState<UploadedFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch existing files on mount
+  useEffect(() => {
+    if (user) {
+      fetchFiles();
+    }
+  }, [user]);
+
+  const fetchFiles = async () => {
+    try {
+      const response = await fetch('/api/get-files', { credentials: 'include' });
+      if (response.ok) {
+        const data = await response.json();
+        setFiles(data);
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+    }
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -79,14 +100,8 @@ export default function FileUploadComponent() {
       if (response.ok) {
         setUploadMessage(`文档上传成功！已处理${result.message.split('.')[1]?.trim() || '完成向量化处理'}`);
         
-        // 添加到已上传文件列表
-        const newFile: UploadedFile = {
-          id: result.fileId,
-          name: file.name,
-          size: file.size,
-          uploadTime: new Date().toISOString()
-        };
-        setUploadedFiles(prev => [...prev, newFile]);
+        // Refetch files to update list
+        fetchFiles();
         
         // 清除输入
         if (fileInputRef.current) {
@@ -113,6 +128,33 @@ export default function FileUploadComponent() {
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('zh-CN');
+  };
+
+  const handleDelete = async (fileId: number) => {
+    if (!confirm('确定要删除此文件吗？删除后相关向量数据也会被清除。')) {
+      return;
+    }
+
+    setDeletingId(fileId);
+    try {
+      const response = await fetch(`/api/files/${fileId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        setUploadMessage('文件删除成功');
+        fetchFiles(); // Refetch to update list
+      } else {
+        const error = await response.json();
+        setUploadMessage(`删除失败: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      setUploadMessage('删除过程中发生错误');
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   return (
@@ -165,11 +207,11 @@ export default function FileUploadComponent() {
       )}
 
       {/* 已上传文件列表 */}
-      {uploadedFiles.length > 0 && (
+      {files.length > 0 && (
         <div>
           <p className="text-sm text-gray-400 mb-3">已上传的文档：</p>
           <ul className="space-y-3">
-            {uploadedFiles.map((file) => (
+            {files.map((file) => (
               <li key={file.id} className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-red-400">picture_as_pdf</span>
@@ -184,6 +226,15 @@ export default function FileUploadComponent() {
                   <span className="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded">
                     已向量化
                   </span>
+                  <Button
+                    onClick={() => handleDelete(file.id)}
+                    disabled={deletingId === file.id}
+                    variant="destructive"
+                    size="sm"
+                    className="ml-2"
+                  >
+                    {deletingId === file.id ? '删除中...' : '删除'}
+                  </Button>
                 </div>
               </li>
             ))}
