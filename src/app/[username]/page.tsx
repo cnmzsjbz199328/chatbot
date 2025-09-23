@@ -3,6 +3,11 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import ChatContainer from "@/components/ChatContainer";
 import ProjectGrid from "@/components/ProjectGrid";
+import ContactInfo from "@/components/ContactInfo";
+import Education from "@/components/Education";
+import WorkExperience from "@/components/WorkExperience";
+import Skills from "@/components/Skills";
+import Hobbies from "@/components/Hobbies";
 import Layout from '@/components/Layout';
 import { UserProfileModel } from '@/db/schema';
 
@@ -87,14 +92,28 @@ export default function DashboardPage() {
         <div className="flex-1 lg:max-w-3xl">
           <div className="mb-12 text-center lg:text-left">
             <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-              {profile ? `${profile.displayName || username}'s Projects` : 'Featured Projects'}
+              {profile ? `${profile.displayName || username}'s Portfolio` : 'Portfolio'}
             </h2>
             <p className="mt-4 text-lg text-gray-400">
               {profile?.bio || 'A series of projects showcasing my IT skills and experience.'}
             </p>
           </div>
+
+          {/* Personal Information Sections */}
+          {profile && (
+            <>
+              <ContactInfo profile={profile} />
+              <Education education={profile.education || undefined} />
+              <WorkExperience workExperience={profile.workExperience || undefined} />
+              <Skills skills={profile.skills || undefined} />
+              <Hobbies hobbies={profile.hobbies || undefined} />
+            </>
+          )}
+
           {/* Dynamic project list */}
-          <ProjectGrid username={username} />
+          <div className="mt-12">
+            <ProjectGrid username={username} />
+          </div>
         </div>
 
         {/* Right sidebar for AI assistant */}

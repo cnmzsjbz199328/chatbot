@@ -18,7 +18,6 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">location_on</span>
             <div>
-              <h4 className="font-semibold">位置</h4>
               <p className="text-gray-400">{profile.location}</p>
             </div>
           </div>
@@ -36,9 +35,8 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
 
         {profile?.website && (
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
-            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">language</span>
+            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">Personal web</span>
             <div>
-              <h4 className="font-semibold">网站</h4>
               <p className="text-gray-400">
                 <a href={profile.website} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   {profile.website}
@@ -50,9 +48,8 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
 
         {profile?.github && (
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
-            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">code</span>
+            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">GitHub</span>
             <div>
-              <h4 className="font-semibold">GitHub</h4>
               <p className="text-gray-400">
                 <a href={profile.github} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   {profile.github}
