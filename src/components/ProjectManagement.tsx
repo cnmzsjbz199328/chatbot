@@ -158,7 +158,6 @@ export default function ProjectManagement() {
   return (
     <div className="space-y-8 p-8">
       <header className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">项目管理</h2>
         <Button onClick={handleAddNewClick} className="flex items-center gap-2">
           <span>添加新项目</span>
         </Button>
