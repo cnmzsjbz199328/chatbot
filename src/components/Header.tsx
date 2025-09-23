@@ -2,15 +2,41 @@
 import Link from 'next/link';
 import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
+  const [username, setUsername] = useState(user?.user_metadata?.username || localStorage.getItem('username') || '');
+  const [profileLoading, setProfileLoading] = useState(false);
+
+  useEffect(() => {
+    if (user && !user.user_metadata?.username && !username) {
+      setProfileLoading(true);
+      fetch('/api/auth/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, email: user.email })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.profile.username) {
+            setUsername(data.profile.username);
+            localStorage.setItem('username', data.profile.username);
+          }
+          setProfileLoading(false);
+        })
+        .catch(() => setProfileLoading(false));
+    }
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
+    localStorage.removeItem('username');
     router.push('/');
   };
+
+  const isLoading = loading || profileLoading;
 
   return (
     <header className="sticky top-0 z-20 w-full bg-gray-900/80 backdrop-blur-md">
@@ -27,30 +53,40 @@ export default function Header() {
         <nav className="hidden items-center gap-8 md:flex">
           <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/#features">功能</Link>
           <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/#demo">演示</Link>
-          
-          {loading ? (
-            <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-          ) : user ? (
-            <div className="flex items-center gap-4">
-              <Link 
-                className="text-sm font-medium text-gray-300 transition-colors hover:text-white" 
-                href={`/${user.user_metadata?.username || user.id}`}
-              >
-                我的主页
-              </Link>
-              <button 
-                onClick={handleSignOut}
-                className="text-sm font-medium text-gray-300 transition-colors hover:text-white"
-              >
-                退出登录
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-4">
-              <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/login">登录</Link>
-              <Link className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="/register">注册</Link>
-            </div>
-          )}
+
+{loading ? (
+  <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+) : user ? (
+  <div className="flex items-center gap-4">
+    {isLoading ? (
+      <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
+        我的主页 (Loading...)
+      </span>
+    ) : username ? (
+      <Link 
+        className="text-sm font-medium text-gray-300 transition-colors hover:text-white" 
+        href={`/${username}`}
+      >
+        我的主页
+      </Link>
+    ) : (
+      <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
+        请设置用户名
+      </span>
+    )}
+    <button 
+      onClick={handleSignOut}
+      className="text-sm font-medium text-gray-300 transition-colors hover:text-white"
+    >
+      退出登录
+    </button>
+  </div>
+) : (
+  <div className="flex items-center gap-4">
+    <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/login">登录</Link>
+    <Link className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="/register">注册</Link>
+  </div>
+)}
         </nav>
         
         <button className="md:hidden">
