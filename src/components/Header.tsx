@@ -9,9 +9,11 @@ export default function Header() {
   const router = useRouter();
   const [username, setUsername] = useState(user?.user_metadata?.username || localStorage.getItem('username') || '');
   const [profileLoading, setProfileLoading] = useState(false);
+  const [fetched, setFetched] = useState(false);
 
   useEffect(() => {
-    if (user && !user.user_metadata?.username && !username) {
+    if (user && !user.user_metadata?.username && !username && !fetched) {
+      setFetched(true);
       setProfileLoading(true);
       fetch('/api/auth/profile', {
         method: 'POST',
@@ -28,7 +30,7 @@ export default function Header() {
         })
         .catch(() => setProfileLoading(false));
     }
-  }, [user]);
+  }, [user, username, fetched]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -51,8 +53,8 @@ export default function Header() {
         </div>
         
         <nav className="hidden items-center gap-8 md:flex">
-          <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/#features">功能</Link>
-          <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/#demo">演示</Link>
+          <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/#features">Feature</Link>
+          <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/#demo">Demo</Link>
 
 {loading ? (
   <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -60,25 +62,25 @@ export default function Header() {
   <div className="flex items-center gap-4">
     {isLoading ? (
       <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
-        我的主页 (Loading...)
+        My Profile (Loading...)
       </span>
     ) : username ? (
       <Link 
         className="text-sm font-medium text-gray-300 transition-colors hover:text-white" 
         href={`/${username}`}
       >
-        我的主页
+        My Profile
       </Link>
     ) : (
       <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
-        请设置用户名
+        Please set a username
       </span>
     )}
     <button 
       onClick={handleSignOut}
       className="text-sm font-medium text-gray-300 transition-colors hover:text-white"
     >
-      退出登录
+      Sign Out
     </button>
   </div>
 ) : (
