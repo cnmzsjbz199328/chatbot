@@ -1,11 +1,53 @@
 import { UserProjectModel } from '@/db/schema';
 import ProjectCard from './ProjectCard';
+import { useState, useEffect } from 'react';
 
 interface ProjectGridProps {
-  projects: UserProjectModel[];
+  username: string;
 }
 
-export default function ProjectGrid({ projects }: ProjectGridProps) {
+export default function ProjectGrid({ username }: ProjectGridProps) {
+  const [projects, setProjects] = useState<UserProjectModel[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/projects/${username}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProjects(data);
+        } else {
+          setProjects([]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch projects:', error);
+        setProjects([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (username) {
+      fetchProjects();
+    } else {
+      setLoading(false);
+      setProjects([]);
+    }
+  }, [username]);
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="col-span-full text-center py-12">
+          <span className="material-symbols-outlined text-6xl text-gray-600 mb-4 block">autorenew</span>
+          <p className="text-gray-600">Loading projects...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
       {projects.length > 0 ? (

@@ -1,21 +1,42 @@
 'use client';
 
 import type { UIMessage } from 'ai'; // 导入正确的类型
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { UserProjectModel, UserProfileModel } from '@/db/schema';
 
 interface ChatContainerProps {
     targetUsername: string;
     userProfile: UserProfileModel | null;
-    userProjects: UserProjectModel[];
 }
 
-const ChatContainer = ({ targetUsername, userProfile, userProjects }: ChatContainerProps) => {
+const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
     // 手动管理消息状态以支持会话
     const [localMessages, setLocalMessages] = React.useState<UIMessage[]>([]);
     const [input, setInput] = React.useState("");
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [userProjects, setUserProjects] = useState<UserProjectModel[]>([]);
+
+    useEffect(() => {
+        async function fetchProjects() {
+            try {
+                const response = await fetch(`/api/projects/${targetUsername}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserProjects(data);
+                } else {
+                    setUserProjects([]);
+                }
+            } catch (error) {
+                console.error('Error fetching user projects:', error);
+                setUserProjects([]);
+            }
+        }
+
+        if (targetUsername) {
+            fetchProjects();
+        }
+    }, [targetUsername]);
 
     // Initialize component
     useEffect(() => {

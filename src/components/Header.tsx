@@ -7,9 +7,18 @@ import { useEffect, useState } from 'react';
 export default function Header() {
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
-  const [username, setUsername] = useState(user?.user_metadata?.username || localStorage.getItem('username') || '');
+  const [username, setUsername] = useState(user?.user_metadata?.username || '');
   const [profileLoading, setProfileLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUsername = localStorage.getItem('username');
+      if (storedUsername && !username) {
+        setUsername(storedUsername);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (user && !user.user_metadata?.username && !username && !fetched) {
@@ -24,7 +33,9 @@ export default function Header() {
         .then(data => {
           if (data.success && data.profile.username) {
             setUsername(data.profile.username);
-            localStorage.setItem('username', data.profile.username);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('username', data.profile.username);
+            }
           }
           setProfileLoading(false);
         })
@@ -34,7 +45,9 @@ export default function Header() {
 
   const handleSignOut = async () => {
     await signOut();
-    localStorage.removeItem('username');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('username');
+    }
     router.push('/');
   };
 

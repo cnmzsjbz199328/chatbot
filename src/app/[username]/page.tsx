@@ -4,13 +4,12 @@ import { useParams } from 'next/navigation';
 import ChatContainer from "@/components/ChatContainer";
 import ProjectGrid from "@/components/ProjectGrid";
 import Layout from '@/components/Layout';
-import { UserProjectModel, UserProfileModel } from '@/db/schema';
+import { UserProfileModel } from '@/db/schema';
 
 export default function DashboardPage() {
   const params = useParams();
   const username = params?.username as string;
   const [profile, setProfile] = useState<UserProfileModel | null>(null);
-  const [projects, setProjects] = useState<UserProjectModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,39 +27,21 @@ export default function DashboardPage() {
     }
   }
 
-  // Get user projects
-  async function getUserProjects(username: string): Promise<UserProjectModel[]> {
-    try {
-      const response = await fetch(`/api/projects/${username}`);
-      if (response.ok) {
-        return await response.json();
-      }
-      return [];
-    } catch (error) {
-      console.error('Error fetching user projects:', error);
-      return [];
-    }
-  }
-
   useEffect(() => {
     if (username) {
       setLoading(true);
       setError(null);
       
-      Promise.all([
-        getUserProfile(username),
-        getUserProjects(username)
-      ])
-      .then(([profileData, projectsData]) => {
-        setProfile(profileData);
-        setProjects(projectsData);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error loading user data:', err);
-        setError('Failed to load user data');
-        setLoading(false);
-      });
+      getUserProfile(username)
+        .then((profileData) => {
+          setProfile(profileData);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('Error loading user profile:', err);
+          setError('Failed to load user profile');
+          setLoading(false);
+        });
     }
   }, [username]);
 
@@ -113,13 +94,13 @@ export default function DashboardPage() {
             </p>
           </div>
           {/* Dynamic project list */}
-          <ProjectGrid projects={projects} />
+          <ProjectGrid username={username} />
         </div>
 
         {/* Right sidebar for AI assistant */}
         <aside className="w-full lg:w-96 lg:flex-shrink-0">
           <div className="sticky top-20 rounded-lg bg-gray-800/50 p-6 shadow-lg">
-            <ChatContainer targetUsername={username} userProfile={profile} userProjects={projects} />
+            <ChatContainer targetUsername={username} userProfile={profile} />
           </div>
         </aside>
       </div>
