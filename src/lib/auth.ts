@@ -1,4 +1,3 @@
-import type { Database } from './supabase';
 import { createServerClient } from './supabase';
 import { NextResponse } from 'next/server';
 

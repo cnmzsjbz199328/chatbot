@@ -18,7 +18,7 @@ export default function Header() {
         setUsername(storedUsername);
       }
     }
-  }, []);
+  }, [username]);
 
   useEffect(() => {
     if (user && !user.user_metadata?.username && !username && !fetched) {
