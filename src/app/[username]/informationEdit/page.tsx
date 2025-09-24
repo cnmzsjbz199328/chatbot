@@ -10,7 +10,7 @@ const UserProfileForm = dynamic(() => import('@/components/UserProfileForm'), {
   loading: () => <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div></div>
 });
 
-const FileUploadComponent = dynamic(() => import('@/components/FileUploadComponent'), {
+const FileUploadComponent = dynamic(() => import('@/components/file-upload'), {
   ssr: false,
   loading: () => <div className="flex justify-center items-center h-32"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div>
 });
