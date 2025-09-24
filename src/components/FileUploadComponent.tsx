@@ -5,9 +5,8 @@ import { Button } from './ui/button';
 
 interface UploadedFile {
   id: number;
-  name: string;
-  size: number;
-  uploadTime: string;
+  file_name: string;
+  createdAt: string;
 }
 
 export default function FileUploadComponent() {
@@ -118,14 +117,6 @@ export default function FileUploadComponent() {
     }
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('zh-CN');
   };
@@ -214,18 +205,14 @@ export default function FileUploadComponent() {
             {files.map((file) => (
               <li key={file.id} className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-red-400">picture_as_pdf</span>
                   <div>
-                    <p className="text-sm font-medium text-white">{file.name}</p>
+                    <p className="text-sm font-medium text-white">{file.file_name}</p>
                     <p className="text-xs text-gray-400">
-                      {formatFileSize(file.size)} • 上传时间: {formatDate(file.uploadTime)}
+                      上传时间: {formatDate(file.createdAt)}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded">
-                    已向量化
-                  </span>
                   <Button
                     onClick={() => handleDelete(file.id)}
                     disabled={deletingId === file.id}
