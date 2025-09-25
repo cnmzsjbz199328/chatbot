@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getIndex, getIndexForUser } from "@/lib/pinecone";
+import { getIndex } from "@/lib/pinecone";
 import { deleteFileById } from "@/db";
 import { getAuthenticatedUser, unauthorizedResponse } from '@/lib/auth';
 

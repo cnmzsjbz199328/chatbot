@@ -1,11 +1,11 @@
-import { createServerClient } from './supabase';
 import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function getAuthenticatedUser() {
   console.log('[AUTH] 开始用户认证检查');
   
   try {
-    const supabase = await createServerClient();
+    const supabase = await createClient();
     
     console.log('[AUTH] Supabase 配置: 已设置');
     
@@ -42,7 +42,7 @@ export async function requireAuth() {
 }
 
 export async function getServerUser() {
-  const supabase = await createServerClient();
+  const supabase = await createClient();
   
   const { data: { user }, error } = await supabase.auth.getUser();
   

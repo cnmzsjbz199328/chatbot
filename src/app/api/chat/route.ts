@@ -4,6 +4,9 @@ import { cohere } from '@ai-sdk/cohere';
 import { streamText, convertToModelMessages } from 'ai';
 import { NextResponse } from 'next/server';
 import { getAuthenticatedUser, unauthorizedResponse } from '@/lib/auth';
+import { getEmbedding } from '@/lib/custom-embedding';
+import { getIndex } from '@/lib/pinecone';
+import { createClient } from '@/lib/supabase/server';
 
 export const maxDuration = 30;
 
@@ -12,16 +15,9 @@ export async function POST(req: Request) {
     console.log('[CHAT API] 收到个人作品集聊天请求');
     
     try {
-        const user = await getAuthenticatedUser();
-        if (!user) {
-          return unauthorizedResponse();
-        }
-
-        const { messages, targetUsername, userProfile, userProjects } = await req.json();
+        const { messages, targetUsername } = await req.json();
         
         console.log('[CHAT API] 目标用户:', targetUsername);
-        console.log('[CHAT API] 用户资料:', userProfile ? '已提供' : '未提供');
-        console.log('[CHAT API] 项目数量:', userProjects?.length || 0);
 
         const lastUserMessage = messages[messages.length - 1];
         if (!lastUserMessage || lastUserMessage.role !== 'user') {
@@ -31,60 +27,70 @@ export async function POST(req: Request) {
         const textPart = lastUserMessage.parts.find((part: { type: string; text?: string }) => part.type === 'text');
         const queryText = textPart?.text;
 
-        if (!queryText) {
-            return NextResponse.json({ error: 'No text content found in user message' }, { status: 400 });
+        console.log(`[RAG] User query: "${queryText}"`);
+
+        // Get target user ID from Supabase
+        const supabase = await createClient();
+        const { data: targetUser, error: userError } = await supabase
+          .from('user_profiles')
+          .select('id')
+          .eq('username', targetUsername)
+          .single();
+
+        if (userError || !targetUser) {
+          console.error(`[RAG] Target user not found for username: ${targetUsername}`, userError);
+          return NextResponse.json({ error: 'Target user not found' }, { status: 404 });
         }
 
-        console.log(`[CHAT API] 用户询问关于 ${targetUsername} 的问题: "${queryText}"`);
+        const targetUserId = targetUser.id;
+        console.log(`[RAG] Target user ID: ${targetUserId}`);
 
-        // 构建上下文信息，基于目标用户的资料和项目
-        const contextParts = [];
-        
-        if (userProfile) {
-            const profileInfo = `姓名: ${userProfile.displayName || targetUsername}
-个人简介: ${userProfile.bio || '暂无介绍'}
-位置: ${userProfile.location || '未提供'}
-联系方式: ${userProfile.email || ''}${userProfile.phone ? `, ${userProfile.phone}` : ''}
-技能: ${userProfile.skills || '未提供'}
-教育背景: ${userProfile.education || '未提供'}
-工作经历: ${userProfile.experience || '未提供'}`;
-            contextParts.push(profileInfo);
-        }
-        
-        if (userProjects && userProjects.length > 0) {
-            const projectsInfo = userProjects.map((project: { title: string; description?: string; tags?: string; projectUrl?: string; githubUrl?: string }) => 
-                `项目: ${project.title}
-描述: ${project.description || '无描述'}
-技术栈: ${project.tags || '未指定'}
-项目链接: ${project.projectUrl || '未提供'}
-代码库: ${project.githubUrl || '未提供'}`
-            ).join('\n\n');
-            contextParts.push(`项目经验:\n${projectsInfo}`);
-        }
-        
-        const context = contextParts.join('\n\n---\n\n');
-        console.log("[CHAT API] 构建的上下文长度:", context.length);
+        // Generate query embedding
+        const queryEmbedding = await getEmbedding(queryText);
 
-        const systemPrompt = `你是 ${userProfile?.displayName || targetUsername} 的智能助手。访客想了解关于 ${userProfile?.displayName || targetUsername} 的信息。
+        // Retrieve from main index with user filter
+        console.log('[RAG] Querying Pinecone...');
+        const index = getIndex();
+        const queryResult = await index.query({
+          vector: queryEmbedding,
+          topK: 5,
+          includeMetadata: true,
+          filter: {
+            user_id: { '$eq': targetUserId }
+          }
+        });
+        console.log(`[RAG] Pinecone query returned ${queryResult.matches.length} matches.`);
 
-请根据以下信息回答访客的问题：
+        // Extract relevant chunks
+        const relevantChunks = queryResult.matches
+          .map((match) => match.metadata?.text || '')
+          .join('\n\n');
+        console.log(`[RAG] Total length of relevant chunks: ${relevantChunks.length}`);
 
-${context}
+        // Build enhanced prompt
+        const systemPrompt = `你是 ${targetUsername} 的智能助手。访客想了解关于 ${targetUsername} 的信息。
+
+基于以下从知识库检索到的文档片段回答问题：
+
+${relevantChunks}
+
+用户问题: ${queryText}
 
 请注意：
 1. 用亲切、专业的语气回答，就像你是这个人的助手
-2. 如果问题涉及的信息在上述资料中没有提供，诚实地说明"这方面的信息暂时没有提供"
-3. 可以主动推荐访客了解相关的项目或技能
-4. 保持回答的简洁和有针对性
-5. 用中文回答`;
+2. 专注于知识库内容，不要重复个人简介或项目信息
+3. 如果问题涉及的信息在知识库中没有提供，诚实地说明"这方面的信息暂时没有提供"
+4. 可以主动推荐访客了解相关的知识点
+5. 保持回答的简洁和有针对性
+6. 用中文回答`;
 
         const finalPayload = {
-            model: cohere('command-r'),
-            system: systemPrompt,
-            messages: convertToModelMessages(messages),
+            model: cohere('command-a-reasoning-08-2025'),
+            messages: [{ role: 'system', content: systemPrompt }, ...convertToModelMessages(messages)],
+            thinking: { "type": "disabled" } as any, // 添加禁用推理参数
         };
 
-        console.log("[CHAT API] 发送给 AI 的系统提示长度:", systemPrompt.length);
+        console.log("[RAG] Calling Cohere with system prompt length:", systemPrompt.length);
 
         const result = await streamText(finalPayload);
         return result.toUIMessageStreamResponse();

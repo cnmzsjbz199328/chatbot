@@ -170,118 +170,86 @@
    - 未登录：返回 401。
    - 大文件：监控内存/超时。
 
-## 第二阶段：打通提问 -> 检索流程 (Retrieval)
+## 第二阶段：实现公开聊天与RAG检索 (Public Chat & Retrieval)
 
-**目标**：改造 `/api/chat/route.ts`，在生成响应前添加查询嵌入、检索和提示增强。
+**核心目标**：改造 `/api/chat/route.ts`，使其成为一个**公开的、无需登录**的API。该API能够根据前端传递的`targetUsername`（简历主人的用户名），安全地从该用户的私有知识库中检索信息，并生成回答。
 
-### 步骤 3.1：更新聊天 API 路由
-- **文件**：`src/app/api/chat/route.ts`
-- **修改**：
-  1. 导入模块：
-     ```typescript
-     import { getEmbedding } from '@/lib/custom-embedding';
-     import { getIndexForUser } from '@/lib/pinecone';
-     import { generateText } from 'ai'; // 或 Cohere SDK
-     ```
-  2. 在 POST 处理中，消息处理后添加检索逻辑：
-     ```typescript
-     export async function POST(req: Request) {
-       const user = await getAuthenticatedUser();
-       if (!user) return unauthorizedResponse();
+### 步骤 3.1：修复核心聊天功能 (Immediate Priority)
 
-       try {
-         const { messages } = await req.json();
-         const lastMessage = messages[messages.length - 1].content;
+本步骤旨在立刻修复当前的API报错，让聊天功能可以针对公开访问者正常工作。
 
-         // 现有逻辑：获取 profile 和 projects（但根据审查，不再注入到提示中）
-         // const systemPrompt = `You are a helpful assistant focused on the user's uploaded documents. Do not repeat profile or project info.`;
+- **子步骤 3.1.1: 将聊天API设为公开接口**
+  - **文件**: `src/app/api/chat/route.ts`
+  - **操作**: 移除文件开头的用户认证代码块。
+    ```typescript
+    // 删除以下代码
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return unauthorizedResponse();
+    }
+    ```
+  - **理由**: 访问者无需登录。此修改将立即解决`AuthSessionMissingError`和401 Unauthorized错误。API将依赖请求体中的`targetUsername`来定位知识库。
 
-         // 生成查询嵌入
-         const queryEmbedding = await getEmbedding(lastMessage);
+- **子步骤 3.1.2: 验证并巩固数据检索逻辑**
+  - **文件**: `src/app/api/chat/route.ts`
+  - **操作**: 审查并确认后续的数据检索流程安全、正确。
+    1.  **确认用户名到ID的映射**: 检查API是否能根据`targetUsername`从`user_profiles`表正确查询到`userId`。
+    2.  **确认知识库隔离**: 确认Pinecone查询中包含`filter: { user_id: { '$eq': targetUserId } }`，确保数据严格隔离。
+    3.  **更新AI模型**: 将`model: cohere('command-r-plus')` 更新为 `model: cohere('command-r')` 或其他当前可用的模型。
+  - **理由**: 确保核心RAG流程不仅能跑通，而且安全、可靠，并使用有效的AI模型。
 
-         // 从用户命名空间检索
-         const userIndex = getIndexForUser(user.id);
-         const queryResult = await userIndex.query({
-           vector: queryEmbedding,
-           topK: 5,
-           includeMetadata: true,
-         });
+### 步骤 3.2：增强API的安全性与稳定性
 
-         // 提取相关 chunks
-         const relevantChunks = queryResult.matches.map(match => match.metadata?.text || '').join('\n\n');
+公开的API必须防止滥用，否则会产生高昂的成本或导致服务中断。
 
-         // 增强系统提示
-         const enhancedPrompt = `
-         Based on the following retrieved documents from the user's knowledge base:
-         ${relevantChunks}
+- **子步骤 3.2.1: 实施IP级别的速率限制 (Rate Limiting)**
+  - **文件**: `src/app/api/chat/route.ts`
+  - **操作**: 为聊天API添加速率限制器。例如，使用一个简单的Map或Upstash Redis来限制同一个IP地址在1分钟内最多请求20次。
+    ```typescript
+    // 示例逻辑
+    const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
+    // ... 实现计数和检查逻辑 ...
+    if (isRateLimited) {
+        return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+    ```
+  - **理由**: 保护API不被恶意攻击或爬虫滥用，有效控制Pinecone和AI模型的调用成本。
 
-         Answer the user's question: ${lastMessage}
+### 步骤 3.3：统一并优化后台架构
 
-         Focus only on the knowledge base; do not include or repeat user profile or project information.
-         `;
+此步骤旨在清理技术债，让整个项目的后端架构更一致、更稳健。
 
-         // 调用 Cohere 生成响应
-         const { text } = await generateText({
-           model: 'command', // 或 Cohere 模型
-           prompt: enhancedPrompt,
-         });
+- **子步骤 3.3.1: 统一Supabase客户端的创建方式**
+  - **文件**: `src/lib/auth.ts` 和 `src/lib/supabase/server.ts`
+  - **操作**: 重构`src/lib/auth.ts`中的`getAuthenticatedUser`函数，使其统一使用`src/lib/supabase/server.ts`中定义的、基于`@supabase/ssr`的`createClient`函数。
+  - **理由**: 尽管聊天API是公开的，但文件上传等功能仍需认证。统一客户端能从根本上解决所有与`cookie`相关的潜在冲突，使代码库更健康、更易于维护。
 
-         return NextResponse.json({ reply: text });
-       } catch (error) {
-         console.error('Chat error:', error);
-         return NextResponse.json({ error: 'Chat failed' }, { status: 500 });
-       }
-     }
-     ```
-- **注意**：移除原有 profile/projects 注入到提示中，转而专注于检索 chunks。更新前端 `ChatContainer.tsx` 以传递仅消息，不再打包 profile。
+- **子步骤 3.3.2: 清理废弃代码**
+  - **文件**: `src/lib/auth.ts`
+  - **操作**: 在统一客户端后，移除对`@supabase/auth-helpers-nextjs`这个旧库的依赖和导入。
+  - **理由**: 保持代码整洁，移除不必要的依赖。
 
-### 步骤 3.2：更新前端聊天组件
-- **文件**：`src/components/ChatContainer.tsx`
-- **修改**：停止发送 profile/projects 到 API，只发送消息历史。
-  ```tsx
-  // 在发送请求时
-  const response = await fetch('/api/chat', {
-    method: 'POST',
-    body: JSON.stringify({ messages }), // 无 profile
-  });
-  ```
+## 第三阶段：测试与验证
 
-### 测试阶段 2：Retrieval 测试
-1. **单元测试**：
-   - 测试 `getEmbedding` 和 Pinecone query：
-     ```typescript
-     // 模拟查询，验证 topK 返回相关 chunks
-     ```
+- **测试 3.1: 核心功能测试 (E2E)**
+  1.  **公开访问**: 在未登录状态下，访问一个用户的个人主页。
+  2.  **提问**: 向聊天机器人提问一个与该用户上传文档相关的问题。
+  3.  **验证回答**: 确认聊天机器人能根据文档内容给出正确回答。
+  4.  **验证隔离**: 访问另一个用户的页面，提问关于第一个用户文档的问题，确认机器人无法回答（返回“信息未提供”等）。
 
-2. **API 测试**：
-   - 发送聊天请求（包含已上传 PDF 的问题）。
-   - 检查响应：包含基于文档的答案，无 profile 重复。
-   - 无文档时：应优雅处理（e.g., "No relevant info found"）。
+- **测试 3.2: 安全性测试**
+  1.  **速率限制**: 使用脚本或工具（如curl循环）快速连续请求`/api/chat`，确认在达到阈值后收到`429 Too Many Requests`错误。
 
-3. **端到端测试**：
-   - 上传 PDF，提问文档内容。
-   - 验证答案准确，基于 chunks。
-   - 不同用户：用户 A 提问用户 B 的文档，应无结果或默认响应。
-   - 性能：响应时间 < 5s。
+- **测试 3.3: 认证功能回归测试**
+  1.  **文件上传**: 登录一个账户，确认文件上传功能依然正常工作。
+  2.  **其他需认证的API**: 检查所有需要登录才能访问的API，确保它们在架构统一后不受影响。
 
-4. **错误测试**：
-   - 无效查询：正常响应。
-   - Pinecone 错误：回退到基本提示。
+## 第四阶段：部署与监控
 
-## 部署与监控阶段
+- **步骤 4.1: 集成与构建**
+  - 运行 `npm run build`，修复任何构建错误。
+  - 检查并更新 Vercel 环境变量，确保所有必需的key都已设置。
 
-### 步骤 4.1：集成与构建
-- 运行 `npm run build`，修复任何错误。
-- 更新 Vercel 配置（`vercel.json`），确保环境变量。
-
-### 步骤 4.2：监控与优化
-- 添加日志：使用 `console.log` 或集成 Sentry。
-- 优化：监控 chunk 大小、topK 值、嵌入维度。
-- 扩展：支持更多文件类型、会话记忆。
-
-### 步骤 4.3：最终验证
-1. 多用户场景：创建 2-3 测试用户，上传不同 PDF，交叉提问。
-2. 负载测试：上传大 PDF（>10MB），多查询。
-3. 安全审计：确认 RLS 和命名空间隔离。
-
-完成本计划后，系统将实现完整的用户隔离 RAG 功能，支持基于上传文档的智能回答。
+- **步骤 4.2: 监控与优化**
+  - **添加日志**: 在`api/chat`的关键步骤（如获取用户名、查询Pinecone、调用AI）添加详细的`console.log`，以便在Vercel后台追踪和调试。
+  - **优化**: 根据实际使用情况，调整速率限制的阈值、Pinecone查询的`topK`值等参数。
