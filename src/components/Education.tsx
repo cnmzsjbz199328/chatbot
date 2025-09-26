@@ -10,24 +10,28 @@ interface EducationProps {
 }
 
 export default function Education({ education }: EducationProps) {
-  const defaultEducation: EducationItem[] = [
-    {
-      school: "某某大学",
-      degree: "计算机科学学士",
-      startYear: 2018,
-      endYear: 2022
-    }
-  ];
-
-  const educationData = education && education.length > 0 ? education : defaultEducation;
+  if (!education || education.length === 0) {
+    return null;
+  }
 
   return (
-    <section className="mb-12">
-      <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> Education </span>
-      </h3>
-      <div className="space-y-8 border-l-2 border-gray-700 pl-8">
-        {educationData.map((edu, index) => (
+    <details className="mb-12 group">
+      <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-white cursor-pointer list-none focus:outline-none">
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Education</span>
+        {/* 下拉箭头图标，随展开状态旋转 */}
+        <svg
+          className="w-6 h-6 text-gray-400 transition-transform duration-300 group-open:rotate-180"
+          aria-label="展开/收起"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
+        </svg>
+      </summary>
+      <div className="space-y-8 border-l-2 border-gray-700 pl-8 transition-all duration-300 ease-in-out">
+        {education.map((edu, index) => (
           <div key={index} className="relative">
             <div className="absolute -left-[38px] top-1 h-4 w-4 rounded-full bg-[var(--primary-color)]"></div>
             <h4 className="text-xl font-semibold">{edu.school}</h4>
@@ -36,6 +40,6 @@ export default function Education({ education }: EducationProps) {
           </div>
         ))}
       </div>
-    </section>
+    </details>
   );
 }
