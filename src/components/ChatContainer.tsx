@@ -1,7 +1,7 @@
 'use client';
 
 import type { UIMessage } from 'ai'; // 导入正确的类型
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { UserProjectModel, UserProfileModel } from '@/db/schema';
 
@@ -15,28 +15,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
     const [localMessages, setLocalMessages] = React.useState<UIMessage[]>([]);
     const [input, setInput] = React.useState("");
     const [isSubmitting, setIsSubmitting] = React.useState(false);
-    const [userProjects, setUserProjects] = useState<UserProjectModel[]>([]);
-
-    useEffect(() => {
-        async function fetchProjects() {
-            try {
-                const response = await fetch(`/api/projects/${targetUsername}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserProjects(data);
-                } else {
-                    setUserProjects([]);
-                }
-            } catch (error) {
-                console.error('Error fetching user projects:', error);
-                setUserProjects([]);
-            }
-        }
-
-        if (targetUsername) {
-            fetchProjects();
-        }
-    }, [targetUsername]);
+    
 
     // Initialize component
     useEffect(() => {
@@ -136,13 +115,25 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                             
                             const data = JSON.parse(jsonStr);
                             
+                            let deltaText = '';
+                            
                             // 处理文本增量
                             if (data.type === 'text-delta' && data.delta) {
+                                deltaText = data.delta;
+                            }
+                            // 处理 content-delta with thinking
+                            else if (data.type === 'content-delta' && data.delta?.message?.content) {
+                                const content = data.delta.message.content;
+                                deltaText = content.text || content.thinking || '';
+                            }
+                            
+                            if (deltaText) {
                                 const currentTextPart = assistantMessage.parts[0];
                                 if (currentTextPart.type === 'text') {
+                                    const newText = currentTextPart.text + deltaText;
                                     assistantMessage = {
                                         ...assistantMessage,
-                                        parts: [{ type: 'text', text: currentTextPart.text + data.delta }]
+                                        parts: [{ type: 'text', text: newText }]
                                     };
                                     
                                     if (!hasContent) {
@@ -158,6 +149,8 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                                         });
                                     }
                                 }
+                            } else {
+                                console.warn('Unhandled or empty delta:', data.type, data);
                             }
                         } catch (parseError) {
                             console.warn('Failed to parse streaming data:', line, parseError);

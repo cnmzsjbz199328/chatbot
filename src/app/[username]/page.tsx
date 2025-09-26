@@ -87,9 +87,9 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      <div className="container mx-auto flex flex-col px-4 py-10 sm:px-6 lg:flex-row lg:gap-8 lg:px-8">
+      <div className="w-full flex flex-col px-4 py-4 sm:px-6 lg:flex-row lg:gap-12 lg:px-8 h-screen">
         {/* Main content area */}
-        <div className="flex-1 lg:max-w-3xl">
+        <div className="flex-1 lg:max-w-none overflow-y-auto">
           <div className="mb-12 text-center lg:text-left">
             <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
               {profile ? `${profile.displayName || username}'s Portfolio` : 'Portfolio'}
@@ -117,8 +117,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Right sidebar for AI assistant */}
-        <aside className="w-full lg:w-96 lg:flex-shrink-0">
-          <div className="sticky top-20 rounded-lg bg-gray-800/50 p-6 shadow-lg">
+        <aside className="w-full lg:w-96 lg:flex-shrink-0 lg:h-screen lg:pt-20">
+          <div className="h-full flex flex-col sticky top-0 rounded-lg bg-gray-800/50 p-6 shadow-lg">
             <ChatContainer targetUsername={username} userProfile={profile} />
           </div>
         </aside>

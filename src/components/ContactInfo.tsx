@@ -8,10 +8,20 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
   const hasContactInfo = profile?.location || profile?.phone || profile?.website || profile?.github || profile?.linkedin;
 
   return (
-    <section className="mb-12">
-      <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">contact</span>
-      </h3>
+    <details className="mb-2 group">
+      <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-white cursor-pointer list-none focus:outline-none">
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Contact</span>
+        <svg
+          className="w-6 h-6 text-gray-400 transition-transform duration-300 group-open:rotate-180"
+          aria-label="展开/收起"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
+        </svg>
+      </summary>
       <div className="grid gap-6 md:grid-cols-2">
         {profile?.location && (
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
@@ -79,6 +89,6 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
           </div>
         )}
       </div>
-    </section>
+  </details>
   );
 }

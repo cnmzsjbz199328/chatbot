@@ -3,7 +3,7 @@ export const runtime = 'nodejs';
 import { cohere } from '@ai-sdk/cohere';
 import { streamText, convertToModelMessages } from 'ai';
 import { NextResponse } from 'next/server';
-import { getAuthenticatedUser, unauthorizedResponse } from '@/lib/auth';
+
 import { getEmbedding } from '@/lib/custom-embedding';
 import { getIndex } from '@/lib/pinecone';
 import { createClient } from '@/lib/supabase/server';
@@ -85,9 +85,9 @@ ${relevantChunks}
 6. 用中文回答`;
 
         const finalPayload = {
-            model: cohere('command-a-reasoning-08-2025'),
-            messages: [{ role: 'system', content: systemPrompt }, ...convertToModelMessages(messages)],
-            thinking: { "type": "disabled" } as any, // 添加禁用推理参数
+            model: cohere('command-r-08-2024'),
+            system: systemPrompt,
+            messages: convertToModelMessages(messages),
         };
 
         console.log("[RAG] Calling Cohere with system prompt length:", systemPrompt.length);

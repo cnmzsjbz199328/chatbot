@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '../AuthProvider';
 import { UploadedFile } from './types';
 import FileUploader from './FileUploader';
 import FileList from './FileList';
