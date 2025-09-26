@@ -13,14 +13,12 @@ interface WorkExperienceProps {
 export default function WorkExperience({ workExperience }: WorkExperienceProps) {
   const defaultWorkExperience: WorkExperienceItem[] = [
     {
-      company: "某科技公司",
-      position: "软件工程师",
-      startDate: "2022年",
-      endDate: "至今",
+      company: "No relevant information",
+      position: "No relevant information",
+      startDate: "N/A",
+      endDate: "N/A",
       description: [
-        "负责设计、开发和维护Web应用程序。",
-        "与跨职能团队合作，交付高质量的软件解决方案。",
-        "参与代码审查和指导初级开发人员。"
+        "No relevant work experience information available."
       ]
     }
   ];
@@ -28,10 +26,20 @@ export default function WorkExperience({ workExperience }: WorkExperienceProps) 
   const experienceData = workExperience && workExperience.length > 0 ? workExperience : defaultWorkExperience;
 
   return (
-    <section className="mb-12">
-      <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> Work Experience </span>
-      </h3>
+    <details className="mb-1 group">
+      <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-white cursor-pointer list-none focus:outline-none">
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Work Experience</span>
+        <svg
+          className="w-6 h-6 text-gray-400 transition-transform duration-300 group-open:rotate-180"
+          aria-label="展开/收起"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
+        </svg>
+      </summary>
       <div className="space-y-12 border-l-2 border-gray-700 pl-8">
         {experienceData.map((work, index) => (
           <div key={index} className="relative">
@@ -47,6 +55,6 @@ export default function WorkExperience({ workExperience }: WorkExperienceProps) 
           </div>
         ))}
       </div>
-    </section>
+    </details>
   );
 }

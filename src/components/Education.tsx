@@ -15,7 +15,7 @@ export default function Education({ education }: EducationProps) {
   }
 
   return (
-    <details className="mb-12 group">
+    <details className="mb-1 group">
       <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-white cursor-pointer list-none focus:outline-none">
         <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Education</span>
         {/* 下拉箭头图标，随展开状态旋转 */}
