@@ -8,17 +8,16 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
   const hasContactInfo = profile?.location || profile?.phone || profile?.website || profile?.github || profile?.linkedin;
 
   return (
-    <section>
+    <section className="mb-12">
       <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">contact_mail</span>
-        联系方式
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">contact</span>
       </h3>
       <div className="grid gap-6 md:grid-cols-2">
         {profile?.location && (
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">location_on</span>
-            <div>
-              <p className="text-gray-400">{profile.location}</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-gray-400 break-words">{profile.location}</p>
             </div>
           </div>
         )}
@@ -26,9 +25,9 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
         {profile?.phone && (
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">phone</span>
-            <div>
+            <div className="flex-1 min-w-0">
               <h4 className="font-semibold">电话</h4>
-              <p className="text-gray-400">{profile.phone}</p>
+              <p className="text-gray-400 break-words">{profile.phone}</p>
             </div>
           </div>
         )}
@@ -36,9 +35,9 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
         {profile?.website && (
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">Personal web</span>
-            <div>
-              <p className="text-gray-400">
-                <a href={profile.website} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+            <div className="flex-1 min-w-0">
+              <p className="text-gray-400 break-all">
+                <a href={profile.website} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors break-all">
                   {profile.website}
                 </a>
               </p>
@@ -49,9 +48,9 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
         {profile?.github && (
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">GitHub</span>
-            <div>
-              <p className="text-gray-400">
-                <a href={profile.github} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+            <div className="flex-1 min-w-0">
+              <p className="text-gray-400 break-all">
+                <a href={profile.github} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors break-all">
                   {profile.github}
                 </a>
               </p>
@@ -61,11 +60,10 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
 
         {profile?.linkedin && (
           <div className="flex items-center gap-4 rounded-lg bg-gray-800 p-6">
-            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">work</span>
-            <div>
-              <h4 className="font-semibold">LinkedIn</h4>
-              <p className="text-gray-400">
-                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">LinkedIn</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-gray-400 break-all">
+                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors break-all">
                   {profile.linkedin}
                 </a>
               </p>

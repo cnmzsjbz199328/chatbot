@@ -28,10 +28,9 @@ export default function WorkExperience({ workExperience }: WorkExperienceProps) 
   const experienceData = workExperience && workExperience.length > 0 ? workExperience : defaultWorkExperience;
 
   return (
-    <section>
+    <section className="mb-12">
       <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> business_center </span>
-        工作经历
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> Work Experience </span>
       </h3>
       <div className="space-y-12 border-l-2 border-gray-700 pl-8">
         {experienceData.map((work, index) => (

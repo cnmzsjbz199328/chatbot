@@ -6,12 +6,10 @@ export default function Skills({ skills }: SkillsProps) {
   return (
     <section>
       <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">code</span>
-        技能专长
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Skills</span>
       </h3>
       {skills && skills.length > 0 ? (
         <div className="rounded-lg bg-gray-800 p-6">
-          <h4 className="mb-4 text-lg font-semibold text-[var(--primary-color)]">技术栈</h4>
           <div className="flex flex-wrap gap-2">
             {skills.map((skill, index) => (
               <span key={index} className="rounded-full bg-gray-700 px-3 py-1 text-sm">

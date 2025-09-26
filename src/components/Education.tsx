@@ -22,10 +22,9 @@ export default function Education({ education }: EducationProps) {
   const educationData = education && education.length > 0 ? education : defaultEducation;
 
   return (
-    <section>
+    <section className="mb-12">
       <h3 className="mb-8 flex items-center gap-4 text-2xl font-bold text-white">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> school </span>
-        教育经历
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]"> Education </span>
       </h3>
       <div className="space-y-8 border-l-2 border-gray-700 pl-8">
         {educationData.map((edu, index) => (
