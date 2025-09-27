@@ -86,6 +86,7 @@ export default function FileUploadContainer() {
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
+        credentials: 'include',
       });
 
       const result = await response.json();

@@ -55,7 +55,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-20 w-full bg-gray-900/80 backdrop-blur-md">
-      <div className="container mx-auto flex items-center justify-between whitespace-nowrap px-4 py-4 sm:px-6 lg:px-8">
+  <div className="w-full flex items-center justify-between whitespace-nowrap px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
             <svg className="h-8 w-8 text-[var(--primary-color)]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">

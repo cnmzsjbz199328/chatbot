@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/components/AuthProvider';
-import { createClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/client';
 
 interface UserProfile {
   id?: string;

@@ -201,7 +201,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
     };
 
     return (
-        <div className="h-full w-full flex flex-col">
+    <div className="h-full w-full flex flex-col">
             {/* 聊天头部 */}
             <div className="mb-4">
                 <div className="flex justify-between items-center">
@@ -254,7 +254,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
             </div>
 
             {/* 输入区域 */}
-            <div className="space-y-3">
+            <div className="space-y-3 mt-auto">
                 <form
                     className='flex gap-3'
                     onSubmit={handleFormSubmit}
