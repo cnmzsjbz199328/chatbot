@@ -117,7 +117,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Right sidebar for AI assistant */}
-        <aside className="w-full lg:w-96 lg:flex-shrink-0 lg:h-screen lg:pt-20">
+        <aside className="w-full lg:w-96 lg:flex-shrink-0 lg:h-[83.33vh] lg:pt-0">
           <div className="h-full flex flex-col sticky top-0 rounded-lg bg-gray-800/50 p-6 shadow-lg">
             <ChatContainer targetUsername={username} userProfile={profile} />
           </div>

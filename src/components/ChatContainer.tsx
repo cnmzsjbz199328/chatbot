@@ -215,12 +215,12 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
             </div>
 
             {/* 消息区域 */}
-            <div className="mb-4 space-y-4">
+            <div className="flex-1 flex flex-col mb-4">
                 {localMessages.length === 0 ? (
                     <div className="text-center">
                     </div>
                 ) : (
-                    <div className="max-h-96 overflow-y-auto space-y-3">
+                    <div className="flex-1 overflow-y-auto space-y-3">
                         {localMessages.map(message => (
                             <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`
