@@ -17,7 +17,7 @@ export default function DemoPage() {
                   {/* Demo 1 - About Page */}
                   <div className="card group cursor-pointer transition-all duration-300 hover:shadow-xl">
                     <div className="mb-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                      <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                         <span className="material-symbols-outlined text-white"> person </span>
                       </div>
                     </div>
@@ -36,7 +36,7 @@ export default function DemoPage() {
                   {/* Demo 2 - Projects Page */}
                   <div className="card group cursor-pointer transition-all duration-300 hover:shadow-xl">
                     <div className="mb-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                      <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                         <span className="material-symbols-outlined text-white"> work </span>
                       </div>
                     </div>
@@ -55,7 +55,7 @@ export default function DemoPage() {
                   {/* Demo 3 - Management */}
                   <div className="card group cursor-pointer transition-all duration-300 hover:shadow-xl">
                     <div className="mb-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                      <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                         <span className="material-symbols-outlined text-white"> dashboard </span>
                       </div>
                     </div>
@@ -79,7 +79,7 @@ export default function DemoPage() {
                     {/* Feature 1 */}
                     <div className="flex gap-6">
                       <div className="flex-shrink-0">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                        <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                           <span className="material-symbols-outlined text-white"> palette </span>
                         </div>
                       </div>
@@ -94,7 +94,7 @@ export default function DemoPage() {
                     {/* Feature 2 */}
                     <div className="flex gap-6">
                       <div className="flex-shrink-0">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                        <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                           <span className="material-symbols-outlined text-white"> speed </span>
                         </div>
                       </div>
@@ -109,7 +109,7 @@ export default function DemoPage() {
                     {/* Feature 3 */}
                     <div className="flex gap-6">
                       <div className="flex-shrink-0">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                        <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                           <span className="material-symbols-outlined text-white"> edit </span>
                         </div>
                       </div>
@@ -124,7 +124,7 @@ export default function DemoPage() {
                     {/* Feature 4 */}
                     <div className="flex gap-6">
                       <div className="flex-shrink-0">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                        <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                           <span className="material-symbols-outlined text-white"> security </span>
                         </div>
                       </div>

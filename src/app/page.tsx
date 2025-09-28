@@ -43,7 +43,7 @@ export default function Home() {
               <div className="mt-16 grid gap-8 lg:grid-cols-3">
                 {/* Feature 1 */}
                 <div className="rounded-lg bg-gray-800 p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                  <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> web </span>
                   </div>
                   <h3 className="mt-6 text-xl font-semibold">Personalized Domain Name</h3>
@@ -54,7 +54,7 @@ export default function Home() {
 
                 {/* Feature 2 */}
                 <div className="rounded-lg bg-gray-800 p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                  <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> dashboard </span>
                   </div>
                   <h3 className="mt-6 text-xl font-semibold">Project Management</h3>
@@ -65,7 +65,7 @@ export default function Home() {
 
                 {/* Feature 3 */}
                 <div className="rounded-lg bg-gray-800 p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                  <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> person </span>
                   </div>
                   <h3 className="mt-6 text-xl font-semibold">Personal Profile</h3>
@@ -76,7 +76,7 @@ export default function Home() {
 
                 {/* Feature 4 */}
                 <div className="rounded-lg bg-gray-800 p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                  <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> chat </span>
                   </div>
                   <h3 className="mt-6 text-xl font-semibold">AI Assistant</h3>
@@ -87,7 +87,7 @@ export default function Home() {
 
                 {/* Feature 5 */}
                 <div className="rounded-lg bg-gray-800 p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                  <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> phone_android </span>
                   </div>
                   <h3 className="mt-6 text-xl font-semibold">Responsive Design</h3>
@@ -98,7 +98,7 @@ export default function Home() {
 
                 {/* Feature 6 */}
                 <div className="rounded-lg bg-gray-800 p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                  <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> security </span>
                   </div>
                   <h3 className="mt-6 text-xl font-semibold">Secure and Reliable</h3>
