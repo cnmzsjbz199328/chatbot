@@ -3,39 +3,16 @@ import ProjectCard from './ProjectCard';
 import { useState, useEffect } from 'react';
 
 interface ProjectGridProps {
-  username: string;
+  projects: UserProjectModel[];
 }
 
-export default function ProjectGrid({ username }: ProjectGridProps) {
-  const [projects, setProjects] = useState<UserProjectModel[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function ProjectGrid({ projects }: ProjectGridProps) {
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchProjects() {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/projects/${username}`);
-        if (res.ok) {
-          const data = await res.json();
-          setProjects(data);
-        } else {
-          setProjects([]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch projects:', error);
-        setProjects([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (username) {
-      fetchProjects();
-    } else {
-      setLoading(false);
-      setProjects([]);
-    }
-  }, [username]);
+    // 项目数据已通过props传入，无需额外加载
+    setLoading(false);
+  }, [projects]);
 
   if (loading) {
     return (

@@ -7,14 +7,12 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="relative flex size-full min-h-screen flex-col overflow-x-hidden bg-gray-900 font-sans text-white" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
-      <div className="flex h-full grow flex-col">
-        <Header />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
-      </div>
+    <div className="relative flex h-screen flex-col overflow-hidden bg-gray-900 font-sans text-white" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
+      <Header />
+      <main className="flex-1 overflow-hidden">
+        {children}
+      </main>
+      <Footer />
     </div>
   );
 }

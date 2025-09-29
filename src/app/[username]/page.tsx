@@ -2,33 +2,35 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import ChatContainer from "@/components/ChatContainer";
-import ProjectGrid from "@/components/ProjectGrid";
+import ProjectShowcase from "@/components/ProjectShowcase";
 import ContactInfo from "@/components/ContactInfo";
 import Education from "@/components/Education";
 import WorkExperience from "@/components/WorkExperience";
 import Skills from "@/components/Skills";
 import Hobbies from "@/components/Hobbies";
 import Layout from '@/components/Layout';
-import { UserProfileModel } from '@/db/schema';
+import { UserProfileModel, UserProjectModel } from '@/db/schema';
 
 export default function DashboardPage() {
   const params = useParams();
   const username = params?.username as string;
   const [profile, setProfile] = useState<UserProfileModel | null>(null);
+  const [projects, setProjects] = useState<UserProjectModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Get user profile
-  async function getUserProfile(username: string): Promise<UserProfileModel | null> {
+  // Get user portfolio data (profile + projects)
+  async function getPortfolioData(username: string): Promise<{ profile: UserProfileModel | null; projects: UserProjectModel[] }> {
     try {
-      const response = await fetch(`/api/profile/${username}`);
+      const response = await fetch(`/api/portfolio/${username}`);
       if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        return { profile: data.profile, projects: data.projects };
       }
-      return null;
+      return { profile: null, projects: [] };
     } catch (error) {
-      console.error('Error fetching user profile:', error);
-      return null;
+      console.error('Error fetching portfolio data:', error);
+      return { profile: null, projects: [] };
     }
   }
 
@@ -37,14 +39,15 @@ export default function DashboardPage() {
       setLoading(true);
       setError(null);
       
-      getUserProfile(username)
-        .then((profileData) => {
-          setProfile(profileData);
+      getPortfolioData(username)
+        .then((data) => {
+          setProfile(data.profile);
+          setProjects(data.projects);
           setLoading(false);
         })
         .catch((err) => {
-          console.error('Error loading user profile:', err);
-          setError('Failed to load user profile');
+          console.error('Error loading portfolio data:', err);
+          setError('Failed to load portfolio data');
           setLoading(false);
         });
     }
@@ -87,7 +90,7 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      <div className="w-full flex flex-col px-4 py-4 sm:px-6 lg:flex-row lg:gap-12 lg:px-8 h-screen">
+      <div className="w-full flex flex-col px-4 py-4 sm:px-6 lg:flex-row lg:gap-12 lg:px-8 h-full">
         {/* Main content area */}
         <div className="flex-1 lg:max-w-none overflow-y-auto">
           <div className="mb-12 text-center lg:text-left">
@@ -110,14 +113,14 @@ export default function DashboardPage() {
             </>
           )}
 
-          {/* Dynamic project list */}
+          {/* Dynamic project showcase */}
           <div className="mt-12">
-            <ProjectGrid username={username} />
+            <ProjectShowcase projects={projects} />
           </div>
         </div>
 
         {/* Right sidebar for AI assistant */}
-        <aside className="w-full lg:w-96 lg:flex-shrink-0 lg:h-[83.33vh] lg:pt-0">
+        <aside className="w-full lg:w-96 lg:flex-shrink-0 lg:h-full lg:pt-0">
           <div className="h-full flex flex-col sticky top-0 rounded-lg bg-gray-800/50 p-6 shadow-lg">
             <ChatContainer targetUsername={username} userProfile={profile} />
           </div>
