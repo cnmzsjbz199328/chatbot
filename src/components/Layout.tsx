@@ -7,9 +7,9 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden bg-gray-900 font-sans text-white" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
+    <div className="relative flex min-h-screen flex-col bg-gray-900 font-sans text-white" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
       <Header />
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1">
         {children}
       </main>
       <Footer />

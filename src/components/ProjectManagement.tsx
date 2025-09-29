@@ -150,7 +150,7 @@ export default function ProjectManagement() {
   if (!user) {
     return (
       <div className="rounded-lg bg-gray-800 p-6 text-center">
-        <p className="text-gray-400">请先登录以管理您的项目</p>
+        <p className="text-gray-400">请先log in以管理您的项目</p>
       </div>
     );
   }

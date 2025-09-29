@@ -49,13 +49,13 @@ export default function LoginForm() {
           }
         } catch (profileError) {
           console.error('Profile creation error:', profileError);
-          // 如果profile创建失败，跳转到demo页面
-          router.push('/demo');
+          // 如果profile创建失败，跳转到示例页面
+          router.push('/tj15982183241');
           router.refresh();
         }
       }
     } catch {
-      setError('登录时发生错误，请稍后重试');
+      setError('log in时发生错误，请稍后重试');
     } finally {
       setIsLoading(false);
     }

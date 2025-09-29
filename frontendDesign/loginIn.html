@@ -117,9 +117,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // 模拟登录验证（实际项目中应该调用后端API）
+        // 模拟log in验证（实际项目中应该调用后端API）
         if (username === 'admin' && password === 'admin123') {
-            alert('登录成功！');
+            alert('log in成功！');
             // 跳转到个人页面
             window.location.href = 'aboutMe.html';
         } else {
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // 回车键登录
+    // 回车键log in
     passwordInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             loginBtn.click();

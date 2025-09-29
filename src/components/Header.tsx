@@ -1,12 +1,15 @@
 'use client';
 import Link from 'next/link';
 import { useAuth } from '@/components/AuthProvider';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 
 export default function Header() {
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const { scrollToSection } = useSmoothScroll();
   const [username, setUsername] = useState(user?.user_metadata?.username || '');
   const [profileLoading, setProfileLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
@@ -51,6 +54,19 @@ export default function Header() {
     router.push('/');
   };
 
+  const handleNavClick = (e: React.MouseEvent, targetId: string) => {
+    e.preventDefault();
+    
+    if (pathname === '/') {
+      // 如果在首页，平滑滚动到目标部分
+      scrollToSection(targetId);
+    } else {
+      // 如果不在首页，跳转到首页然后滚动
+      const href = `/#${targetId}`;
+      router.push(href);
+    }
+  };
+
   const isLoading = loading || profileLoading;
 
   return (
@@ -66,8 +82,18 @@ export default function Header() {
         </div>
         
         <nav className="hidden items-center gap-8 md:flex">
-          <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/#features">Feature</Link>
-          <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/#demo">Demo</Link>
+          <button 
+            className="text-sm font-medium text-gray-300 transition-colors hover:text-white"
+            onClick={(e) => handleNavClick(e, 'features')}
+          >
+            Feature
+          </button>
+          <button 
+            className="text-sm font-medium text-gray-300 transition-colors hover:text-white"
+            onClick={(e) => handleNavClick(e, 'portfolio')}
+          >
+            Portfolio
+          </button>
 
 {loading ? (
   <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -98,8 +124,8 @@ export default function Header() {
   </div>
 ) : (
   <div className="flex items-center gap-4">
-    <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/login">登录</Link>
-    <Link className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="/register">注册</Link>
+    <Link className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="/login">log in</Link>
+    <Link className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="/register">sign up</Link>
   </div>
 )}
         </nav>

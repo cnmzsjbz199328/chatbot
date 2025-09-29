@@ -98,7 +98,7 @@ export default function UserProfileForm() {
   if (!user) {
     return (
       <div className="rounded-lg bg-gray-800 p-6 text-center">
-        <p className="text-gray-400">请先登录以编辑个人信息</p>
+        <p className="text-gray-400">请先log in以编辑个人信息</p>
       </div>
     );
   }

@@ -62,7 +62,7 @@ export default function FileUploadContainer() {
 
   const handleFileUpload = async (file: File) => {
     if (!user) {
-      setUploadMessage('请先登录');
+      setUploadMessage('请先log in');
       return;
     }
 

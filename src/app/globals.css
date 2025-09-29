@@ -26,6 +26,36 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* 为固定 header 预留空间 */
+}
+
+/* 增强平滑滚动效果 */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(45, 55, 72, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0e5cb3;
+}
+
 body {
   background: var(--secondary-color) url('/background.png') center/cover no-repeat fixed;
   color: var(--text-primary);
@@ -142,21 +172,21 @@ body {
   border-bottom: 1px solid var(--border-color);
 }
 
-/* 响应式工具类 */
-.container {
+/* 响应式工具类 - 自定义容器 */
+.custom-container {
   width: 100%;
   margin: 0;
   padding: 0 1rem;
 }
 
 @media (min-width: 640px) {
-  .container {
+  .custom-container {
     padding: 0 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
-  .container {
+  .custom-container {
     padding: 0 2rem;
   }
 }

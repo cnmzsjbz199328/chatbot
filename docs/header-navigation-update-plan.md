@@ -2,15 +2,15 @@
 
 ## 更新用户需求
 
-原需求：登录后从首页无缝进入公开页面 /${username}，浏览器记住上下文。
+原需求：log in后从首页无缝进入公开页面 /${username}，浏览器记住上下文。
 
 当前问题：根路径 (/) 上显示 “My Portfolio (Loading...)” 且不可点击，因为 user.user_metadata?.username 未设置（Supabase metadata 未存储 username），导致回退逻辑失败。username 实际存储在 DB 的 user_profiles 表中，需要从 API 获取。
 
 更新需求：
 - **核心**：Header 中的 “我的主页” 始终可点击，链接到 /${username}，无论在根路径还是子路径。
-- **增强**：AuthProvider 在登录时自动从 /api/auth/profile 或 /api/profile/${user.id} 获取 profile，包括 username，并缓存到 context 中。避免 Header 直接 fetch（保持组件轻量）。
+- **增强**：AuthProvider 在log in时自动从 /api/auth/profile 或 /api/profile/${user.id} 获取 profile，包括 username，并缓存到 context 中。避免 Header 直接 fetch（保持组件轻量）。
 - **边界**：如果 profile 未创建，提示创建或使用临时 ID（但优先确保 username 可用）；加载状态仅在 auth 初始时显示。
-- **测试**：登录后 / 页面链接到 /${username}；子路径链接回仪表板；无 profile 时优雅降级（e.g., 链接到 /profile-setup）。
+- **测试**：log in后 / 页面链接到 /${username}；子路径链接回仪表板；无 profile 时优雅降级（e.g., 链接到 /profile-setup）。
 
 此更新使导航可靠，减少对 metadata 的依赖，转向 DB 集成。
 
@@ -108,7 +108,7 @@ JSX 更新：
 
 ## 验证与后续
 
-- **测试**：登录后 / 页面显示可点击链接到 /${username}；无延迟加载；新用户提示设置 profile。
+- **测试**：log in后 / 页面显示可点击链接到 /${username}；无延迟加载；新用户提示设置 profile。
 - **性能**：Cache profile in localStorage 或 context；错误处理（e.g., fetch 失败回退）。
 - **益处**：全局 username 可用，支持其他组件；提升 UX 无加载卡顿。
 - **时间线**：步骤1-2（AuthProvider）：核心；步骤3（Header）：UI  polish。

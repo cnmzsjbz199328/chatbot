@@ -11,7 +11,7 @@
 
 ## 2. 改造核心目标
 
-1.  **实现多租户模式**: 引入 Supabase 用户注册、登录、鉴权系统。
+1.  **实现多租户模式**: 引入 Supabase 用户sign up、log in、鉴权系统。
 2.  **数据完全隔离**: 确保每个用户的数据在 PostgreSQL 和 Pinecone 中严格隔离。
 3.  **集成前端设计**: 将 `frontendDesign/` 的 HTML 转化为 React 组件。
 
@@ -311,9 +311,9 @@ export async function POST(req: Request) {
 
 **3.2 实现前端认证逻辑**
 
-使用 `supabase-js` 客户端在前端处理用户注册和登录。
+使用 `supabase-js` 客户端在前端处理用户sign up和log in。
 
-**示例 (在登录页面组件中):**
+**示例 (在log in页面组件中):**
 
 ```tsx
 'use client';
@@ -448,7 +448,7 @@ INSERT INTO auth.users (
 SELECT 
   gen_random_uuid(),
   'anonymous_' || id || '@temp.local',
-  '', -- 空密码，这些用户无法正常登录
+  '', -- 空密码，这些用户无法正常log in
   now(),
   created_at,
   created_at
@@ -462,16 +462,16 @@ WHERE id NOT IN (SELECT session_id FROM files WHERE user_id IS NOT NULL);
 **5.2 渐进式迁移方案：**
 
 1. **第一阶段**：新用户使用Supabase Auth，现有session继续工作
-2. **第二阶段**：提供"账户升级"功能，让匿名用户注册正式账户
+2. **第二阶段**：提供"账户升级"功能，让匿名用户sign up正式账户
 3. **第三阶段**：逐步清理匿名数据
 
 ### 6. 测试与验证
 
 **6.1 基础功能测试：**
-1. **注册与登录**：使用新UI，通过Supabase创建用户并登录
+1. **sign up与log in**：使用新UI，通过Supabase创建用户并log in
 2. **数据隔离测试**：
-   - 用户A登录，上传文件并聊天
-   - 用户B登录，验证无法看到用户A的数据
+   - 用户Alog in，上传文件并聊天
+   - 用户Blog in，验证无法看到用户A的数据
 3. **RLS策略验证**：直接查询数据库确保策略生效
 
 **6.2 性能测试：**
@@ -480,5 +480,5 @@ WHERE id NOT IN (SELECT session_id FROM files WHERE user_id IS NOT NULL);
 
 **6.3 安全测试：**
 1. **JWT Token验证**：确保过期token被正确拒绝
-2. **API访问控制**：未登录用户无法访问受保护资源
+2. **API访问控制**：未log in用户无法访问受保护资源
 3. **跨用户数据访问**：尝试访问其他用户数据应被阻止

@@ -17,7 +17,7 @@ export default function UserDashboard({ username }: UserDashboardProps) {
     );
   }
 
-  // 如果用户已登录且用户名匹配，显示管理界面
+  // 如果用户已log in且用户名匹配，显示管理界面
   const isOwner = user && user.user_metadata?.username === username;
 
   return (
@@ -31,7 +31,7 @@ export default function UserDashboard({ username }: UserDashboardProps) {
               <span className="material-symbols-outlined text-green-400">check_circle</span>
               <div>
                 <p className="text-green-400 font-medium">
-                  {isOwner ? '您正在管理自己的页面' : `已登录为 ${user.email}`}
+                  {isOwner ? '您正在管理自己的页面' : `已log in为 ${user.email}`}
                 </p>
                 {isOwner && (
                   <p className="text-green-300 text-sm">
@@ -52,9 +52,9 @@ export default function UserDashboard({ username }: UserDashboardProps) {
                   正在浏览 {username} 的个人页面
                 </p>
                 <p className="text-blue-300 text-sm">
-                  <Link href="/login" className="underline hover:text-blue-200">登录</Link>
+                  <Link href="/login" className="underline hover:text-blue-200">log in</Link>
                   {' '}或{' '}
-                  <Link href="/register" className="underline hover:text-blue-200">注册</Link>
+                  <Link href="/register" className="underline hover:text-blue-200">sign up</Link>
                   {' '}来创建您自己的个人网站
                 </p>
               </div>

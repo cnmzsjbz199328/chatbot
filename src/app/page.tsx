@@ -21,12 +21,12 @@ export default function Home() {
                 >
                   Get Started for Free
                 </Link>
-                <Link
-                  className="rounded-lg border border-gray-600 px-8 py-3 text-lg font-semibold text-gray-300 transition-all hover:bg-gray-800 hover:text-white"
-                  href="/demo"
-                >
-                  View Demo
-                </Link>
+                  <Link
+                    className="rounded-lg border border-gray-600 px-8 py-3 text-lg font-semibold text-gray-300 transition-all hover:bg-gray-800 hover:text-white"
+                    href="/tj15982183241"
+                  >
+                     View Portfolio
+                  </Link>
               </div>
             </div>
           </section>
@@ -110,20 +110,20 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Demo Section */}
-          <section id="demo" className="bg-gray-800/50 py-24 sm:py-32">
+          {/* Portfolio Section */}
+          <section id="portfolio" className="bg-gray-800/50 py-24 sm:py-32">
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-              <h2 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">View Demo</h2>
+              <h2 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">View Portfolio</h2>
               <p className="mt-4 text-lg text-gray-400">
                 Experience our platform&apos;s features and see real portfolio examples.
               </p>
               <div className="mt-8">
                 <Link
                   className="inline-flex items-center gap-2 rounded-lg bg-[var(--primary-color)] px-6 py-3 text-lg font-semibold text-white transition-all hover:bg-opacity-80"
-                  href="/demo"
+                  href="/tj15982183241"
                 >
                   <span className="material-symbols-outlined"> visibility </span>
-                  View Demo Portfolio
+                  View Portfolio
                 </Link>
               </div>
             </div>

@@ -86,7 +86,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                查看项目 <span className="material-symbols-outlined text-base">arrow_forward</span>
+                Check out the project
               </a>
             )}
           </div>

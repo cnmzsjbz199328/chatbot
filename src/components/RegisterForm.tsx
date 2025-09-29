@@ -38,14 +38,14 @@ export default function RegisterForm() {
       if (error) {
         setError(error.message);
       } else if (data.user) {
-        setMessage('注册成功！请检查您的邮箱以验证账户。');
-        // 可选：几秒后跳转到登录页面
+        setMessage('sign up成功！请检查您的邮箱以验证账户。');
+        // 可选：几秒后跳转到log in页面
         setTimeout(() => {
           router.push('/login');
         }, 3000);
       }
     } catch {
-      setError('注册时发生错误，请稍后重试');
+      setError('sign up时发生错误，请稍后重试');
     } finally {
       setIsLoading(false);
     }

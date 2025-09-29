@@ -8,7 +8,8 @@ import Education from "@/components/Education";
 import WorkExperience from "@/components/WorkExperience";
 import Skills from "@/components/Skills";
 import Hobbies from "@/components/Hobbies";
-import Layout from '@/components/Layout';
+import PortfolioLayout from '@/components/PortfolioLayout';
+
 import { UserProfileModel, UserProjectModel } from '@/db/schema';
 
 export default function DashboardPage() {
@@ -55,20 +56,20 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <Layout>
+      <PortfolioLayout>
         <div className="container mx-auto flex items-center justify-center px-4 py-20">
           <div className="text-center">
             <div className="w-12 h-12 border-2 border-[var(--primary-color)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-gray-400">Loading {username}&apos;s portfolio...</p>
           </div>
         </div>
-      </Layout>
+      </PortfolioLayout>
     );
   }
 
   if (error) {
     return (
-      <Layout>
+      <PortfolioLayout>
         <div className="container mx-auto flex items-center justify-center px-4 py-20">
           <div className="text-center">
             <div className="w-16 h-16 bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -84,12 +85,12 @@ export default function DashboardPage() {
             </button>
           </div>
         </div>
-      </Layout>
+      </PortfolioLayout>
     );
   }
 
   return (
-    <Layout>
+    <PortfolioLayout>
       <div className="w-full flex flex-col px-4 py-4 sm:px-6 lg:flex-row lg:gap-12 lg:px-8 h-full">
         {/* Main content area */}
         <div className="flex-1 lg:max-w-none overflow-y-auto">
@@ -126,6 +127,6 @@ export default function DashboardPage() {
           </div>
         </aside>
       </div>
-    </Layout>
+    </PortfolioLayout>
   );
 }

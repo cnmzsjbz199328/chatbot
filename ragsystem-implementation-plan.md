@@ -36,8 +36,8 @@
     ```
 - **测试**：
   1. 运行 `npm run dev`。
-  2. 未登录访问 `/api/upload` 或 `/api/chat`，应返回 401 Unauthorized。
-  3. 登录后访问，应成功（即使无其他逻辑）。
+  2. 未log in访问 `/api/upload` 或 `/api/chat`，应返回 401 Unauthorized。
+  3. log in后访问，应成功（即使无其他逻辑）。
 
 ### 步骤 1.2：确认 Pinecone 用户命名空间
 - **修改**：更新 `src/lib/pinecone.ts` 以支持用户命名空间（参考指南第2.2节）。
@@ -156,23 +156,23 @@
    - 运行 `npm test`。
 
 2. **API 测试**：
-   - 使用 Postman 或 curl 上传 PDF 文件（需先登录获取 token）。
+   - 使用 Postman 或 curl 上传 PDF 文件（需先log in获取 token）。
    - 检查响应：成功时返回 "processed successfully"。
    - 验证 Pinecone：使用 Pinecone 控制台查询用户命名空间，确认向量已 upsert（包含 metadata）。
 
 3. **端到端测试**：
-   - 浏览器中登录，上传 PDF。
+   - 浏览器中log in，上传 PDF。
    - 检查 `public/uploads` 有文件，数据库有记录，Pinecone 有数据。
    - 不同用户上传，确认隔离（用户 A 看不到用户 B 的向量）。
 
 4. **错误测试**：
    - 上传非 PDF：返回 400。
-   - 未登录：返回 401。
+   - 未log in：返回 401。
    - 大文件：监控内存/超时。
 
 ## 第二阶段：实现公开聊天与RAG检索 (Public Chat & Retrieval)
 
-**核心目标**：改造 `/api/chat/route.ts`，使其成为一个**公开的、无需登录**的API。该API能够根据前端传递的`targetUsername`（简历主人的用户名），安全地从该用户的私有知识库中检索信息，并生成回答。
+**核心目标**：改造 `/api/chat/route.ts`，使其成为一个**公开的、无需log in**的API。该API能够根据前端传递的`targetUsername`（简历主人的用户名），安全地从该用户的私有知识库中检索信息，并生成回答。
 
 ### 步骤 3.1：修复核心聊天功能 (Immediate Priority)
 
@@ -188,7 +188,7 @@
       return unauthorizedResponse();
     }
     ```
-  - **理由**: 访问者无需登录。此修改将立即解决`AuthSessionMissingError`和401 Unauthorized错误。API将依赖请求体中的`targetUsername`来定位知识库。
+  - **理由**: 访问者无需log in。此修改将立即解决`AuthSessionMissingError`和401 Unauthorized错误。API将依赖请求体中的`targetUsername`来定位知识库。
 
 - **子步骤 3.1.2: 验证并巩固数据检索逻辑**
   - **文件**: `src/app/api/chat/route.ts`
@@ -232,7 +232,7 @@
 ## 第三阶段：测试与验证
 
 - **测试 3.1: 核心功能测试 (E2E)**
-  1.  **公开访问**: 在未登录状态下，访问一个用户的个人主页。
+  1.  **公开访问**: 在未log in状态下，访问一个用户的个人主页。
   2.  **提问**: 向聊天机器人提问一个与该用户上传文档相关的问题。
   3.  **验证回答**: 确认聊天机器人能根据文档内容给出正确回答。
   4.  **验证隔离**: 访问另一个用户的页面，提问关于第一个用户文档的问题，确认机器人无法回答（返回“信息未提供”等）。
@@ -241,8 +241,8 @@
   1.  **速率限制**: 使用脚本或工具（如curl循环）快速连续请求`/api/chat`，确认在达到阈值后收到`429 Too Many Requests`错误。
 
 - **测试 3.3: 认证功能回归测试**
-  1.  **文件上传**: 登录一个账户，确认文件上传功能依然正常工作。
-  2.  **其他需认证的API**: 检查所有需要登录才能访问的API，确保它们在架构统一后不受影响。
+  1.  **文件上传**: log in一个账户，确认文件上传功能依然正常工作。
+  2.  **其他需认证的API**: 检查所有需要log in才能访问的API，确保它们在架构统一后不受影响。
 
 ## 第四阶段：部署与监控
 
