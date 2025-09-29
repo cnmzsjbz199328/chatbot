@@ -215,7 +215,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
             </div>
 
             {/* 消息区域 */}
-            <div className="flex-1 flex flex-col mb-4">
+            <div className="flex-1 flex flex-col mb-4 overflow-y-auto">
                 {localMessages.length === 0 ? (
                     <div className="text-center">
                     </div>

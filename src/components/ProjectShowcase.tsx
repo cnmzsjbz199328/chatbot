@@ -45,15 +45,8 @@ export default function ProjectShowcase({ projects }: ProjectShowcaseProps) {
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-lg">
-                  {project.icon || 'folder'}
-                </span>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-medium truncate">{project.title}</h4>
-                  <p className="text-sm text-gray-400 truncate">
-                    {project.status === 'completed' ? '已完成' : 
-                     project.status === 'in_progress' ? '进行中' : '计划中'}
-                  </p>
                 </div>
               </div>
             </button>
