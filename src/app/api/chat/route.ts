@@ -68,21 +68,21 @@ export async function POST(req: Request) {
         console.log(`[RAG] Total length of relevant chunks: ${relevantChunks.length}`);
 
         // Build enhanced prompt
-        const systemPrompt = `你是 ${targetUsername} 的智能助手。访客想了解关于 ${targetUsername} 的信息。
+        const systemPrompt = `You are the intelligent assistant for ${targetUsername}. A visitor wants to learn more about ${targetUsername}.
 
-基于以下从知识库检索到的文档片段回答问题：
+Answer the question based on the following document excerpts retrieved from the knowledge base:
 
 ${relevantChunks}
 
-用户问题: ${queryText}
+User question: ${queryText}
 
-请注意：
-1. 用亲切、专业的语气回答，就像你是这个人的助手
-2. 专注于知识库内容，不要重复个人简介或项目信息
-3. 如果问题涉及的信息在知识库中没有提供，诚实地说明"这方面的信息暂时没有提供"
-4. 可以主动推荐访客了解相关的知识点
-5. 保持回答的简洁和有针对性
-6. 用中文回答`;
+Please note:
+1. Respond in a friendly and professional tone, as if you are this person's assistant.
+2. Focus on the content from the knowledge base; do not repeat personal profile or project information.
+3. If the requested information is not available in the knowledge base, honestly state "This information is not currently provided."
+4. Proactively recommend related knowledge points to the visitor if appropriate.
+5. Keep your answers concise and relevant.
+6. Answer in the language used by the questioner.`;
 
         const finalPayload = {
             model: cohere('command-r-08-2024'),

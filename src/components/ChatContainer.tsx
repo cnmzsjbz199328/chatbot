@@ -19,27 +19,27 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
 
     // Initialize component
     useEffect(() => {
-        // 显示欢迎消息，基于目标用户
+        // Show welcome message based on the target user
         const welcomeMessage: UIMessage = {
             id: 'welcome',
             role: 'assistant',
-            parts: [{ 
-                type: 'text', 
-                text: `你好！我是 ${userProfile?.displayName || targetUsername} 的智能助手。你可以询问关于 ${userProfile?.displayName || targetUsername} 的项目经验、技能背景或任何其他信息。我会基于他/她的作品集来回答你的问题。` 
+            parts: [{
+                type: 'text',
+                text: `Hello! I am the intelligent assistant for ${userProfile?.displayName || targetUsername}. You can ask about ${userProfile?.displayName || targetUsername}'s project experience, skills, or any other information. I will answer your questions based on their portfolio.`
             }]
         };
         setLocalMessages([welcomeMessage]);
     }, [targetUsername, userProfile]);
 
-    // 清除对话历史的函数
+    // Function to clear conversation history
     const clearConversation = async () => {
-        // 重新显示欢迎消息
+        // Show the welcome message again
         const welcomeMessage: UIMessage = {
             id: 'welcome-' + Date.now(),
             role: 'assistant',
-            parts: [{ 
-                type: 'text', 
-                text: `你好！我是 ${userProfile?.displayName || targetUsername} 的智能助手。你可以询问关于 ${userProfile?.displayName || targetUsername} 的项目经验、技能背景或任何其他信息。我会基于他/她的作品集来回答你的问题。` 
+            parts: [{
+                type: 'text',
+                text: `Hello! I am the intelligent assistant for ${userProfile?.displayName || targetUsername}. You can ask about ${userProfile?.displayName || targetUsername}'s project experience, skills, or any other information. I will answer your questions based on their portfolio.`
             }]
         };
         setLocalMessages([welcomeMessage]);
