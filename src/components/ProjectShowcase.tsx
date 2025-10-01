@@ -30,9 +30,9 @@ export default function ProjectShowcase({ projects }: ProjectShowcaseProps) {
 
   return (
     <div className="flex gap-6 h-96">
-      {/* 左侧项目列表 */}
+      {/* 左侧Project list */}
       <div className="w-1/3 min-w-64">
-        <h3 className="text-lg font-semibold text-white mb-4">项目列表</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Project list</h3>
         <div className="space-y-2 max-h-80 overflow-y-auto">
           {projects.map((project) => (
             <button
@@ -54,9 +54,9 @@ export default function ProjectShowcase({ projects }: ProjectShowcaseProps) {
         </div>
       </div>
 
-      {/* 右侧项目详情 */}
+      {/* 右侧Project list */}
       <div className="flex-1">
-        <h3 className="text-lg font-semibold text-white mb-4">项目详情</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Details</h3>
         {selectedProject ? (
           <div className="h-full">
             <ProjectCard project={selectedProject} index={0} />

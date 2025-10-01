@@ -209,7 +209,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                         onClick={clearConversation}
                         className="text-xs px-2 py-1 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded-md transition-colors"
                     >
-                        清空
+                        clean
                     </Button>
                 </div>
             </div>

@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { createClient } from '@/lib/supabase/client';
+import ImageUploadField from '@/components/ImageUploadField';
 
 interface UserProfile {
   id?: string;
@@ -118,6 +119,20 @@ export default function UserProfileForm() {
       {/* 基本信息 */}
       <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
         <h3 className="mb-6 text-xl font-bold">基本信息</h3>
+        
+        {/* 头像上传 */}
+        <div className="mb-6">
+          <label className="mb-2 block text-sm font-medium text-gray-300">
+            头像
+          </label>
+          <ImageUploadField
+            value={profile.avatar || ''}
+            onChange={(imageUrl) => setProfile(prev => ({ ...prev, avatar: imageUrl }))}
+            placeholder="点击上传头像..."
+            className="max-w-xs"
+          />
+        </div>
+
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="display_name">

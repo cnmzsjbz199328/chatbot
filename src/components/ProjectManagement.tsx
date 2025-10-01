@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/components/AuthProvider';
 import { Button } from '@/components/ui/button';
+import ImageUploadField from '@/components/ImageUploadField';
 
 interface UserProject {
   id?: number;
@@ -183,6 +184,19 @@ export default function ProjectManagement() {
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-300">项目描述</label>
               <textarea name="description" value={formData.description || ''} onChange={handleInputChange} rows={3} className="w-full rounded-md border border-gray-600 bg-gray-700 px-4 py-2 text-white focus:border-primary-500 focus:ring-primary-500" />
+            </div>
+            
+            {/* 项目图片上传 */}
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-300">
+                项目图片
+              </label>
+              <ImageUploadField
+                value={formData.imageUrl || ''}
+                onChange={(imageUrl) => setFormData(prev => ({ ...prev, imageUrl }))}
+                placeholder="点击上传项目图片..."
+                className="max-w-md"
+              />
             </div>
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-300">技术栈 (用逗号分隔)</label>
