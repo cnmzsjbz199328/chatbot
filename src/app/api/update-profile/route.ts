@@ -14,7 +14,7 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json();
     const {
-      display_name,
+      displayName,
       bio,
       location,
       phone,
@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest) {
     const [updatedProfile] = await db
       .update(userProfilesTable)
       .set({
-        display_name: display_name || null,
+        displayName: displayName || null,
         bio: bio || null,
         location: location || null,
         phone: phone || null,

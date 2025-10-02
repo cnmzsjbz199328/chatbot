@@ -12,6 +12,14 @@ export interface DeleteResult {
   error?: string;
 }
 
+export interface UserFile {
+  name: string | undefined;
+  key: string | undefined;
+  size: number | undefined;
+  lastModified: Date | undefined;
+  url: string | undefined;
+}
+
 class SupabaseStorageClient {
   private s3: S3Client;
   private endpoint: string;
@@ -74,7 +82,7 @@ class SupabaseStorageClient {
       }
 
       const contentType = typeof file === 'object' && 'type' in file && file.type
-        ? (file as any).type
+        ? file.type
         : `image/${fileExtension}`;
 
       // 使用 S3 兼容 API 上传
@@ -129,7 +137,7 @@ class SupabaseStorageClient {
   async listUserFiles(
     userId: string,
     bucket: string = this.bucket
-  ): Promise<any[]> {
+  ): Promise<UserFile[]> {
     try {
       const res = await this.s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: `${userId}/` }));
       const items = (res.Contents || []).map(obj => ({

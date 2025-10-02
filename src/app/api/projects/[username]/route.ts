@@ -5,10 +5,10 @@ import { eq } from 'drizzle-orm';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   try {
-    const { username } = await Promise.resolve(params);
+    const { username } = await params;
     
     // 首先通过username查找用户ID
     const profile = await db

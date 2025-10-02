@@ -15,7 +15,7 @@ export const useSmoothScroll = () => {
         });
       } else {
         // 降级方案
-        let start = window.pageYOffset;
+        const start = window.pageYOffset;
         const distance = offsetPosition - start;
         const duration = 800;
         let startTime: number | null = null;

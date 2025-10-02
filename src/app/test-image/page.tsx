@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import ImageUploadField from '@/components/ImageUploadField';
 import Layout from '@/components/Layout';
 
@@ -71,16 +72,20 @@ export default function TestImagePage() {
                 {/* 图片预览 */}
                 <div className="mt-4 pt-4 border-t border-blue-500/50">
                   <h4 className="font-medium mb-2">预览:</h4>
-                  <img
-                    src={imageUrl}
-                    alt="上传的图片"
-                    className="max-w-full max-h-64 rounded-md shadow-md mx-auto"
-                    onError={(e) => {
-                      console.error('图片加载失败:', imageUrl);
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                    }}
-                  />
+                  <div className="relative w-full h-64 mx-auto">
+                    <Image
+                      src={imageUrl}
+                      alt="上传的图片"
+                      layout="fill"
+                      objectFit="contain"
+                      className="rounded-md shadow-md"
+                      onError={(e) => {
+                        console.error('图片加载失败:', imageUrl);
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -94,7 +99,7 @@ export default function TestImagePage() {
               <li>• 支持格式：JPEG, PNG, GIF, WebP</li>
               <li>• 最大文件大小：5MB</li>
               <li>• 需要登录用户身份</li>
-              <li>• 图片将上传到 Supabase Storage 的 'project-images' bucket</li>
+              <li>• 图片将上传到 Supabase Storage 的 &lsquo;project-images&rsquo; bucket</li>
               <li>• 成功上传后返回公共访问 URL</li>
             </ul>
           </div>

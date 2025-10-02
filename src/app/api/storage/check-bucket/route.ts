@@ -38,10 +38,11 @@ export async function GET(request: NextRequest) {
         region,
         keyCountSample: (res.Contents || []).length,
       })
-    } catch (err: any) {
-      const code = err?.Code || err?.name || 'UnknownError'
-      const message = err?.message || String(err)
-      const bucketExists = code !== 'NoSuchBucket'
+    } catch (err: unknown) {
+      const error = err as { Code?: string; name?: string; message?: string };
+      const code = error?.Code || error?.name || 'UnknownError';
+      const message = error?.message || String(err);
+      const bucketExists = code !== 'NoSuchBucket';
       return NextResponse.json({
         ok: false,
         bucketExists,

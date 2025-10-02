@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { useAuth } from './AuthProvider';
 
 interface ImageUploadFieldProps {
@@ -201,15 +202,19 @@ export default function ImageUploadField({
           // 已上传图片
           <div className="flex flex-col items-center">
             <div className="relative mb-4">
-              <img
-                src={value}
-                alt="Uploaded"
-                className="max-w-full max-h-48 rounded-lg shadow-md"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                }}
-              />
+              <div className="relative w-full h-48">
+                <Image
+                  src={value}
+                  alt="Uploaded"
+                  layout="fill"
+                  objectFit="contain"
+                  className="rounded-lg shadow-md"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              </div>
               {!disabled && (
                 <button
                   onClick={handleRemoveImage}
