@@ -58,7 +58,7 @@ export default function Header() {
 
   const handleNavClick = (e: React.MouseEvent, targetId: string) => {
     e.preventDefault();
-    
+
     if (pathname === '/') {
       // 如果在首页，平滑滚动到目标部分
       scrollToSection(targetId);
@@ -81,7 +81,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-20 w-full bg-[var(--secondary-color)]/80 backdrop-blur-md border-b border-[var(--border-color)]">
-  <div className="w-full flex items-center justify-between whitespace-nowrap px-4 py-4 sm:px-6 lg:px-8">
+      <div className="w-full flex items-center justify-between whitespace-nowrap px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 text-[var(--text-primary)] hover:opacity-80 transition-opacity">
             <svg className="h-8 w-8 text-[var(--primary-color)]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -89,67 +89,66 @@ export default function Header() {
             </svg>
           </Link>
         </div>
-        
+
         <nav className="hidden items-center gap-8 md:flex">
-          <button 
+          <button
             className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
             onClick={(e) => handleNavClick(e, 'features')}
           >
             Feature
           </button>
-          <button 
+          <button
             className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
             onClick={(e) => handleNavClick(e, 'portfolio')}
           >
             Portfolio
           </button>
-          
-          {/* 主题切换按钮 */}
-          <button
-            onClick={handleThemeToggle}
-            className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--accent-color)] transition-colors"
-            title={`当前主题: ${theme === 'dark' ? '暗色' : '明亮'}`}
-          >
-            <span className="material-symbols-outlined text-xl">
-              {getThemeIcon()}
-            </span>
-          </button>
 
-{loading ? (
-  <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-) : user ? (
-  <div className="flex items-center gap-4">
-    {isLoading ? (
-      <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
-        My Profile (Loading...)
-      </span>
-    ) : username ? (
-      <Link 
-        className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]" 
-        href={`/${username}`}
-      >
-        My Profile
-      </Link>
-    ) : (
-      <span className="text-sm font-medium text-gray-500 dark:text-gray-500 light:text-gray-400 cursor-not-allowed">
-        Please set a username
-      </span>
-    )}
-    <button 
-      onClick={handleSignOut}
-      className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-    >
-      Sign Out
-    </button>
-  </div>
-) : (
-  <div className="flex items-center gap-4">
-    <Link className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]" href="/login">log in</Link>
-    <Link className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="/register">sign up</Link>
-  </div>
-)}
+          {loading ? (
+            <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+          ) : user ? (
+            <div className="flex items-center gap-4">
+              {isLoading ? (
+                <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
+                  My Profile (Loading...)
+                </span>
+              ) : username ? (
+                <Link
+                  className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+                  href={`/${username}`}
+                >
+                  My Profile
+                </Link>
+              ) : (
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-500 light:text-gray-400 cursor-not-allowed">
+                  Please set a username
+                </span>
+              )}
+              <button
+                onClick={handleSignOut}
+                className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+              >
+                Sign Out
+              </button>
+              {/* 主题切换按钮 */}
+              <button
+                onClick={handleThemeToggle}
+                className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--accent-color)] transition-colors"
+                title={`当前主题: ${theme === 'dark' ? '暗色' : '明亮'}`}
+              >
+                <span className="material-symbols-outlined text-xl">
+                  {getThemeIcon()}
+                </span>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Link className="text-sm font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]" href="/login">log in</Link>
+              <Link className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="/register">sign up</Link>
+            </div>
+          )}
         </nav>
-        
+
         <button className="md:hidden">
           <span className="material-symbols-outlined"> menu </span>
         </button>

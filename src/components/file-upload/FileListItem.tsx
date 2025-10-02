@@ -15,11 +15,11 @@ export default function FileListItem({ file, onDelete, deletingId }: FileListIte
   };
 
   return (
-    <li className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg">
+    <li className="flex items-center justify-between p-3 bg-[var(--accent-color)]/50 rounded-lg">
       <div className="flex items-center gap-3">
         <div>
-          <p className="text-sm font-medium text-white">{file.file_name}</p>
-          <p className="text-xs text-gray-400">
+          <p className="text-sm font-medium text-[var(--text-primary)]">{file.file_name}</p>
+          <p className="text-xs text-[var(--text-secondary)]">
             上传时间: {formatDate(file.createdAt)}
           </p>
         </div>

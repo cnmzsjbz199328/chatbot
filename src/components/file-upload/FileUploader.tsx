@@ -24,7 +24,7 @@ export default function FileUploader({
       className={`flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-all ${
         dragActive 
           ? 'border-[var(--primary-color)] bg-[var(--primary-color)]/10' 
-          : 'border-gray-600 bg-gray-700/50 hover:bg-gray-700'
+          : 'border-[var(--border-color)] bg-[var(--accent-color)]/50 hover:bg-[var(--accent-color)]'
       }`}
       onDragEnter={onDrag}
       onDragLeave={onDrag}
@@ -33,10 +33,10 @@ export default function FileUploader({
       onClick={() => fileInputRef.current?.click()}
     >
       <div className="flex flex-col items-center justify-center pt-5 pb-6">
-        <span className="material-symbols-outlined text-4xl text-gray-400 mb-2">
+        <span className="material-symbols-outlined text-4xl text-[var(--text-secondary)] mb-2">
           {uploading ? 'sync' : 'cloud_upload'}
         </span>
-        <p className="mb-2 text-sm text-gray-400">
+        <p className="mb-2 text-sm text-[var(--text-secondary)]">
           <span className="font-semibold">点击上传</span> 或拖拽文件至此
         </p>
         <p className="text-xs text-gray-500">

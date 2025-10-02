@@ -98,8 +98,8 @@ export default function UserProfileForm() {
 
   if (!user) {
     return (
-      <div className="rounded-lg bg-gray-800 p-6 text-center">
-        <p className="text-gray-400">请先log in以编辑个人信息</p>
+      <div className="rounded-lg bg-[var(--secondary-color)] p-6 text-center">
+        <p className="text-[var(--text-secondary)]">请先log in以编辑个人信息</p>
       </div>
     );
   }
@@ -117,12 +117,12 @@ export default function UserProfileForm() {
       )}
 
       {/* 基本信息 */}
-      <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
+      <div className="rounded-lg bg-[var(--secondary-color)] p-6 shadow-lg">
         <h3 className="mb-6 text-xl font-bold">基本信息</h3>
         
         {/* 头像上传 */}
         <div className="mb-6">
-          <label className="mb-2 block text-sm font-medium text-gray-300">
+          <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
             头像
           </label>
           <ImageUploadField
@@ -135,11 +135,11 @@ export default function UserProfileForm() {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="display_name">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="display_name">
               显示名称
             </label>
             <input
-              className="w-full rounded-md border border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500"
+              className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
               id="display_name"
               name="display_name"
               type="text"
@@ -150,11 +150,11 @@ export default function UserProfileForm() {
           </div>
           
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="email">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="email">
               邮箱地址
             </label>
             <input
-              className="w-full rounded-md border border-gray-600 bg-gray-600/50 py-2 px-4 text-gray-400 cursor-not-allowed"
+              className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-secondary)] cursor-not-allowed"
               id="email"
               name="email"
               type="email"
@@ -164,11 +164,11 @@ export default function UserProfileForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="location">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="location">
               所在地
             </label>
             <input
-              className="w-full rounded-md border border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500"
+              className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
               id="location"
               name="location"
               type="text"
@@ -179,11 +179,11 @@ export default function UserProfileForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="phone">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="phone">
               联系电话
             </label>
             <input
-              className="w-full rounded-md border border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500"
+              className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
               id="phone"
               name="phone"
               type="tel"
@@ -195,11 +195,11 @@ export default function UserProfileForm() {
         </div>
 
         <div className="mt-6">
-          <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="bio">
+          <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="bio">
             个人简介
           </label>
           <textarea
-            className="w-full rounded-md border border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500"
+            className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
             id="bio"
             name="bio"
             rows={4}
@@ -211,21 +211,21 @@ export default function UserProfileForm() {
       </div>
 
       {/* 技能标签 */}
-      <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
+      <div className="rounded-lg bg-[var(--secondary-color)] p-6 shadow-lg">
         <h3 className="mb-6 text-xl font-bold">技能标签</h3>
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="skills">
+          <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="skills">
             技能列表（用逗号分隔）
           </label>
           <input
-            className="w-full rounded-md border border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500"
+            className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
             id="skills"
             type="text"
             value={skills}
             onChange={(e) => setSkills(e.target.value)}
             placeholder="JavaScript, React, Node.js, Python, SQL"
           />
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-[var(--text-secondary)]">
             输入您掌握的技能，用逗号分隔
           </p>
         </div>
@@ -233,7 +233,7 @@ export default function UserProfileForm() {
         {/* 技能预览 */}
         {skills && (
           <div className="mt-4">
-            <p className="mb-2 text-sm font-medium text-gray-300">预览：</p>
+            <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">预览：</p>
             <div className="flex flex-wrap gap-2">
               {skills.split(',').map((skill, index) => {
                 const trimmedSkill = skill.trim();
@@ -241,7 +241,7 @@ export default function UserProfileForm() {
                 return (
                   <span
                     key={index}
-                    className="rounded-full bg-primary-900 px-3 py-1 text-sm text-primary-200"
+                    className="rounded-full bg-[var(--primary-color)]/20 px-3 py-1 text-sm text-[var(--primary-color)]"
                   >
                     {trimmedSkill}
                   </span>
@@ -253,15 +253,15 @@ export default function UserProfileForm() {
       </div>
 
       {/* 社交链接 */}
-      <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
+      <div className="rounded-lg bg-[var(--secondary-color)] p-6 shadow-lg">
         <h3 className="mb-6 text-xl font-bold">社交链接</h3>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="website">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="website">
               个人网站
             </label>
             <input
-              className="w-full rounded-md border border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500"
+              className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
               id="website"
               name="website"
               type="url"
@@ -272,11 +272,11 @@ export default function UserProfileForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="github">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="github">
               GitHub
             </label>
             <input
-              className="w-full rounded-md border border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500"
+              className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
               id="github"
               name="github"
               type="text"
@@ -287,11 +287,11 @@ export default function UserProfileForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300" htmlFor="linkedin">
+            <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="linkedin">
               LinkedIn
             </label>
             <input
-              className="w-full rounded-md border border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500"
+              className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 px-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
               id="linkedin"
               name="linkedin"
               type="text"
