@@ -5,7 +5,6 @@ import { UploadedFile } from './types';
 import FileUploader from './FileUploader';
 import FileList from './FileList';
 import UploadStatus from './UploadStatus';
-import UsageInstructions from './UsageInstructions';
 
 export default function FileUploadContainer() {
   const { user } = useAuth();
@@ -133,17 +132,21 @@ export default function FileUploadContainer() {
   };
 
   return (
-    <div className="space-y-6">
-      <FileUploader 
-        onFileSelect={handleFileSelect}
-        onDrop={handleDrop}
-        onDrag={handleDrag}
-        dragActive={dragActive}
-        uploading={uploading}
-      />
-      <UploadStatus uploadMessage={uploadMessage} />
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      {/* Left Column */}
+      <div className="space-y-6">
+        <FileUploader 
+          onFileSelect={handleFileSelect}
+          onDrop={handleDrop}
+          onDrag={handleDrag}
+          dragActive={dragActive}
+          uploading={uploading}
+        />
+        <UploadStatus uploadMessage={uploadMessage} />
+      </div>
+
+      {/* Right Column */}
       <FileList files={files} onDelete={handleDelete} deletingId={deletingId} />
-      <UsageInstructions />
     </div>
   );
 }

@@ -37,7 +37,6 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
           <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">phone</span>
             <div className="flex-1 min-w-0">
-              <h4 className="font-semibold text-[var(--text-primary)]">电话</h4>
               <p className="text-[var(--text-secondary)] break-words">{profile.phone}</p>
             </div>
           </div>
