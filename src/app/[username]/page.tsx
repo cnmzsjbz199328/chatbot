@@ -98,7 +98,7 @@ export default function DashboardPage() {
             <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
               {profile ? `${profile.displayName || username}'s Portfolio` : 'Portfolio'}
             </h2>
-            <p className="mt-4 text-lg text-gray-400">
+            <p className="mt-4 text-lg text-[var(--text-secondary)]">
               {profile?.bio || 'A series of projects showcasing my IT skills and experience.'}
             </p>
           </div>
@@ -122,7 +122,7 @@ export default function DashboardPage() {
 
         {/* Right sidebar for AI assistant */}
         <aside className="w-full lg:w-96 lg:flex-shrink-0 lg:h-full lg:pt-0">
-          <div className="h-full flex flex-col sticky top-0 rounded-lg bg-gray-800/50 p-6 shadow-lg">
+          <div className="h-full flex flex-col sticky top-0 rounded-lg bg-gray-800/50 dark:bg-gray-800/50 light:bg-gray-100/50 p-6 shadow-lg">
             <ChatContainer targetUsername={username} userProfile={profile} />
           </div>
         </aside>

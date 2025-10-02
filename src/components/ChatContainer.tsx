@@ -207,7 +207,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                 <div className="flex justify-between items-center">
                     <Button
                         onClick={clearConversation}
-                        className="text-xs px-2 py-1 bg-gray-700 dark:bg-gray-700 light:bg-gray-300 text-gray-300 dark:text-gray-300 light:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-600 light:hover:bg-gray-400 rounded-md transition-colors"
+                        className="text-xs px-2 py-1 bg-[var(--accent-color)] text-[var(--text-secondary)] hover:bg-[var(--border-color)] rounded-md transition-colors"
                     >
                         clean
                     </Button>
@@ -227,7 +227,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                                     max-w-[85%] p-3 rounded-lg text-sm leading-relaxed
                                     ${message.role === 'user' 
                                         ? 'bg-[var(--primary-color)] text-white' 
-                                        : 'bg-gray-700/50 dark:bg-gray-700/50 light:bg-gray-200/50 text-gray-100 dark:text-gray-100 light:text-gray-800 border border-gray-600 dark:border-gray-600 light:border-gray-300'
+                                        : 'bg-[var(--accent-color)]/50 text-[var(--text-primary)] border border-[var(--border-color)]'
                                     }
                                 `}>
                                     {renderMessageContent(message)}
@@ -240,11 +240,11 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                 {/* 加载指示器 */}
                 {isSubmitting && (
                     <div className="flex justify-start">
-                        <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md p-4 shadow-sm">
+                        <div className="bg-[var(--accent-color)]/50 border border-[var(--border-color)] rounded-2xl rounded-bl-md p-4 shadow-sm">
                             <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                <div className="w-2 h-2 bg-[var(--text-secondary)] rounded-full animate-bounce"></div>
+                                <div className="w-2 h-2 bg-[var(--text-secondary)] rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                <div className="w-2 h-2 bg-[var(--text-secondary)] rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                             </div>
                         </div>
                     </div>
@@ -261,7 +261,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                 >
                     <div className="relative flex-1">
                         <input
-                            className='w-full rounded-md border-gray-600 bg-gray-700/50 py-2 pl-10 pr-4 text-white focus:border-primary-500 focus:ring-primary-500 placeholder-gray-400'
+                            className='w-full rounded-md border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 pl-10 pr-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500 placeholder-[var(--text-secondary)]'
                             name="prompt"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -277,7 +277,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                         className={`
                             px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 shrink-0
                             ${isSubmitting || !input.trim()
-                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                ? 'bg-[var(--accent-color)] text-[var(--text-secondary)] cursor-not-allowed'
                                 : 'bg-[var(--primary-color)] hover:bg-opacity-80 text-white'
                             }
                         `}

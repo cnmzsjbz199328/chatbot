@@ -14,10 +14,10 @@ export default function Hobbies({ hobbies }: HobbiesProps) {
 
   return (
     <details className="mb-1 group">
-      <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-white cursor-pointer list-none focus:outline-none">
+      <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-[var(--text-primary)] cursor-pointer list-none focus:outline-none">
         <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Hobbies</span>
         <svg
-          className="w-6 h-6 text-gray-400 transition-transform duration-300 group-open:rotate-180"
+          className="w-6 h-6 text-[var(--text-secondary)] transition-transform duration-300 group-open:rotate-180"
           aria-label="展开/收起"
           fill="none"
           stroke="currentColor"
@@ -29,7 +29,7 @@ export default function Hobbies({ hobbies }: HobbiesProps) {
       </summary>
       <div className="flex flex-wrap gap-2">
         {hobbies.map((hobby, index) => (
-          <span key={index} className="flex items-center gap-1 rounded-full bg-gray-700 px-3 py-1 text-sm">
+          <span key={index} className="flex items-center gap-1 rounded-full bg-[var(--accent-color)] px-3 py-1 text-sm text-[var(--text-secondary)]">
             {hobby.name}
           </span>
         ))}

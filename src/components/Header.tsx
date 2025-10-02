@@ -80,7 +80,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-20 w-full bg-gray-900/80 dark:bg-gray-900/80 light:bg-white/80 backdrop-blur-md border-b border-gray-700 dark:border-gray-700 light:border-gray-200">
+    <header className="sticky top-0 z-20 w-full bg-[var(--secondary-color)]/80 backdrop-blur-md border-b border-[var(--border-color)]">
   <div className="w-full flex items-center justify-between whitespace-nowrap px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 text-[var(--text-primary)] hover:opacity-80 transition-opacity">
@@ -107,7 +107,7 @@ export default function Header() {
           {/* 主题切换按钮 */}
           <button
             onClick={handleThemeToggle}
-            className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-200 transition-colors"
+            className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--accent-color)] transition-colors"
             title={`当前主题: ${theme === 'dark' ? '暗色' : '明亮'}`}
           >
             <span className="material-symbols-outlined text-xl">

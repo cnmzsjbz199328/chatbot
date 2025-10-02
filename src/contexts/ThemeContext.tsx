@@ -20,25 +20,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const applyTheme = (resolvedTheme: 'light' | 'dark') => {
     const root = document.documentElement;
     root.setAttribute('data-theme', resolvedTheme);
-    
-    // 更新CSS变量
-    if (resolvedTheme === 'light') {
-      root.style.setProperty('--background', '#ffffff');
-      root.style.setProperty('--foreground', '#171717');
-      root.style.setProperty('--secondary-color', '#f7fafc');
-      root.style.setProperty('--accent-color', '#edf2f7');
-      root.style.setProperty('--text-primary', '#1a202c');
-      root.style.setProperty('--text-secondary', '#4a5568');
-      root.style.setProperty('--border-color', '#e2e8f0');
-    } else {
-      root.style.setProperty('--background', '#0a0a0a');
-      root.style.setProperty('--foreground', '#ededed');
-      root.style.setProperty('--secondary-color', '#1a202c');
-      root.style.setProperty('--accent-color', '#2d3748');
-      root.style.setProperty('--text-primary', '#ffffff');
-      root.style.setProperty('--text-secondary', '#a0aec0');
-      root.style.setProperty('--border-color', '#4a5568');
-    }
   };
 
   // 初始化主题

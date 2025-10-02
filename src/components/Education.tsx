@@ -16,11 +16,11 @@ export default function Education({ education }: EducationProps) {
 
   return (
     <details className="mb-1 group">
-      <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-white cursor-pointer list-none focus:outline-none">
+      <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-[var(--text-primary)] cursor-pointer list-none focus:outline-none">
         <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Education</span>
         {/* 下拉箭头图标，随展开状态旋转 */}
         <svg
-          className="w-6 h-6 text-gray-400 transition-transform duration-300 group-open:rotate-180"
+          className="w-6 h-6 text-[var(--text-secondary)] transition-transform duration-300 group-open:rotate-180"
           aria-label="展开/收起"
           fill="none"
           stroke="currentColor"
@@ -30,13 +30,13 @@ export default function Education({ education }: EducationProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
         </svg>
       </summary>
-      <div className="space-y-8 border-l-2 border-gray-700 pl-8 transition-all duration-300 ease-in-out">
+      <div className="space-y-8 border-l-2 border-gray-700 dark:border-gray-700 light:border-gray-300 pl-8 transition-all duration-300 ease-in-out">
         {education.map((edu, index) => (
           <div key={index} className="relative">
             <div className="absolute -left-[38px] top-1 h-4 w-4 rounded-full bg-[var(--primary-color)]"></div>
-            <h4 className="text-xl font-semibold">{edu.school}</h4>
-            <p className="text-gray-400">{edu.degree}</p>
-            <p className="text-sm text-gray-500">{edu.startYear}年 - {edu.endYear}年</p>
+            <h4 className="text-xl font-semibold text-[var(--text-primary)]">{edu.school}</h4>
+            <p className="text-[var(--text-secondary)]">{edu.degree}</p>
+            <p className="text-sm text-[var(--text-secondary)]">{edu.startYear}年 - {edu.endYear}年</p>
           </div>
         ))}
       </div>
