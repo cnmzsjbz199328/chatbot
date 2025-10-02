@@ -150,8 +150,8 @@ export default function ProjectManagement() {
 
   if (!user) {
     return (
-      <div className="rounded-lg bg-gray-800 p-6 text-center">
-        <p className="text-gray-400">请先log in以管理您的项目</p>
+      <div className="rounded-lg bg-[var(--secondary-color)] p-6 text-center">
+        <p className="text-[var(--text-secondary)]">请先log in以管理您的项目</p>
       </div>
     );
   }
@@ -160,6 +160,7 @@ export default function ProjectManagement() {
     <div className="space-y-8 p-8">
       <header className="flex items-center justify-between">
         <Button onClick={handleAddNewClick} className="flex items-center gap-2">
+          <span className="material-symbols-outlined">add</span>
           <span>添加新项目</span>
         </Button>
       </header>
@@ -171,24 +172,22 @@ export default function ProjectManagement() {
       )}
 
       {(isAddingNew || editingProject) && (
-        <div className="rounded-lg bg-gray-800 p-6 shadow-lg">
+        <div className="rounded-lg bg-[var(--secondary-color)] p-6 shadow-lg">
           <h3 className="mb-6 text-xl font-bold">
             {editingProject ? `编辑项目：${editingProject.title}` : '添加新项目'}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Form fields from the original component */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-300">项目标题 *</label>
-              <input type="text" name="title" value={formData.title} onChange={handleInputChange} required className="w-full rounded-md border border-gray-600 bg-gray-700 px-4 py-2 text-white focus:border-primary-500 focus:ring-primary-500" />
+              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">项目标题 *</label>
+              <input type="text" name="title" value={formData.title} onChange={handleInputChange} required className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)] px-4 py-2 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500" />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-300">项目描述</label>
-              <textarea name="description" value={formData.description || ''} onChange={handleInputChange} rows={3} className="w-full rounded-md border border-gray-600 bg-gray-700 px-4 py-2 text-white focus:border-primary-500 focus:ring-primary-500" />
+              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">项目描述</label>
+              <textarea name="description" value={formData.description || ''} onChange={handleInputChange} rows={3} className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)] px-4 py-2 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500" />
             </div>
             
-            {/* 项目图片上传 */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-300">
+              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
                 项目图片
               </label>
               <ImageUploadField
@@ -199,17 +198,17 @@ export default function ProjectManagement() {
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-300">技术栈 (用逗号分隔)</label>
-              <input type="text" value={formData.technologies?.join(', ') || ''} onChange={handleTechnologiesChange} placeholder="React, Node.js" className="w-full rounded-md border border-gray-600 bg-gray-700 px-4 py-2 text-white focus:border-primary-500 focus:ring-primary-500" />
+              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">技术栈 (用逗号分隔)</label>
+              <input type="text" value={formData.technologies?.join(', ') || ''} onChange={handleTechnologiesChange} placeholder="React, Node.js" className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)] px-4 py-2 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500" />
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-300">GitHub 链接</label>
-                <input type="url" name="githubUrl" value={formData.githubUrl || ''} onChange={handleInputChange} className="w-full rounded-md border border-gray-600 bg-gray-700 px-4 py-2 text-white focus:border-primary-500 focus:ring-primary-500" />
+                <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">GitHub 链接</label>
+                <input type="url" name="githubUrl" value={formData.githubUrl || ''} onChange={handleInputChange} className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)] px-4 py-2 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500" />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-300">演示链接</label>
-                <input type="url" name="liveUrl" value={formData.liveUrl || ''} onChange={handleInputChange} className="w-full rounded-md border border-gray-600 bg-gray-700 px-4 py-2 text-white focus:border-primary-500 focus:ring-primary-500" />
+                <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">演示链接</label>
+                <input type="url" name="liveUrl" value={formData.liveUrl || ''} onChange={handleInputChange} className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)] px-4 py-2 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500" />
               </div>
             </div>
             <div className="flex justify-end gap-4">
@@ -220,12 +219,12 @@ export default function ProjectManagement() {
         </div>
       )}
 
-      <div className="mt-8 rounded-lg bg-gray-800 p-6 shadow-lg">
+      <div className="mt-8 rounded-lg bg-[var(--secondary-color)] p-6 shadow-lg">
         <h3 className="mb-6 text-xl font-bold">所有项目</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-gray-700">
+              <tr className="border-b border-[var(--border-color)]">
                 <th className="px-4 py-3 text-sm font-medium">项目名称</th>
                 <th className="px-4 py-3 text-sm font-medium">描述</th>
                 <th className="px-4 py-3 text-sm font-medium">状态</th>
@@ -236,14 +235,14 @@ export default function ProjectManagement() {
               {isLoading ? (
                 <tr><td colSpan={4} className="text-center py-4">加载中...</td></tr>
               ) : projects.length === 0 ? (
-                <tr><td colSpan={4} className="text-center py-4 text-gray-400">未找到任何项目。</td></tr>
+                <tr><td colSpan={4} className="text-center py-4 text-[var(--text-secondary)]">未找到任何项目。</td></tr>
               ) : (
                 projects.map(project => (
-                  <tr key={project.id} className="border-b border-gray-700 hover:bg-gray-700/50">
+                  <tr key={project.id} className="border-b border-[var(--border-color)] hover:bg-[var(--accent-color)]/50">
                     <td className="px-4 py-3 font-medium">{project.title}</td>
-                    <td className="max-w-xs truncate px-4 py-3 text-gray-400">{project.description}</td>
+                    <td className="max-w-xs truncate px-4 py-3 text-[var(--text-secondary)]">{project.description}</td>
                     <td className="px-4 py-3">
-                      <span className={`rounded-full px-3 py-1 text-xs font-medium ${project.status === 'completed' ? 'bg-green-900 text-green-200' : project.status === 'active' ? 'bg-blue-900 text-blue-200' : 'bg-gray-700 text-gray-300'}`}>
+                      <span className={`rounded-full px-3 py-1 text-xs font-medium ${project.status === 'completed' ? 'bg-green-900/50 text-green-300' : project.status === 'active' ? 'bg-blue-900/50 text-blue-300' : 'bg-[var(--accent-color)] text-[var(--text-secondary)]'}`}>
                         {project.status === 'completed' ? '已完成' : project.status === 'active' ? '进行中' : '已归档'}
                       </span>
                     </td>
