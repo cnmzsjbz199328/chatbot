@@ -10,7 +10,8 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
   return (
     <details className="mb-2 group">
       <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-[var(--text-primary)] cursor-pointer list-none focus:outline-none">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Contact</span>
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">contact_mail</span>
+        <span>Contact</span>
         <svg
           className="w-6 h-6 text-[var(--text-secondary)] transition-transform duration-300 group-open:rotate-180"
           aria-label="展开/收起"
@@ -44,7 +45,7 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
 
         {profile?.website && (
           <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
-            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">Personal web</span>
+            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">language</span>
             <div className="flex-1 min-w-0">
               <p className="text-[var(--text-secondary)] break-all">
                 <a href={profile.website} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text-primary)] transition-colors break-all">
@@ -57,7 +58,7 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
 
         {profile?.github && (
           <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
-            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">GitHub</span>
+            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">code</span>
             <div className="flex-1 min-w-0">
               <p className="text-[var(--text-secondary)] break-all">
                 <a href={profile.github} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text-primary)] transition-colors break-all">
@@ -70,7 +71,7 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
 
         {profile?.linkedin && (
           <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
-            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">LinkedIn</span>
+            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">group</span>
             <div className="flex-1 min-w-0">
               <p className="text-[var(--text-secondary)] break-all">
                 <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text-primary)] transition-colors break-all">

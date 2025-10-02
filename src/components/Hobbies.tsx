@@ -15,7 +15,8 @@ export default function Hobbies({ hobbies }: HobbiesProps) {
   return (
     <details className="mb-1 group">
       <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-[var(--text-primary)] cursor-pointer list-none focus:outline-none">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Hobbies</span>
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">interests</span>
+        <span>Hobbies</span>
         <svg
           className="w-6 h-6 text-[var(--text-secondary)] transition-transform duration-300 group-open:rotate-180"
           aria-label="展开/收起"

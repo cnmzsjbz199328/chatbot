@@ -28,7 +28,8 @@ export default function WorkExperience({ workExperience }: WorkExperienceProps) 
   return (
     <details className="mb-1 group">
       <summary className="mb-8 flex items-center gap-4 text-2xl font-bold text-[var(--text-primary)] cursor-pointer list-none focus:outline-none">
-        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">Work Experience</span>
+        <span className="material-symbols-outlined text-3xl text-[var(--primary-color)]">work</span>
+        <span>Work Experience</span>
         <svg
           className="w-6 h-6 text-[var(--text-secondary)] transition-transform duration-300 group-open:rotate-180"
           aria-label="展开/收起"
@@ -40,7 +41,7 @@ export default function WorkExperience({ workExperience }: WorkExperienceProps) 
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
         </svg>
       </summary>
-      <div className="space-y-12 border-l-2 border-gray-700 dark:border-gray-700 light:border-gray-300 pl-8">
+      <div className="space-y-12 border-l-2 border-[var(--border-color)] pl-8">
         {experienceData.map((work, index) => (
           <div key={index} className="relative">
             <div className="absolute -left-[38px] top-1 h-4 w-4 rounded-full bg-[var(--primary-color)]"></div>
