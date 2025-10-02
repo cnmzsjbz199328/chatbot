@@ -26,7 +26,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
   const icon = icons[index % icons.length];
   
   return (
-    <div className="group transform-gpu overflow-hidden rounded-lg bg-gray-800/50 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-500/30 h-full">
+    <div className="group transform-gpu overflow-hidden rounded-lg bg-gray-800/50 dark:bg-gray-800/50 light:bg-gray-100/50 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-500/30 h-full">
       <div className="flex h-full">
         {/* 左侧图片区域 */}
         <div className="relative w-1/2 flex-shrink-0">
@@ -45,7 +45,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
           <div className="absolute bottom-0 left-0 p-4">
-            <h3 className="text-xl font-bold">{project.title}</h3>
+            <h3 className="text-xl font-bold text-white">{project.title}</h3>
             {project.status && (
               <span className={`inline-block mt-1 px-2 py-1 rounded-full text-xs font-medium ${
                 project.status === 'completed' ? 'bg-green-600 text-white' :
@@ -62,7 +62,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         {/* 右侧内容区域 */}
         <div className="flex-1 p-6 flex flex-col justify-between">
           <div>
-            <p className="mb-4 text-gray-400">
+            <p className="mb-4 text-[var(--text-secondary)]">
               {project.description || '暂无项目描述'}
             </p>
             
@@ -70,12 +70,12 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             {project.technologies && project.technologies.length > 0 && (
               <div className="mb-4 flex flex-wrap gap-2">
                 {project.technologies.slice(0, 3).map((tech, techIndex) => (
-                  <span key={techIndex} className="inline-block bg-gray-700 px-2 py-1 rounded text-xs text-gray-300">
+                  <span key={techIndex} className="inline-block bg-gray-700 dark:bg-gray-700 light:bg-gray-300 px-2 py-1 rounded text-xs text-gray-300 dark:text-gray-300 light:text-gray-700">
                     {tech}
                   </span>
                 ))}
                 {project.technologies.length > 3 && (
-                  <span className="inline-block bg-gray-700 px-2 py-1 rounded text-xs text-gray-300">
+                  <span className="inline-block bg-gray-700 dark:bg-gray-700 light:bg-gray-300 px-2 py-1 rounded text-xs text-gray-300 dark:text-gray-300 light:text-gray-700">
                     +{project.technologies.length - 3}
                   </span>
                 )}
@@ -98,7 +98,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             </div>
             {project.githubUrl && (
               <a 
-                className="text-gray-400 hover:text-white" 
+                className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]" 
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"

@@ -67,21 +67,21 @@ export default function UserDashboard({ username }: UserDashboardProps) {
           <div className="lg:col-span-2">
             {/* 项目展示区域 */}
             <section className="mb-8">
-              <h2 className="text-2xl font-bold mb-6">我的项目</h2>
+              <h2 className="text-2xl font-bold mb-6 text-[var(--text-primary)]">我的项目</h2>
               <div className="grid gap-6 md:grid-cols-2">
                 
                 {/* 项目卡片示例 */}
-                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div className="bg-gray-800 dark:bg-gray-800 light:bg-gray-100 rounded-lg p-6 border border-gray-700 dark:border-gray-700 light:border-gray-300">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-white">AI智能助手平台</h3>
-                      <p className="text-gray-400 text-sm">全栈开发项目</p>
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)]">AI智能助手平台</h3>
+                      <p className="text-[var(--text-secondary)] text-sm">全栈开发项目</p>
                     </div>
                     <span className="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">
                       已完成
                     </span>
                   </div>
-                  <p className="text-gray-300 text-sm mb-4">
+                  <p className="text-[var(--text-secondary)] text-sm mb-4">
                     基于Next.js和Supabase构建的多租户AI助手平台，支持文档上传、智能对话等功能。
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">

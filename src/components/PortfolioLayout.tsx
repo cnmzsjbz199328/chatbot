@@ -8,10 +8,11 @@ interface PortfolioLayoutProps {
 export default function PortfolioLayout({ children }: PortfolioLayoutProps) {
   return (
     <div 
-      className="relative flex h-screen flex-col overflow-hidden font-sans text-white" 
+      className="relative flex h-screen flex-col overflow-hidden font-sans transition-colors duration-300" 
       style={{ 
         fontFamily: 'Inter, "Noto Sans", sans-serif',
-        backgroundColor: 'var(--secondary-color)'
+        backgroundColor: 'var(--secondary-color)',
+        color: 'var(--text-primary)'
       }}
     >
       {/* 背景图片层 - 使用伪元素实现透明度 */}

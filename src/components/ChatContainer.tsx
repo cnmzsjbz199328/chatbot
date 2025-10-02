@@ -3,7 +3,7 @@
 import type { UIMessage } from 'ai'; // 导入正确的类型
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
-import { UserProjectModel, UserProfileModel } from '@/db/schema';
+import { UserProfileModel } from '@/db/schema';
 
 interface ChatContainerProps {
     targetUsername: string;
@@ -207,7 +207,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                 <div className="flex justify-between items-center">
                     <Button
                         onClick={clearConversation}
-                        className="text-xs px-2 py-1 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded-md transition-colors"
+                        className="text-xs px-2 py-1 bg-gray-700 dark:bg-gray-700 light:bg-gray-300 text-gray-300 dark:text-gray-300 light:text-gray-700 hover:bg-gray-600 dark:hover:bg-gray-600 light:hover:bg-gray-400 rounded-md transition-colors"
                     >
                         clean
                     </Button>
@@ -227,7 +227,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                                     max-w-[85%] p-3 rounded-lg text-sm leading-relaxed
                                     ${message.role === 'user' 
                                         ? 'bg-[var(--primary-color)] text-white' 
-                                        : 'bg-gray-700/50 text-gray-100 border border-gray-600'
+                                        : 'bg-gray-700/50 dark:bg-gray-700/50 light:bg-gray-200/50 text-gray-100 dark:text-gray-100 light:text-gray-800 border border-gray-600 dark:border-gray-600 light:border-gray-300'
                                     }
                                 `}>
                                     {renderMessageContent(message)}
