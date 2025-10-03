@@ -130,16 +130,6 @@ export default function Header() {
               >
                 Sign Out
               </button>
-              {/* 主题切换按钮 */}
-              <button
-                onClick={handleThemeToggle}
-                className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--accent-color)] transition-colors"
-                title={`当前主题: ${theme === 'dark' ? '暗色' : '明亮'}`}
-              >
-                <span className="material-symbols-outlined text-xl">
-                  {getThemeIcon()}
-                </span>
-              </button>
             </div>
           ) : (
             <div className="flex items-center gap-4">
@@ -147,6 +137,17 @@ export default function Header() {
               <Link className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="/register">sign up</Link>
             </div>
           )}
+
+          {/* 主题切换按钮 - 放在最右侧，对所有用户可见 */}
+          <button
+            onClick={handleThemeToggle}
+            className="p-2 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--accent-color)] transition-colors"
+            title={`当前主题: ${theme === 'dark' ? '暗色' : '明亮'}`}
+          >
+            <span className="material-symbols-outlined text-xl">
+              {getThemeIcon()}
+            </span>
+          </button>
         </nav>
 
         <button className="md:hidden">
