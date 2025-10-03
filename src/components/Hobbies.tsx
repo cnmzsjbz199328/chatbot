@@ -28,7 +28,7 @@ export default function Hobbies({ hobbies }: HobbiesProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
         </svg>
       </summary>
-      <div className="flex flex-wrap gap-2">
+      <div className="mb-8 flex flex-wrap gap-2">
         {hobbies.map((hobby, index) => (
           <span key={index} className="flex items-center gap-1 rounded-full bg-[var(--accent-color)] px-3 py-1 text-sm text-[var(--text-secondary)]">
             {hobby.name}

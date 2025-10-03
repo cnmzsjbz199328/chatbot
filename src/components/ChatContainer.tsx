@@ -265,7 +265,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                             name="prompt"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="询问我的项目..."
+                            placeholder="ask about my Experience..."
                             disabled={isSubmitting}
                             type="text"
                         />
@@ -285,7 +285,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                         {isSubmitting ? (
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
                         ) : (
-                            '发送'
+                            'Send'
                         )}
                     </Button>
                 </form>

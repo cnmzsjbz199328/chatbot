@@ -31,13 +31,12 @@ export default function Education({ education }: EducationProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
         </svg>
       </summary>
-      <div className="space-y-8 border-l-2 border-[var(--border-color)] pl-8 transition-all duration-300 ease-in-out">
-        {education.map((edu, index) => (
+      <div className="mb-8 space-y-8 border-l-2 border-[var(--border-color)] pl-8 transition-all duration-300 ease-in-out">{education.map((edu, index) => (
           <div key={index} className="relative">
             <div className="absolute -left-[38px] top-1 h-4 w-4 rounded-full bg-[var(--primary-color)]"></div>
             <h4 className="text-xl font-semibold text-[var(--text-primary)]">{edu.school}</h4>
             <p className="text-[var(--text-secondary)]">{edu.degree}</p>
-            <p className="text-sm text-[var(--text-secondary)]">{edu.startYear}年 - {edu.endYear}年</p>
+            <p className="text-sm text-[var(--text-secondary)]">{edu.startYear} - {edu.endYear}</p>
           </div>
         ))}
       </div>

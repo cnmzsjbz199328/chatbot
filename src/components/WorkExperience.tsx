@@ -41,7 +41,7 @@ export default function WorkExperience({ workExperience }: WorkExperienceProps) 
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
         </svg>
       </summary>
-      <div className="space-y-12 border-l-2 border-[var(--border-color)] pl-8">
+      <div className="mb-8 space-y-12 border-l-2 border-[var(--border-color)] pl-8">
         {experienceData.map((work, index) => (
           <div key={index} className="relative">
             <div className="absolute -left-[38px] top-1 h-4 w-4 rounded-full bg-[var(--primary-color)]"></div>
