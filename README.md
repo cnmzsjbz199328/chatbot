@@ -154,6 +154,59 @@ Follow these steps to deploy your application to Vercel.
 -   After configuring the database and environment variables, trigger a new deployment from your Vercel project dashboard.
 -   Your application will be built and deployed. Vercel will provide you with a public URL.
 
+## CI/CD Pipeline
+
+This project uses Vercel for continuous deployment and GitHub Actions for automated quality checks.
+
+### Vercel Deployment
+
+The application is automatically deployed to Vercel when changes are pushed to the `main` branch. The deployment configuration is defined in `vercel.json`.
+
+### GitHub Actions Workflows
+
+Several automated workflows are configured in `.github/workflows/`:
+
+- **`code-quality.yml`**: Runs on every push and PR to check code quality
+  - ESLint for code style
+  - TypeScript type checking
+  - Build verification
+
+- **`security.yml`**: Weekly security scans and dependency audits
+  - npm audit for vulnerability checking
+  - Snyk security scanning (requires SNYK_TOKEN secret)
+
+- **`deployment-check.yml`**: Validates successful Vercel deployments
+  - Health checks on deployed URLs
+  - Deployment status notifications
+
+- **`auto-tag.yml`**: Automatic versioning and release tagging
+  - Creates version tags on main branch pushes
+  - Generates GitHub releases
+
+### Environment Variables
+
+Required environment variables for deployment (set in Vercel Dashboard):
+
+```bash
+# AI/ML Services
+EMBEDDING_SERVICE_URL=...
+COHERE_API_KEY=...
+PINECONE_API_KEY=...
+PINECONE_INDEX_NAME=...
+
+# Database
+DATABASE_URL=...
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+
+# Storage
+SUPABASE_S3_ENDPOINT=...
+SUPABASE_S3_ACCESS_KEY=...
+SUPABASE_S3_SECRET_KEY=...
+SUPABASE_S3_BUCKET=...
+SUPABASE_S3_REGION=...
+```
+
 ## API Endpoints
 
 -   `POST /api/upload`: Handles PDF file uploads, processing, and embedding.

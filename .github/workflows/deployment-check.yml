@@ -1,0 +1,47 @@
+name: Deployment Check
+
+on:
+  deployment_status
+
+jobs:
+  deployment-check:
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Health Check
+      run: |
+        # 等待部署完成
+        sleep 30
+
+        # 检查应用是否正常响应
+        DEPLOY_URL="${{ github.event.deployment_status.target_url }}"
+        if curl -f -s "$DEPLOY_URL" > /dev/null; then
+          echo "✅ Deployment successful - $DEPLOY_URL is responding"
+        else
+          echo "❌ Deployment failed - $DEPLOY_URL is not responding"
+          exit 1
+        fi
+
+    - name: Notify on success
+      if: success()
+      run: |
+        echo "🎉 Deployment completed successfully!"
+        echo "URL: ${{ github.event.deployment_status.target_url }}"
+
+    - name: Notify on failure
+      if: failure()
+      run: |
+        echo "💥 Deployment failed!"
+        echo "Check Vercel dashboard for details"

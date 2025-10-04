@@ -203,11 +203,11 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
     return (
     <div className="h-full w-full flex flex-col">
             {/* 聊天头部 */}
-            <div className="mb-4">
+            <div className="mb-3 sm:mb-4">
                 <div className="flex justify-between items-center">
                     <Button
                         onClick={clearConversation}
-                        className="text-xs px-2 py-1 bg-[var(--accent-color)] text-[var(--text-secondary)] hover:bg-[var(--border-color)] rounded-md transition-colors"
+                        className="text-xs px-2 py-1.5 sm:px-3 sm:py-2 bg-[var(--accent-color)] text-[var(--text-secondary)] hover:bg-[var(--border-color)] rounded-md transition-colors min-h-[36px]"
                     >
                         clean
                     </Button>
@@ -215,16 +215,16 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
             </div>
 
             {/* 消息区域 */}
-            <div className="flex-1 flex flex-col mb-4 overflow-y-auto">
+            <div className="flex-1 flex flex-col mb-3 sm:mb-4 overflow-y-auto">
                 {localMessages.length === 0 ? (
                     <div className="text-center">
                     </div>
                 ) : (
-                    <div className="flex-1 overflow-y-auto space-y-3">
+                    <div className="flex-1 overflow-y-auto space-y-2 sm:space-y-3">
                         {localMessages.map(message => (
                             <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`
-                                    max-w-[85%] p-3 rounded-lg text-sm leading-relaxed
+                                    max-w-[90%] sm:max-w-[85%] p-2 sm:p-3 rounded-lg text-xs sm:text-sm leading-relaxed
                                     ${message.role === 'user' 
                                         ? 'bg-[var(--primary-color)] text-white' 
                                         : 'bg-[var(--accent-color)]/50 text-[var(--text-primary)] border border-[var(--border-color)]'
@@ -240,11 +240,11 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                 {/* 加载指示器 */}
                 {isSubmitting && (
                     <div className="flex justify-start">
-                        <div className="bg-[var(--accent-color)]/50 border border-[var(--border-color)] rounded-2xl rounded-bl-md p-4 shadow-sm">
+                        <div className="bg-[var(--accent-color)]/50 border border-[var(--border-color)] rounded-2xl rounded-bl-md p-3 sm:p-4 shadow-sm">
                             <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-[var(--text-secondary)] rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-[var(--text-secondary)] rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                                <div className="w-2 h-2 bg-[var(--text-secondary)] rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--text-secondary)] rounded-full animate-bounce"></div>
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--text-secondary)] rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--text-secondary)] rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                             </div>
                         </div>
                     </div>
@@ -254,14 +254,14 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
             </div>
 
             {/* 输入区域 */}
-            <div className="space-y-3 mt-auto">
+            <div className="space-y-2 sm:space-y-3 mt-auto">
                 <form
-                    className='flex gap-3'
+                    className='flex flex-col sm:flex-row gap-2 sm:gap-3'
                     onSubmit={handleFormSubmit}
                 >
                     <div className="relative flex-1">
                         <input
-                            className='w-full rounded-md border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 pl-10 pr-4 text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500 placeholder-[var(--text-secondary)]'
+                            className='w-full rounded-md border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 sm:py-2.5 pl-3 sm:pl-10 pr-3 sm:pr-4 text-xs sm:text-sm text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500 placeholder-[var(--text-secondary)] min-h-[44px]'
                             name="prompt"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -275,7 +275,7 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
                         type="submit" 
                         disabled={isSubmitting || !input.trim()}
                         className={`
-                            px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 shrink-0
+                            px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 shrink-0 min-h-[44px] w-full sm:w-auto
                             ${isSubmitting || !input.trim()
                                 ? 'bg-[var(--accent-color)] text-[var(--text-secondary)] cursor-not-allowed'
                                 : 'bg-[var(--primary-color)] hover:bg-opacity-80 text-white'

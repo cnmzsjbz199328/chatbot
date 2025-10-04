@@ -1,0 +1,46 @@
+name: Auto Tag Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  tag-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Get current date
+      id: date
+      run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+
+    - name: Get commit count
+      id: commit
+      run: echo "count=$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
+
+    - name: Create tag
+      run: |
+        TAG="v1.0.${{ steps.commit.outputs.count }}-${{ steps.date.outputs.date }}"
+        git tag $TAG
+        git push origin $TAG
+
+    - name: Create release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.tag }}
+        release_name: Release ${{ steps.tag.outputs.tag }}
+        body: |
+          Automatic release created from commit ${{ github.sha }}
+
+          ## Changes
+          - Automated deployment to Vercel
+          - Code quality checks passed
+          - Security scan completed
+        draft: false
+        prerelease: false

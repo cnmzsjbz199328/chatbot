@@ -41,14 +41,14 @@ export default function WorkExperience({ workExperience }: WorkExperienceProps) 
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
         </svg>
       </summary>
-      <div className="mb-8 space-y-12 border-l-2 border-[var(--border-color)] pl-8">
+      <div className="mb-8 space-y-8 sm:space-y-12 border-l-2 border-[var(--border-color)] pl-4 sm:pl-8">
         {experienceData.map((work, index) => (
           <div key={index} className="relative">
-            <div className="absolute -left-[38px] top-1 h-4 w-4 rounded-full bg-[var(--primary-color)]"></div>
-            <h4 className="text-xl font-semibold text-[var(--text-primary)]">{work.company}</h4>
-            <p className="font-medium text-[var(--text-secondary)]">{work.position}</p>
-            <p className="text-sm text-[var(--text-secondary)]">{work.startDate} - {work.endDate}</p>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-[var(--text-secondary)]">
+            <div className="absolute -left-[22px] sm:-left-[38px] top-1 h-3 w-3 sm:h-4 sm:w-4 rounded-full bg-[var(--primary-color)]"></div>
+            <h4 className="text-lg sm:text-xl font-semibold text-[var(--text-primary)]">{work.company}</h4>
+            <p className="font-medium text-[var(--text-secondary)] text-sm sm:text-base">{work.position}</p>
+            <p className="text-xs sm:text-sm text-[var(--text-secondary)]">{work.startDate} - {work.endDate}</p>
+            <ul className="mt-3 sm:mt-4 list-disc space-y-2 pl-4 sm:pl-5 text-sm sm:text-base text-[var(--text-secondary)]">
               {work.description?.map((desc, descIndex) => (
                 <li key={descIndex}>{desc}</li>
               )) || []}

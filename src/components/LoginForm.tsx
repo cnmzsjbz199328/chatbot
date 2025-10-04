@@ -62,32 +62,32 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex flex-1 items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
+      <div className="w-full max-w-md space-y-6 sm:space-y-8">
             <div className="text-center">
-              <h2 className="text-3xl font-extrabold tracking-tight">Admin Login</h2>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Admin Login</h2>
               <p className="mt-2 text-sm text-[var(--text-secondary)]">
                 Welcome back! Please enter your credentials.
               </p>
             </div>
             
-            <div className="card space-y-6">
+            <div className="card space-y-4 sm:space-y-6">
               {error && (
                 <div className="bg-red-900/20 border border-red-600 text-red-400 px-4 py-3 rounded-md text-sm">
                   {error}
                 </div>
               )}
               
-              <form onSubmit={handleSignIn} className="space-y-6">
-              <div className="space-y-4 rounded-md shadow-sm">
+              <form onSubmit={handleSignIn} className="space-y-4 sm:space-y-6">
+              <div className="space-y-3 sm:space-y-4 rounded-md shadow-sm">
                 <div>
                   <label className="sr-only" htmlFor="email">Email address</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                      <span className="material-symbols-outlined text-gray-400">email</span>
+                      <span className="material-symbols-outlined text-gray-400 text-xl">email</span>
                     </div>
                     <input 
-                      className="form-input relative block w-full appearance-none rounded-md border pl-10 pr-3 py-3 placeholder-gray-500 focus:z-10 sm:text-sm" 
+                      className="form-input relative block w-full appearance-none rounded-md border pl-10 pr-3 py-2.5 sm:py-3 placeholder-gray-500 focus:z-10 text-sm sm:text-base min-h-[44px]" 
                       id="email" 
                       name="email" 
                       placeholder="Email address" 
@@ -103,10 +103,10 @@ export default function LoginForm() {
                   <label className="sr-only" htmlFor="password">Password</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                      <span className="material-symbols-outlined text-gray-400">lock</span>
+                      <span className="material-symbols-outlined text-gray-400 text-xl">lock</span>
                     </div>
                     <input 
-                      className="form-input relative block w-full appearance-none rounded-md border pl-10 pr-3 py-3 placeholder-gray-500 focus:z-10 sm:text-sm" 
+                      className="form-input relative block w-full appearance-none rounded-md border pl-10 pr-3 py-2.5 sm:py-3 placeholder-gray-500 focus:z-10 text-sm sm:text-base min-h-[44px]" 
                       id="password" 
                       name="password" 
                       placeholder="Password" 
@@ -122,7 +122,7 @@ export default function LoginForm() {
               
               <div>
                 <button 
-                  className="group relative flex w-full justify-center rounded-md border border-transparent bg-[var(--primary-color)] py-3 px-4 text-sm font-medium text-white hover:bg-[#0e5cb3] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" 
+                  className="group relative flex w-full justify-center rounded-md border border-transparent bg-[var(--primary-color)] py-2.5 sm:py-3 px-4 text-sm sm:text-base font-medium text-white hover:bg-[#0e5cb3] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px]" 
                   type="submit"
                   disabled={isLoading}
                 >
@@ -135,14 +135,14 @@ export default function LoginForm() {
               </div>
               
               <div className="flex items-center justify-end">
-                <div className="text-sm">
-                  <a className="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors" href="#">
+                <div className="text-xs sm:text-sm">
+                  <a className="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors min-h-[44px] inline-flex items-center" href="#">
                     Forgot your password?
                   </a>
                 </div>
               </div>
               
-              <div className="text-center text-sm text-[var(--text-secondary)]">
+              <div className="text-center text-xs sm:text-sm text-[var(--text-secondary)]">
                 Don&apos;t have an account?{' '}
                 <Link className="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors" href="/register">
                   Register here

@@ -25,7 +25,7 @@ export default function Skills({ skills }: SkillsProps) {
       </summary>
       <div className="mb-8 flex flex-wrap gap-2">
         {skills.map((skill, index) => (
-          <span key={index} className="rounded-full bg-[var(--accent-color)] px-3 py-1 text-sm text-[var(--text-secondary)]">
+          <span key={index} className="rounded-full bg-[var(--accent-color)] px-2 py-1 sm:px-3 text-xs sm:text-sm text-[var(--text-secondary)]">
             {skill}
           </span>
         ))}

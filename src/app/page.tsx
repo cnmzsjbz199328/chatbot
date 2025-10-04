@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <Layout>
           {/* Hero Section */}
-          <section className="relative overflow-hidden bg-[var(--background)] py-24 sm:py-32">
+          <section className="relative overflow-hidden bg-[var(--background)] py-24 sm:py-16">
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
               <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
                 Showcase Your Technical Work
@@ -15,13 +15,13 @@ export default function Home() {
               </p>
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
-                  className="rounded-lg bg-[var(--primary-color)] px-8 py-3 text-lg font-semibold text-white transition-all hover:bg-opacity-80 hover:shadow-lg"
+                  className="rounded-lg bg-[var(--primary-color)] px-4 py-2 sm:px-6 sm:py-3 lg:px-8 text-base sm:text-lg font-semibold text-white transition-all hover:bg-opacity-80 hover:shadow-lg min-h-[44px] flex items-center justify-center"
                   href="/register"
                 >
                   Get Started for Free
                 </Link>
                   <Link
-                    className="rounded-lg border border-gray-600 dark:border-gray-600 px-8 py-3 text-lg font-semibold text-gray-300 dark:text-gray-300 transition-all hover:bg-gray-800 dark:hover:bg-gray-800 hover:text-white"
+                    className="rounded-lg border border-gray-600 dark:border-gray-600 px-4 py-2 sm:px-6 sm:py-3 lg:px-8 text-base sm:text-lg font-semibold text-gray-300 dark:text-gray-300 transition-all hover:bg-gray-800 dark:hover:bg-gray-800 hover:text-white min-h-[44px] flex items-center justify-center"
                     href="/tj15982183241"
                   >
                      View Example
@@ -31,7 +31,7 @@ export default function Home() {
           </section>
 
           {/* Features Section */}
-          <section id="features" className="py-24 sm:py-32">
+          <section id="features" className="py-24 sm:py-16">
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-2xl text-center">
                 <h2 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">Powerful Features</h2>
@@ -41,7 +41,7 @@ export default function Home() {
               </div>
               <div className="mt-16 grid gap-8 lg:grid-cols-3">
                 {/* Feature 1 */}
-                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-8 border border-[var(--border-color)]">
+                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 border border-[var(--border-color)]">
                   <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> web </span>
                   </div>
@@ -52,7 +52,7 @@ export default function Home() {
                 </div>
 
                 {/* Feature 2 */}
-                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-8 border border-[var(--border-color)]">
+                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 border border-[var(--border-color)]">
                   <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> dashboard </span>
                   </div>
@@ -63,7 +63,7 @@ export default function Home() {
                 </div>
 
                 {/* Feature 3 */}
-                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-8 border border-[var(--border-color)]">
+                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 border border-[var(--border-color)]">
                   <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> person </span>
                   </div>
@@ -74,7 +74,7 @@ export default function Home() {
                 </div>
 
                 {/* Feature 4 */}
-                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-8 border border-[var(--border-color)]">
+                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 border border-[var(--border-color)]">
                   <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> chat </span>
                   </div>
@@ -85,7 +85,7 @@ export default function Home() {
                 </div>
 
                 {/* Feature 5 */}
-                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-8 border border-[var(--border-color)]">
+                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 border border-[var(--border-color)]">
                   <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> phone_android </span>
                   </div>
@@ -96,7 +96,7 @@ export default function Home() {
                 </div>
 
                 {/* Feature 6 */}
-                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-8 border border-[var(--border-color)]">
+                <div className="rounded-lg bg-white/50 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 border border-[var(--border-color)]">
                   <div className="flex h-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                     <span className="material-symbols-outlined text-white"> security </span>
                   </div>
@@ -110,7 +110,7 @@ export default function Home() {
           </section>
 
           {/* Portfolio Section */}
-          <section id="portfolio" className="bg-white/50 dark:bg-gray-800/50 py-24 sm:py-32">
+          <section id="portfolio" className="bg-white/50 dark:bg-gray-800/50 py-24 sm:py-16">
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
               <h2 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-[var(--text-primary)]">View Example</h2>
               <p className="mt-4 text-lg text-[var(--text-secondary)]">
@@ -129,7 +129,7 @@ export default function Home() {
           </section>
 
           {/* CTA Section */}
-          <section className="py-24 sm:py-32">
+          <section className="py-24 sm:py-16">
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
               <h2 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-[var(--text-primary)]">
                 Ready to showcase your work?
