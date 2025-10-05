@@ -72,7 +72,7 @@ export default function InformationEditPage() {
       style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}
     >
       <AdminSidebar />
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 h-screen lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
         <SectionCard
           title="Upload Personal Profile Document"
           description="Upload your resume, personal introduction, and other PDF documents. The AI will learn your background information, and visitors can learn about your experience through chat."

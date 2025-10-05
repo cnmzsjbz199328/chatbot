@@ -40,6 +40,7 @@ export default function ProjectManagement() {
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [message, setMessage] = useState('');
   const [formData, setFormData] = useState<UserProject>(emptyFormData);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const loadProjects = useCallback(async () => {
     if (!user) return;
@@ -61,6 +62,11 @@ export default function ProjectManagement() {
   useEffect(() => {
     loadProjects();
   }, [loadProjects]);
+
+  // 过滤项目列表
+  const filteredProjects = projects.filter(project => 
+    project.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -159,13 +165,12 @@ export default function ProjectManagement() {
   return (
     <div className="space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8">
       <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-[var(--text-primary)]">项目管理</h2>
         <Button 
           onClick={handleAddNewClick} 
           className="flex items-center gap-2 w-full sm:w-auto justify-center min-h-[44px] px-4 py-2"
         >
           <span className="material-symbols-outlined">add</span>
-          <span>添加新项目</span>
+          <span>Add New Project</span>
         </Button>
       </header>
 
@@ -178,12 +183,12 @@ export default function ProjectManagement() {
       {(isAddingNew || editingProject) && (
         <div className="rounded-lg bg-[var(--secondary-color)] p-4 sm:p-6 shadow-lg">
           <h3 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold">
-            {editingProject ? `编辑项目：${editingProject.title}` : '添加新项目'}
+            {editingProject ? `Edit Project: ${editingProject.title}` : 'Add New Project'}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">项目标题 *</label>
-              <input 
+              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">Project Title *</label>
+              <input
                 type="text" 
                 name="title" 
                 value={formData.title} 
@@ -205,12 +210,12 @@ export default function ProjectManagement() {
             
             <div>
               <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                项目图片
+                Project Image
               </label>
               <ImageUploadField
                 value={formData.imageUrl || ''}
                 onChange={(imageUrl) => setFormData(prev => ({ ...prev, imageUrl }))}
-                placeholder="点击上传项目图片..."
+                placeholder="Click to upload project image..."
                 className="w-full"
               />
             </div>
@@ -253,54 +258,72 @@ export default function ProjectManagement() {
                 onClick={handleCancel}
                 className="w-full sm:w-auto min-h-[44px]"
               >
-                取消
+                Cancel
               </Button>
               <Button 
                 type="submit" 
                 loading={isSubmitting}
                 className="w-full sm:w-auto min-h-[44px]"
               >
-                {editingProject ? '更新项目' : '创建项目'}
+                {editingProject ? 'Update Project' : 'Create Project'}
               </Button>
             </div>
           </form>
         </div>
       )}
 
-      {/* 移动端：卡片视图 */}
-      <div className="block lg:hidden space-y-4">
-        <h3 className="text-lg sm:text-xl font-bold">所有项目</h3>
+      {/* 移动端：精简卡片视图 */}
+      <div className="block lg:hidden space-y-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="relative w-full sm:w-64">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search project title..."
+              className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--accent-color)] pl-10 pr-4 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] min-h-[44px]"
+            />
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-xl">
+              search
+            </span>
+          </div>
+        </div>
         {isLoading ? (
-          <div className="text-center py-8 text-[var(--text-secondary)]">加载中...</div>
+          <div className="text-center py-8 text-[var(--text-secondary)]">Loading...</div>
         ) : projects.length === 0 ? (
-          <div className="text-center py-8 text-[var(--text-secondary)]">未找到任何项目。</div>
+          <div className="text-center py-8 text-[var(--text-secondary)]">No projects found.</div>
+        ) : filteredProjects.length === 0 ? (
+          <div className="text-center py-8 text-[var(--text-secondary)]">No matching projects found.</div>
         ) : (
-          projects.map(project => (
-            <div key={project.id} className="rounded-lg bg-[var(--secondary-color)] p-4 shadow-lg border border-[var(--border-color)]">
-              <div className="flex justify-between items-start mb-3">
-                <h4 className="font-semibold text-lg flex-1">{project.title}</h4>
-                <span className={`rounded-full px-2 py-1 text-xs font-medium ${project.status === 'completed' ? 'bg-green-900/50 text-green-300' : project.status === 'active' ? 'bg-blue-900/50 text-blue-300' : 'bg-[var(--accent-color)] text-[var(--text-secondary)]'}`}>
-                  {project.status === 'completed' ? '已完成' : project.status === 'active' ? '进行中' : '已归档'}
-                </span>
-              </div>
-              <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-2">{project.description}</p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => handleEditClick(project)}
-                  className="flex-1 justify-center gap-2 min-h-[44px]"
-                >
-                  <span className="material-symbols-outlined text-lg">edit</span>
-                  <span>编辑</span>
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  onClick={() => handleDelete(project.id!)}
-                  className="flex-1 justify-center gap-2 text-red-500 hover:text-red-400 hover:bg-red-900/20 min-h-[44px]"
-                >
-                  <span className="material-symbols-outlined text-lg">delete</span>
-                  <span>删除</span>
-                </Button>
+          filteredProjects.map(project => (
+            <div key={project.id} className="rounded-lg bg-[var(--secondary-color)] p-3 shadow border border-[var(--border-color)]">
+              <div className="flex items-center gap-3">
+                {/* 标题和状态 */}
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-base truncate mb-1">{project.title}</h4>
+                  <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${project.status === 'completed' ? 'bg-green-900/50 text-green-300' : project.status === 'active' ? 'bg-blue-900/50 text-blue-300' : 'bg-[var(--accent-color)] text-[var(--text-secondary)]'}`}>
+                    {project.status === 'completed' ? 'Completed' : project.status === 'active' ? 'In Progress' : 'Archived'}
+                  </span>
+                </div>
+                {/* 操作按钮 */}
+                <div className="flex gap-1 flex-shrink-0">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleEditClick(project)}
+                    className="min-h-[44px] min-w-[44px]"
+                  >
+                    <span className="material-symbols-outlined text-xl">edit</span>
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleDelete(project.id!)}
+                    className="min-h-[44px] min-w-[44px] text-red-500 hover:text-red-400 hover:bg-red-900/20"
+                  >
+                    <span className="material-symbols-outlined text-xl">delete</span>
+                  </Button>
+                </div>
               </div>
             </div>
           ))
@@ -309,30 +332,45 @@ export default function ProjectManagement() {
 
       {/* 桌面端：表格视图 */}
       <div className="hidden lg:block mt-8 rounded-lg bg-[var(--secondary-color)] p-6 shadow-lg">
-        <h3 className="mb-6 text-xl font-bold">所有项目</h3>
+        <div className="flex items-center justify-between mb-6">
+          <div className="relative w-80">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search project title..."
+              className="w-full rounded-lg border border-[var(--border-color)] bg-[var(--accent-color)] pl-10 pr-4 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] min-h-[44px]"
+            />
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-xl">
+              search
+            </span>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-[var(--border-color)]">
-                <th className="px-4 py-3 text-sm font-medium">项目名称</th>
-                <th className="px-4 py-3 text-sm font-medium">描述</th>
-                <th className="px-4 py-3 text-sm font-medium">状态</th>
-                <th className="px-4 py-3 text-sm font-medium">操作</th>
+                <th className="px-4 py-3 text-sm font-medium">Project Name</th>
+                <th className="px-4 py-3 text-sm font-medium">Description</th>
+                <th className="px-4 py-3 text-sm font-medium">Status</th>
+                <th className="px-4 py-3 text-sm font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={4} className="text-center py-4">加载中...</td></tr>
+                <tr><td colSpan={4} className="text-center py-4">Loading...</td></tr>
               ) : projects.length === 0 ? (
-                <tr><td colSpan={4} className="text-center py-4 text-[var(--text-secondary)]">未找到任何项目。</td></tr>
+                <tr><td colSpan={4} className="text-center py-4 text-[var(--text-secondary)]">No projects found.</td></tr>
+              ) : filteredProjects.length === 0 ? (
+                <tr><td colSpan={4} className="text-center py-4 text-[var(--text-secondary)]">No matching projects found.</td></tr>
               ) : (
-                projects.map(project => (
+                filteredProjects.map(project => (
                   <tr key={project.id} className="border-b border-[var(--border-color)] hover:bg-[var(--accent-color)]/50">
                     <td className="px-4 py-3 font-medium">{project.title}</td>
                     <td className="max-w-xs truncate px-4 py-3 text-[var(--text-secondary)]">{project.description}</td>
                     <td className="px-4 py-3">
                       <span className={`rounded-full px-3 py-1 text-xs font-medium ${project.status === 'completed' ? 'bg-green-900/50 text-green-300' : project.status === 'active' ? 'bg-blue-900/50 text-blue-300' : 'bg-[var(--accent-color)] text-[var(--text-secondary)]'}`}>
-                        {project.status === 'completed' ? '已完成' : project.status === 'active' ? '进行中' : '已归档'}
+                        {project.status === 'completed' ? 'Completed' : project.status === 'active' ? 'In Progress' : 'Archived'}
                       </span>
                     </td>
                     <td className="px-4 py-3">
