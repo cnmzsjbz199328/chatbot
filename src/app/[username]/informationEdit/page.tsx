@@ -15,6 +15,21 @@ const FileUploadComponent = dynamic(() => import('@/components/file-upload'), {
   loading: () => <LoadingSpinner size="sm" />
 });
 
+const EducationForm = dynamic(() => import('@/components/EducationForm'), {
+  ssr: false,
+  loading: () => <LoadingSpinner size="sm" />
+});
+
+const WorkExperienceForm = dynamic(() => import('@/components/WorkExperienceForm'), {
+  ssr: false,
+  loading: () => <LoadingSpinner size="sm" />
+});
+
+const HobbiesForm = dynamic(() => import('@/components/HobbiesForm'), {
+  ssr: false,
+  loading: () => <LoadingSpinner size="sm" />
+});
+
 const LoadingSpinner = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
   const sizeClasses = {
     sm: "h-8 w-8",
@@ -82,6 +97,27 @@ export default function InformationEditPage() {
 
         <SectionCard title="Edit Basic Information">
           <UserProfileForm />
+        </SectionCard>
+
+        <SectionCard 
+          title="Education Background"
+          description="Add your educational background, including schools, degrees, and time periods."
+        >
+          <EducationForm />
+        </SectionCard>
+
+        <SectionCard 
+          title="Work Experience"
+          description="Add your work experience, including company, position, time period, and job responsibilities."
+        >
+          <WorkExperienceForm />
+        </SectionCard>
+
+        <SectionCard 
+          title="Hobbies & Interests"
+          description="Add your hobbies and interests to help visitors better understand you."
+        >
+          <HobbiesForm />
         </SectionCard>
       </main>
     </div>
