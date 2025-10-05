@@ -33,6 +33,7 @@ export const userProfilesTable = pgTable("user_profiles", {
   website: text('website'),
   github: text('github'),
   linkedin: text('linkedin'),
+  contactEmail: text('contact_email'), // 公开展示的联系邮箱（可选）
   skills: json('skills').$type<string[]>(),
   // 教育信息
   education: json('education').$type<{

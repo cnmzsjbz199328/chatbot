@@ -12,6 +12,7 @@ interface UserProfile {
   bio?: string;
   location?: string;
   phone?: string;
+  contactEmail?: string; // 公开展示的联系邮箱
   website?: string;
   github?: string;
   linkedin?: string;
@@ -39,7 +40,11 @@ export default function UserProfileForm() {
       if (error && error.code !== 'PGRST116') {
         console.error('Error loading profile:', error);
       } else if (data) {
-        setProfile(data);
+        // 转换字段名：下划线 -> 驼峰（匹配组件状态）
+        setProfile({
+          ...data,
+          contactEmail: data.contact_email, // 下划线 -> 驼峰
+        });
         setSkills(data.skills?.join(', ') || '');
       }
     } catch (error) {
@@ -69,9 +74,18 @@ export default function UserProfileForm() {
     setMessage('');
 
     try {
+      // 转换字段名：驼峰 -> 下划线（匹配数据库schema）
       const profileData = {
-        ...profile,
         id: user.id,
+        display_name: profile.display_name,
+        avatar: profile.avatar,
+        bio: profile.bio,
+        location: profile.location,
+        phone: profile.phone,
+        contact_email: profile.contactEmail, // 驼峰 -> 下划线
+        website: profile.website,
+        github: profile.github,
+        linkedin: profile.linkedin,
         skills: skills.split(',').map(s => s.trim()).filter(Boolean)
       };
 
@@ -191,6 +205,24 @@ export default function UserProfileForm() {
               onChange={handleInputChange}
               placeholder="+86 138-0000-0000"
             />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="contactEmail">
+              公开邮箱 <span className="text-xs text-[var(--text-secondary)]">(用于展示)</span>
+            </label>
+            <input
+              className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
+              id="contactEmail"
+              name="contactEmail"
+              type="email"
+              value={profile.contactEmail || ''}
+              onChange={handleInputChange}
+              placeholder="contact@example.com"
+            />
+            <p className="mt-1 text-xs text-[var(--text-secondary)]">
+              💡 建议：使用专门的工作邮箱，不要使用登录账号邮箱
+            </p>
           </div>
         </div>
 

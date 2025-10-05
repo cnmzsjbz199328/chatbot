@@ -5,7 +5,7 @@ interface ContactInfoProps {
 }
 
 export default function ContactInfo({ profile }: ContactInfoProps) {
-  const hasContactInfo = profile?.location || profile?.phone || profile?.website || profile?.github || profile?.linkedin;
+  const hasContactInfo = profile?.contactEmail || profile?.location || profile?.phone || profile?.website || profile?.github || profile?.linkedin;
 
   return (
     <details className="mb-2 group">
@@ -24,6 +24,19 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
         </svg>
       </summary>
       <div className="grid gap-6 md:grid-cols-2">
+        {profile?.contactEmail && (
+          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-3">
+            <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">email</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[var(--text-secondary)] break-all">
+                <a href={`mailto:${profile.contactEmail}`} className="hover:text-[var(--text-primary)] transition-colors break-all">
+                  {profile.contactEmail}
+                </a>
+              </p>
+            </div>
+          </div>
+        )}
+
         {profile?.location && (
           <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-3">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">location_on</span>

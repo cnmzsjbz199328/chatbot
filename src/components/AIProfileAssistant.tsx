@@ -92,6 +92,7 @@ export default function AIProfileAssistant({ onSuccess }: { onSuccess?: () => vo
         bio: extractedData.bio,
         location: extractedData.location,
         phone: extractedData.phone,
+        contact_email: extractedData.email, // AI提取的email保存到contact_email
         website: extractedData.website,
         github: extractedData.github,
         linkedin: extractedData.linkedin,
