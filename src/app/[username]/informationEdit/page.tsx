@@ -34,10 +34,10 @@ const SectionCard = ({ title, description, children }: {
   description?: string; 
   children: React.ReactNode; 
 }) => (
-  <div className="rounded-lg bg-[var(--secondary-color)] p-6 shadow-lg">
-    <h3 className="mb-6 text-xl font-bold">{title}</h3>
+  <div className="rounded-lg bg-[var(--secondary-color)] p-4 sm:p-5 lg:p-6 shadow-lg">
+    <h3 className="mb-4 sm:mb-5 lg:mb-6 text-lg sm:text-xl font-bold">{title}</h3>
     {description && (
-      <p className="text-sm text-[var(--text-secondary)] mb-4">{description}</p>
+      <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-3 sm:mb-4 leading-relaxed">{description}</p>
     )}
     {children}
   </div>
@@ -68,11 +68,11 @@ export default function InformationEditPage() {
 
   return (
     <div 
-      className="relative flex size-full h-screen flex-row overflow-hidden bg-[var(--background)] font-sans text-[var(--text-primary)]" 
+      className="relative flex size-full min-h-screen flex-col lg:flex-row overflow-hidden bg-[var(--background)] font-sans text-[var(--text-primary)]" 
       style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}
     >
       <AdminSidebar />
-      <main className="flex-1 overflow-y-auto p-8 space-y-8">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
         <SectionCard
           title="Upload Personal Profile Document"
           description="Upload your resume, personal introduction, and other PDF documents. The AI will learn your background information, and visitors can learn about your experience through chat."

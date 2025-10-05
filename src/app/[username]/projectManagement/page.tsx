@@ -36,11 +36,11 @@ export default function ProjectManagementPage() {
   }
 
   return (
-    <div className="relative flex size-full h-screen flex-row overflow-hidden bg-[var(--background)] font-sans text-[var(--text-primary)]" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
+    <div className="relative flex size-full min-h-screen flex-col lg:flex-row overflow-hidden bg-[var(--background)] font-sans text-[var(--text-primary)]" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
       <AdminSidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="bg-[var(--background)] text-[var(--text-primary)] min-h-screen">
-          <div className="p-6">
+          <div className="p-4 sm:p-5 lg:p-6">
             <ProjectManagement />
           </div>
         </div>

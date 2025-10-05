@@ -25,7 +25,7 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
       </summary>
       <div className="grid gap-6 md:grid-cols-2">
         {profile?.location && (
-          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
+          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-3">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">location_on</span>
             <div className="flex-1 min-w-0">
               <p className="text-[var(--text-secondary)] break-words">{profile.location}</p>
@@ -34,7 +34,7 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
         )}
 
         {profile?.phone && (
-          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
+          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-3">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">phone</span>
             <div className="flex-1 min-w-0">
               <p className="text-[var(--text-secondary)] break-words">{profile.phone}</p>
@@ -43,7 +43,7 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
         )}
 
         {profile?.website && (
-          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
+          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-3">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">language</span>
             <div className="flex-1 min-w-0">
               <p className="text-[var(--text-secondary)] break-all">
@@ -56,7 +56,7 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
         )}
 
         {profile?.github && (
-          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
+          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-3">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">code</span>
             <div className="flex-1 min-w-0">
               <p className="text-[var(--text-secondary)] break-all">
@@ -69,7 +69,7 @@ export default function ContactInfo({ profile }: ContactInfoProps) {
         )}
 
         {profile?.linkedin && (
-          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-6">
+          <div className="flex items-center gap-4 rounded-lg bg-[var(--accent-color)] p-3">
             <span className="material-symbols-outlined text-2xl text-[var(--primary-color)]">group</span>
             <div className="flex-1 min-w-0">
               <p className="text-[var(--text-secondary)] break-all">
