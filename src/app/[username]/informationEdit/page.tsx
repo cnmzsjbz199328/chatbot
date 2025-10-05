@@ -1,9 +1,14 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import AdminSidebar from '@/components/AdminSidebar';
+
+const AIProfileAssistant = dynamic(() => import('@/components/AIProfileAssistant'), {
+  ssr: false,
+  loading: () => <LoadingSpinner size="md" />
+});
 
 const UserProfileForm = dynamic(() => import('@/components/UserProfileForm'), {
   ssr: false,
@@ -61,12 +66,21 @@ const SectionCard = ({ title, description, children }: {
 export default function InformationEditPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
+  const [showAdvancedForms, setShowAdvancedForms] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
+
+  const handleAISuccess = () => {
+    // 刷新页面数据
+    setRefreshKey(prev => prev + 1);
+    // 展开高级表单让用户查看结果
+    setShowAdvancedForms(true);
+  };
 
   if (loading) {
     return (
@@ -88,37 +102,72 @@ export default function InformationEditPage() {
     >
       <AdminSidebar />
       <main className="flex-1 overflow-y-auto p-4 sm:p-6 h-screen lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+        {/* AI辅助填充 - 首要功能 */}
         <SectionCard
-          title="Upload Personal Profile Document"
-          description="Upload your resume, personal introduction, and other PDF documents. The AI will learn your background information, and visitors can learn about your experience through chat."
+          title="🤖 AI-Assisted Profile Setup (Quick Start)"
+          description="Paste your resume or personal information in any format. AI will automatically extract and fill in all your data. This is the fastest way to get started!"
         >
-          <FileUploadComponent />
+          <AIProfileAssistant onSuccess={handleAISuccess} />
         </SectionCard>
 
-        <SectionCard title="Edit Basic Information">
-          <UserProfileForm />
-        </SectionCard>
+        {/* 高级编辑表单 - 可折叠 */}
+        <div className="rounded-lg bg-[var(--secondary-color)] p-4 sm:p-5 lg:p-6 shadow-lg">
+          <button
+            onClick={() => setShowAdvancedForms(!showAdvancedForms)}
+            className="w-full flex items-center justify-between text-left group"
+          >
+            <h3 className="text-lg sm:text-xl font-bold">
+              ⚙️ Advanced Manual Editing
+            </h3>
+            <span className={`material-symbols-outlined transition-transform ${showAdvancedForms ? 'rotate-180' : ''}`}>
+              expand_more
+            </span>
+          </button>
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-2 mb-3 sm:mb-4">
+            Prefer manual control? Use these forms to edit each section individually.
+          </p>
 
-        <SectionCard 
-          title="Education Background"
-          description="Add your educational background, including schools, degrees, and time periods."
-        >
-          <EducationForm />
-        </SectionCard>
+          {showAdvancedForms && (
+            <div className="space-y-4 sm:space-y-6 lg:space-y-8 mt-4 sm:mt-6" key={refreshKey}>
+              <div className="border-t border-[var(--border-color)] pt-4 sm:pt-6">
+                <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Upload Personal Profile Document</h4>
+                <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-3 sm:mb-4">
+                  Upload your resume, personal introduction, and other PDF documents. The AI will learn your background information, and visitors can learn about your experience through chat.
+                </p>
+                <FileUploadComponent />
+              </div>
 
-        <SectionCard 
-          title="Work Experience"
-          description="Add your work experience, including company, position, time period, and job responsibilities."
-        >
-          <WorkExperienceForm />
-        </SectionCard>
+              <div className="border-t border-[var(--border-color)] pt-4 sm:pt-6">
+                <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Basic Information</h4>
+                <UserProfileForm />
+              </div>
 
-        <SectionCard 
-          title="Hobbies & Interests"
-          description="Add your hobbies and interests to help visitors better understand you."
-        >
-          <HobbiesForm />
-        </SectionCard>
+              <div className="border-t border-[var(--border-color)] pt-4 sm:pt-6">
+                <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Education Background</h4>
+                <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-3 sm:mb-4">
+                  Add your educational background, including schools, degrees, and time periods.
+                </p>
+                <EducationForm />
+              </div>
+
+              <div className="border-t border-[var(--border-color)] pt-4 sm:pt-6">
+                <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Work Experience</h4>
+                <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-3 sm:mb-4">
+                  Add your work experience, including company, position, time period, and job responsibilities.
+                </p>
+                <WorkExperienceForm />
+              </div>
+
+              <div className="border-t border-[var(--border-color)] pt-4 sm:pt-6">
+                <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Hobbies & Interests</h4>
+                <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-3 sm:mb-4">
+                  Add your hobbies and interests to help visitors better understand you.
+                </p>
+                <HobbiesForm />
+              </div>
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

@@ -1,9 +1,9 @@
 export const runtime = 'nodejs';
 
-import { cohere } from '@ai-sdk/cohere';
 import { streamText, convertToModelMessages } from 'ai';
 import { NextResponse } from 'next/server';
 
+import { getAIConfig } from '@/lib/ai-config';
 import { getEmbedding } from '@/lib/custom-embedding';
 import { getIndex } from '@/lib/pinecone';
 import { createClient } from '@/lib/supabase/server';
@@ -84,8 +84,9 @@ Please note:
 5. Keep your answers concise and relevant.
 6. Answer in the language used by the questioner.`;
 
+        const aiConfig = getAIConfig();
         const finalPayload = {
-            model: cohere('command-r-08-2024'),
+            model: aiConfig.chat,
             system: systemPrompt,
             messages: convertToModelMessages(messages),
         };
