@@ -30,15 +30,32 @@ export default function ProjectShowcase({ projects }: ProjectShowcaseProps) {
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-h-[24rem] lg:h-96">
-      {/* 左侧Project list */}
+      {/* Project list - 移动端水平滚动，桌面端垂直滚动 */}
       <div className="w-full lg:w-1/3 lg:min-w-64">
-        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Project list</h3>
-        <div className="space-y-2 max-h-60 lg:max-h-80 overflow-y-auto">
+        <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-[var(--text-primary)] mb-3 lg:mb-4">Project list</h3>
+        {/* 移动端：水平滚动 */}
+        <div className="flex gap-2 overflow-x-auto pb-3 lg:hidden snap-x snap-mandatory scroll-smooth">
           {projects.map((project) => (
             <button
               key={project.id}
               onClick={() => handleProjectSelect(project)}
-              className={`w-full text-left p-2 sm:p-3 rounded-lg border transition-all duration-200 min-h-[44px] ${
+              className={`flex-shrink-0 w-44 sm:w-52 text-left p-3 rounded-lg border transition-all duration-200 min-h-[44px] snap-start ${
+                selectedProject?.id === project.id
+                  ? 'border-[var(--primary-color)] bg-[var(--primary-color)]/10 text-[var(--text-primary)]'
+                  : 'border-gray-600 dark:border-gray-600 light:border-gray-300 bg-gray-800/50 dark:bg-gray-800/50 light:bg-gray-100/50 text-[var(--text-secondary)] hover:border-gray-500 dark:hover:border-gray-500 light:hover:border-gray-400 hover:bg-gray-700/50 dark:hover:bg-gray-700/50 light:hover:bg-gray-200/50'
+              }`}
+            >
+              <h4 className="font-medium text-sm line-clamp-2">{project.title}</h4>
+            </button>
+          ))}
+        </div>
+        {/* 桌面端：垂直滚动 */}
+        <div className="hidden lg:block space-y-2 max-h-80 overflow-y-auto">
+          {projects.map((project) => (
+            <button
+              key={project.id}
+              onClick={() => handleProjectSelect(project)}
+              className={`w-full text-left p-3 rounded-lg border transition-all duration-200 min-h-[44px] ${
                 selectedProject?.id === project.id
                   ? 'border-[var(--primary-color)] bg-[var(--primary-color)]/10 text-[var(--text-primary)]'
                   : 'border-gray-600 dark:border-gray-600 light:border-gray-300 bg-gray-800/50 dark:bg-gray-800/50 light:bg-gray-100/50 text-[var(--text-secondary)] hover:border-gray-500 dark:hover:border-gray-500 light:hover:border-gray-400 hover:bg-gray-700/50 dark:hover:bg-gray-700/50 light:hover:bg-gray-200/50'
@@ -54,9 +71,9 @@ export default function ProjectShowcase({ projects }: ProjectShowcaseProps) {
         </div>
       </div>
 
-      {/* 右侧Project list */}
+      {/* Project Details */}
       <div className="flex-1">
-        <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Details</h3>
+        <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-[var(--text-primary)] mb-3 lg:mb-4">Details</h3>
         {selectedProject ? (
           <div className="h-full">
             <ProjectCard project={selectedProject} index={0} />

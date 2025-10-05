@@ -19,30 +19,14 @@ const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
 
     // Initialize component
     useEffect(() => {
-        // Show welcome message based on the target user
-        const welcomeMessage: UIMessage = {
-            id: 'welcome',
-            role: 'assistant',
-            parts: [{
-                type: 'text',
-                text: `Hello! I am the intelligent assistant for ${userProfile?.displayName || targetUsername}. You can ask about ${userProfile?.displayName || targetUsername}'s project experience, skills, or any other information. I will answer your questions based on their portfolio.`
-            }]
-        };
-        setLocalMessages([welcomeMessage]);
+        // Initialize with empty messages
+        setLocalMessages([]);
     }, [targetUsername, userProfile]);
 
     // Function to clear conversation history
     const clearConversation = async () => {
-        // Show the welcome message again
-        const welcomeMessage: UIMessage = {
-            id: 'welcome-' + Date.now(),
-            role: 'assistant',
-            parts: [{
-                type: 'text',
-                text: `Hello! I am the intelligent assistant for ${userProfile?.displayName || targetUsername}. You can ask about ${userProfile?.displayName || targetUsername}'s project experience, skills, or any other information. I will answer your questions based on their portfolio.`
-            }]
-        };
-        setLocalMessages([welcomeMessage]);
+        // Clear all messages
+        setLocalMessages([]);
     };
 
     const endRef = React.useRef<HTMLDivElement>(null);
