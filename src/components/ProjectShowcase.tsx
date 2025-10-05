@@ -50,7 +50,7 @@ export default function ProjectShowcase({ projects }: ProjectShowcaseProps) {
           ))}
         </div>
         {/* 桌面端：垂直滚动 */}
-        <div className="hidden lg:block space-y-2 max-h-80 overflow-y-auto">
+        <div className="hidden lg:block space-y-2 h-full overflow-y-auto">
           {projects.map((project) => (
             <button
               key={project.id}
