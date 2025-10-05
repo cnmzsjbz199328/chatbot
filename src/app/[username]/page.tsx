@@ -19,6 +19,7 @@ export default function DashboardPage() {
   const [projects, setProjects] = useState<UserProjectModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isChatOpen, setIsChatOpen] = useState(false); // 控制聊天框展开/隐藏，默认隐藏
 
   // Get user portfolio data (profile + projects)
   async function getPortfolioData(username: string): Promise<{ profile: UserProfileModel | null; projects: UserProjectModel[] }> {
@@ -120,12 +121,37 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Right sidebar for AI assistant */}
-        <aside className="w-full lg:w-96 lg:flex-shrink-0 lg:h-full lg:pt-0">
-          <div className="h-full flex flex-col sticky top-0 rounded-lg bg-gray-800/50 dark:bg-gray-800/50 light:bg-gray-100/50 p-6 shadow-lg">
-            <ChatContainer targetUsername={username} userProfile={profile} />
-          </div>
-        </aside>
+        {/* Right sidebar for AI assistant with toggle */}
+        <div className="relative">
+          {/* Toggle button - 固定在左侧 */}
+          <button
+            onClick={() => setIsChatOpen(!isChatOpen)}
+            className={`
+              fixed lg:absolute top-1/2 -translate-y-1/2 z-50
+              bg-[var(--primary-color)] hover:bg-opacity-80 text-white
+              rounded-l-lg shadow-lg transition-all duration-300
+              w-10 h-16 flex items-center justify-center
+              ${isChatOpen ? 'right-[calc(100vw-2.5rem)] lg:right-[calc(24rem-2.5rem)]' : 'right-4'}
+            `}
+            aria-label={isChatOpen ? "隐藏聊天框" : "显示聊天框"}
+          >
+            <span className="material-symbols-outlined text-xl">
+              {isChatOpen ? 'chevron_right' : 'chat'}
+            </span>
+          </button>
+
+          {/* Chat sidebar */}
+          <aside className={`
+            fixed lg:relative top-0 right-0 h-[calc(100vh-5rem)] lg:h-full
+            w-full lg:w-96 lg:flex-shrink-0 lg:pt-0
+            transition-transform duration-300 ease-in-out z-40
+            ${isChatOpen ? 'translate-x-0' : 'translate-x-full'}
+          `}>
+            <div className="h-full flex flex-col sticky top-0 rounded-lg bg-gray-800/95 dark:bg-gray-800/95 light:bg-gray-100/95 lg:bg-gray-800/50 lg:dark:bg-gray-800/50 lg:light:bg-gray-100/50 p-6 shadow-lg">
+              <ChatContainer targetUsername={username} userProfile={profile} />
+            </div>
+          </aside>
+        </div>
       </div>
     </PortfolioLayout>
   );
