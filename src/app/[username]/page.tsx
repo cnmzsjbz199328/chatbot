@@ -121,7 +121,7 @@ export default function DashboardPage() {
                   {profile ? `${profile.displayName || username}'s Portfolio` : 'Portfolio'}
                 </h2>
                 <p className="mt-4 text-lg text-[var(--text-secondary)]">
-                  {profile?.bio || 'A series of projects showcasing my IT skills and experience.'}
+                  {profile?.bio || 'Just guess.'}
                 </p>
               </div>
             </div>
@@ -138,10 +138,12 @@ export default function DashboardPage() {
             </>
           )}
 
-          {/* Dynamic project showcase */}
-          <div className="mt-12">
-            <ProjectShowcase projects={projects} />
-          </div>
+          {/* Dynamic project showcase - 仅在有项目时显示 */}
+          {projects.length > 0 && (
+            <div className="mt-12">
+              <ProjectShowcase projects={projects} />
+            </div>
+          )}
         </div>
 
         {/* Right sidebar for AI assistant with toggle */}

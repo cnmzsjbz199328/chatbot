@@ -38,7 +38,7 @@ export default function RegisterForm() {
       if (error) {
         setError(error.message);
       } else if (data.user) {
-        setMessage('sign up成功！请检查您的邮箱以验证账户。');
+        setMessage('sign up success！Please check your email to verify your account.');
         // 可选：几秒后跳转到log in页面
         setTimeout(() => {
           router.push('/login');
