@@ -7,9 +7,10 @@ interface StackedFeatureCardProps {
   title: string;
   description: string;
   index: number;
+  highlight?: boolean;
 }
 
-export default function StackedFeatureCard({ icon, title, description, index }: StackedFeatureCardProps) {
+export default function StackedFeatureCard({ icon, title, description, index, highlight = false }: StackedFeatureCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
@@ -45,25 +46,45 @@ export default function StackedFeatureCard({ icon, title, description, index }: 
   return (
     <div
       ref={cardRef}
-      className="sticky rounded-lg bg-white dark:bg-gray-800 p-4 sm:p-6 lg:p-8 border border-[var(--border-color)] flex flex-col sm:flex-row gap-4 transition-all duration-300 shadow-lg"
+      className={`sticky rounded-lg p-4 sm:p-6 lg:p-8 border flex flex-col sm:flex-row gap-4 transition-all duration-300 shadow-lg ${
+        highlight
+          ? 'bg-gradient-to-br from-[var(--primary-color)]/10 to-purple-500/10 border-[var(--primary-color)] ring-2 ring-[var(--primary-color)]/20'
+          : 'bg-white dark:bg-gray-800 border-[var(--border-color)]'
+      }`}
       style={{
         top: `${topOffset}px`,
         transform: `scale(${scale})`,
         opacity: opacity,
-        zIndex: index + 10, // 正序 z-index，后面的卡片在上面
+        zIndex: highlight ? index + 100 : index + 10, // Highlighted cards have higher z-index
       }}
     >
-      <div className="flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-[var(--primary-color)] flex-shrink-0">
+      <div className={`flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg flex-shrink-0 ${
+        highlight 
+          ? 'bg-gradient-to-br from-[var(--primary-color)] to-purple-600 shadow-lg' 
+          : 'bg-[var(--primary-color)]'
+      }`}>
         <span className="material-symbols-outlined text-white text-2xl sm:text-3xl">{icon}</span>
       </div>
       <div className="flex-1">
+        {highlight && (
+          <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-[var(--primary-color)]/20 px-3 py-1 text-xs font-semibold text-[var(--primary-color)]">
+            <span className="material-symbols-outlined text-sm">auto_awesome</span>
+            AI Feature
+          </div>
+        )}
         <h3 className="text-xl font-semibold text-[var(--text-primary)]">{title}</h3>
         <p className="mt-2 text-[var(--text-secondary)]">{description}</p>
         
         {/* 底部进度条 */}
-        <div className="mt-4 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className={`mt-4 h-1 rounded-full overflow-hidden ${
+          highlight ? 'bg-[var(--primary-color)]/20' : 'bg-gray-200 dark:bg-gray-700'
+        }`}>
           <div
-            className="h-full bg-[var(--primary-color)] transition-all duration-300 rounded-full"
+            className={`h-full transition-all duration-300 rounded-full ${
+              highlight 
+                ? 'bg-gradient-to-r from-[var(--primary-color)] to-purple-600' 
+                : 'bg-[var(--primary-color)]'
+            }`}
             style={{ width: `${progress * 100}%` }}
           />
         </div>
