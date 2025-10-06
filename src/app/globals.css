@@ -1,14 +1,44 @@
 @import "tailwindcss";
 
 :root {
+  --primary-color: #1173d4;
+  /* 默认暗色主题 */
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --secondary-color: #1a202c;
+  --accent-color: #2d3748;
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --border-color: #4a5568;
+}
+
+/* 明亮主题 */
+[data-theme="light"] {
   --background: #ffffff;
   --foreground: #171717;
+  --secondary-color: #f7fafc;
+  --accent-color: #edf2f7;
+  --text-primary: #000000;
+  --text-secondary: #374151;
+  --border-color: #e2e8f0;
+}
+
+/* 暗色主题 */
+[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --secondary-color: #1a202c;
+  --accent-color: #2d3748;
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --border-color: #4a5568;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
+  --font-inter: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -19,8 +49,271 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* 为固定 header 预留空间 */
+}
+
+/* 增强平滑滚动效果 */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--accent-color);
+  opacity: 0.3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0e5cb3;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--secondary-color);
+  color: var(--text-primary);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 移动端触摸优化 */
+@media (max-width: 480px) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* 确保触摸目标足够大 (WCAG 2.1 标准) */
+  button, 
+  a,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Material Icons fallback */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 表单输入样式 - 响应式优化 */
+.form-input {
+  background-color: var(--accent-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  border-width: 1px;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+@media (min-width: 640px) {
+  .form-input {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .form-input {
+    padding: 1rem;
+  }
+}
+
+.form-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+/* 按钮样式 */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0c5ab2;
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(17, 115, 212, 0.5);
+}
+
+.btn-secondary {
+  background-color: var(--accent-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: background-color 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: #374151;
+}
+
+/* 卡片样式 - 响应式内边距 */
+.card {
+  background-color: var(--accent-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    padding: 2rem;
+  }
+}
+
+/* 时间线样式 - 响应式优化 */
+.timeline-item {
+  position: relative;
+  padding-left: 1rem;
+  border-left: 2px solid var(--border-color);
+}
+
+@media (min-width: 640px) {
+  .timeline-item {
+    padding-left: 2rem;
+  }
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 0.25rem;
+  width: 12px;
+  height: 12px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+}
+
+@media (min-width: 640px) {
+  .timeline-item::before {
+    left: -9px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* 导航栏样式 */
+.navbar {
+  background-color: rgba(26, 32, 44, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* 响应式工具类 - 自定义容器 */
+.custom-container {
+  width: 100%;
+  margin: 0;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .custom-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .custom-container {
+    padding: 0 2rem;
+  }
+}
+
+/* 加载动画 */
+.loading-spinner {
+  border: 2px solid var(--border-color);
+  border-top: 2px solid var(--primary-color);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Focus 样式优化 - 可访问性增强 */
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* 触摸设备点击反馈 */
+@media (hover: none) {
+  button:active,
+  a:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* 小屏幕字体大小优化 */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.875rem; /* 30px */
+    line-height: 2.25rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem; /* 24px */
+    line-height: 2rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.75rem;
+  }
 }

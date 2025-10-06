@@ -1,0 +1,147 @@
+<html><head>
+<meta charset="utf-8"/>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-color: #1173d4;
+      }
+    </style>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+<div class="relative flex size-full min-h-screen flex-row overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
+<aside class="sticky top-0 h-screen w-64 flex-shrink-0 bg-gray-800 p-6">
+<div class="flex items-center gap-2">
+<svg class="h-8 w-8 text-[var(--primary-color)]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+<h1 class="text-xl font-bold leading-tight tracking-[-0.015em]">管理后台</h1>
+</div>
+<nav class="mt-8 flex flex-col gap-4">
+<a class="flex items-center gap-3 rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="#">
+<span class="material-symbols-outlined"> folder_managed </span>
+<span>项目管理</span>
+</a>
+<a class="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white" href="#">
+<span class="material-symbols-outlined"> person </span>
+<span>个人信息</span>
+</a>
+</nav>
+<div class="mt-auto">
+<a class="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white" href="#">
+<span class="material-symbols-outlined"> logout </span>
+<span>退出log in</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto">
+<header class="sticky top-0 z-10 w-full border-b border-gray-700 bg-gray-900/80 p-4 backdrop-blur-md">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-bold">项目管理</h2>
+<button class="flex items-center gap-2 rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-semibold text-white hover:bg-opacity-80">
+<span class="material-symbols-outlined"> add </span>
+<span>添加新项目</span>
+</button>
+</div>
+</header>
+<div class="p-8">
+<div class="rounded-lg bg-gray-800 p-6 shadow-lg">
+<h3 class="mb-6 text-xl font-bold">编辑项目：电子商务平台</h3>
+<form class="space-y-6">
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="projectName">项目名称</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="projectName" type="text" value="电子商务平台"/>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="projectImage">项目图片</label>
+<div class="flex items-center gap-4">
+<img alt="Project Image" class="h-20 w-20 rounded-md object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5XWtqyPk-9vut3xYNZl8WWdBuSkB302p0S9ht1Q9nRMWmG5Nwa4C9ui8Cs8w4sDi_JoiAqkb-nZxr7fcu0D9JHNElaxPnA1SPh4OQyw6aQMZMLnnz2TD4KytXg5ycLg3x_KPua-kDtxyrqivhz943ziBHUpev7tBLL0xPzobpfO32O2d7b9KZBbUoMrYeEO-IYcxii5M3w4L0a_Y_SsyXdtiPMIoN82LnnCPMbjhKttLgDPZxeNcCHvnbqEIij99XoRd5cU4TIQM"/>
+<button class="rounded-md border border-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700" type="button">上传新图片</button>
+</div>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="projectDescription">项目描述</label>
+<textarea class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="projectDescription" rows="4"></textarea>
+</div>一个功能齐全的电子商务平台去去去品目录、购物车和支付网关集成。
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="projectLink">项目链接</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="projectLink" type="url" value="https://example.com/ecommerce"/>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="githubLink">GitHub 地址</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="githubLink" type="url" value="https://github.com/user/ecommerce"/>
+</div>
+<div class="flex justify-end gap-4">
+<button class="rounded-md border border-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700" type="button">取消</button>
+<button class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700" type="button">删除</button>
+<button class="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white hover:bg-opacity-80" type="submit">保存更改</button>
+</div>
+</form>
+</div>
+<div class="mt-8 rounded-lg bg-gray-800 p-6 shadow-lg">
+<h3 class="mb-6 text-xl font-bold">所有项目</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-gray-700">
+<th class="px-4 py-3 text-sm font-medium">项目名称</th>
+<th class="px-4 py-3 text-sm font-medium">描述</th>
+<th class="px-4 py-3 text-sm font-medium">操作</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-gray-700 hover:bg-gray-700/50">
+<td class="px-4 py-3">电子商务平台</td>
+<td class="max-w-xs truncate px-4 py-3 text-gray-400">一个功能齐全的电子商务平台...</td>
+<td class="px-4 py-3">
+<div class="flex gap-2">
+<button class="text-gray-400 hover:text-white">
+<span class="material-symbols-outlined"> edit </span>
+</button>
+<button class="text-gray-400 hover:text-red-500">
+<span class="material-symbols-outlined"> delete </span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-gray-700 hover:bg-gray-700/50">
+<td class="px-4 py-3">数据分析仪表板</td>
+<td class="max-w-xs truncate px-4 py-3 text-gray-400">一个用于可视化和分析大型数据集的交互式仪表板...</td>
+<td class="px-4 py-3">
+<div class="flex gap-2">
+<button class="text-gray-400 hover:text-white">
+<span class="material-symbols-outlined"> edit </span>
+</button>
+<button class="text-gray-400 hover:text-red-500">
+<span class="material-symbols-outlined"> delete </span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-gray-700/50">
+<td class="px-4 py-3">任务管理移动应用</td>
+<td class="max-w-xs truncate px-4 py-3 text-gray-400">一款用于管理任务和待办事项的移动应用...</td>
+<td class="px-4 py-3">
+<div class="flex gap-2">
+<button class="text-gray-400 hover:text-white">
+<span class="material-symbols-outlined"> edit </span>
+</button>
+<button class="text-gray-400 hover:text-red-500">
+<span class="material-symbols-outlined"> delete </span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

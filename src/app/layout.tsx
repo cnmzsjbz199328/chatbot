@@ -1,23 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import QueryClientProvider from "@/QueryClientProvider"
+import { AuthProvider } from "@/components/AuthProvider";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "RAG Chatbot",
-  description: "Upload PDF documents and chat with them using AI. Get instant answers from your documents with our intelligent document assistant.",
-  keywords: "PDF chat, document AI, RAG, question answering, document analysis",
-  authors: [{ name: "Your Name" }],
+  title: "Personal Website | AI Assistant",
+  description: "Personal portfolio website to showcase project experience and provide AI assistant services. Supports document uploading, intelligent conversation, and other features.",
+  keywords: "Personal Website, Portfolio, AI Assistant, Full-Stack Development, Project Showcase",
+  authors: [{ name: "Zhang San" }],
 };
 
 export const viewport: Viewport = {
@@ -31,13 +28,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en-US">
+      <head>
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" 
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} font-inter antialiased`}
       >
-        <QueryClientProvider>
-          {children}
-        </QueryClientProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <QueryClientProvider>
+              {children}
+            </QueryClientProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

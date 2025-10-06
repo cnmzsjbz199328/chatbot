@@ -1,95 +1,118 @@
- POST /api/chat 200 in 5627ms
- ✓ Compiled in 1506ms (1310 modules)
- GET /?id=7aa0cc71-3b68-4bbb-8c42-2da5ddef6919&vscodeBrowserReqId=1757134802811 200 in 574ms
- ○ Compiling /api/upload ...
- ✓ Compiled /api/upload in 954ms (1622 modules)
-Received file: File {
-  size: 72914,
-  type: 'application/pdf',
-  name: 'Request for Health Examinations(JIangTang).pdf',
-  lastModified: 1757134952708
-}
-File record created in DB with ID: 24, Session: 0417b486-90c3-40ef-9b07-44b822a17b14
-Successfully split PDF into 23 chunks.
-Starting cloud embedding process for 23 chunks...
-Processing all 23 chunks in one batch...
-✅ Batch processed 23 texts in 0.8901s
-Embedding process finished. Total vectors created: 23
-Upserting batch of 23 records to Pinecone (384d)...
-Upsert result: { upsertedCount: 23 }
- POST /api/upload 200 in 7622ms
- ✓ Compiled /api/get-files in 201ms (1279 modules)
- GET /api/get-files 200 in 935ms
- ✓ Compiled /api/chat in 194ms (1299 modules)
-
-[RAG Flow] 1. Received user query: "你能从我的文件中提取信息吗" for session: 0417b486-90c3-40ef-9b07-44b822a17b14
-✅ Batch processed 1 texts in 0.0398s
-[RAG Flow] 2. Query embedded into vector (first 5 dims): [
-  -0.006487728096544743,
-  0.1135733351111412,
-  0.046806249767541885,
-  0.004720782395452261,
-  0.008170921355485916
-]
-[RAG Flow] 3. Pinecone returned 3 matches for session 0417b486-90c3-40ef-9b07-44b822a17b14
-[RAG Flow] 4. Constructed context from matches.
-[RAG Flow] 5. FINAL PAYLOAD TO AI: {
-  "model": {
-    "specificationVersion": "v2",
-    "supportedUrls": {},
-    "modelId": "command-r",
-    "config": {
-      "provider": "cohere.chat",
-      "baseURL": "https://api.cohere.com/v2"
-    }
-  },
-  "system": "You are a helpful assistant. Please answer the user's question based on the following context. If the context does not contain the answer, say that you don't know.\n\nContext:\nApplication summary\nClient nameJiang TANG\nClient date of birth28 March 1993\nDate of application27 August 2025\nApplication ID435707043\nHAP ID30569794\nTransaction reference numberEGP8Z6MLBP\nTravel document IDEJ2768128\nIssuing countryCHINA\nTimeframe for response\nYou must respond to this request within 28 days after you are taken to have received this\nletter.\n---\n*30569794*\nHAP ID: *30569794*\nDear Jiang TANG\nWe require you to complete health examination(s) to ensure that you meet the health\nrequirement for your Temporary Graduate (Post Higher Education Work) (subclass 485) visa\napplication.\nApplication status\nTemporary Graduate (Post Higher\nEducation Work) (subclass 485)\nHealth examinations\nrequired\nApplication summary\nClient nameJiang TANG\n---\nsituation\nYours sincerely\nDepartment of Home Affairs\nSent to: ADMIN@GLOBALZNZ.COM\nSent on: 27 August 2025",
-  "messages": [
-    {
-      "role": "user",
-      "content": [
-        {
-          "type": "text",
-          "text": "你好"
-        }
-      ]
-    },
-    {
-      "role": "assistant",
-      "content": [
-        {
-          "type": "text",
-          "text": "抱歉，我无法处理您的请求。请稍后再试。"
-        }
-      ]
-    },
-    {
-      "role": "user",
-      "content": [
-        {
-          "type": "text",
-          "text": "你能从我的文件中提取信息吗？"
-        }
-      ]
-    },
-    {
-      "role": "assistant",
-      "content": [
-        {
-          "type": "text",
-          "text": "抱歉，我无法处理您的请求。请稍后再试。"
-        }
-      ]
-    },
-    {
-      "role": "user",
-      "content": [
-        {
-          "type": "text",
-          "text": "你能从我的文件中提取信息吗"
-        }
-      ]
-    }
-  ]
-}
- POST /api/chat 200 in 5626ms
+22:51:41.177 Running build in Washington, D.C., USA (East) – iad1
+22:51:41.184 Build machine configuration: 2 cores, 8 GB
+22:51:41.204 Cloning github.com/cnmzsjbz199328/chatbot (Branch: selfweb, Commit: b8372e9)
+22:51:41.353 Previous build caches not available
+22:51:41.533 Cloning completed: 329.000ms
+22:51:42.277 Running "vercel build"
+22:51:42.665 Vercel CLI 48.1.6
+22:51:42.975 Running "install" command: `npm install`...
+22:51:48.057 npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+22:51:48.303 npm warn deprecated @types/bcryptjs@3.0.0: This is a stub types definition. bcryptjs provides its own type definitions, so you do not need this installed.
+22:51:48.577 npm warn deprecated @supabase/auth-helpers-shared@0.7.0: This package is now deprecated - please use the @supabase/ssr package instead.
+22:51:49.358 npm warn deprecated @supabase/auth-helpers-nextjs@0.10.0: This package is now deprecated - please use the @supabase/ssr package instead.
+22:51:49.493 npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+22:51:49.646 npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+22:52:32.813 
+22:52:32.813 added 705 packages, and audited 706 packages in 50s
+22:52:32.814 
+22:52:32.814 173 packages are looking for funding
+22:52:32.814   run `npm fund` for details
+22:52:32.836 
+22:52:32.837 5 vulnerabilities (4 moderate, 1 high)
+22:52:32.837 
+22:52:32.837 To address issues that do not require attention, run:
+22:52:32.837   npm audit fix
+22:52:32.837 
+22:52:32.838 To address all issues (including breaking changes), run:
+22:52:32.838   npm audit fix --force
+22:52:32.838 
+22:52:32.838 Run `npm audit` for details.
+22:52:32.885 Detected Next.js version: 15.5.2
+22:52:32.886 Running "npx drizzle-kit push && next build"
+22:52:33.598 No config path provided, using default 'drizzle.config.ts'
+22:52:33.598 Reading config file '/vercel/path0/drizzle.config.ts'
+22:52:34.088 Using 'postgres' driver for database querying
+22:52:34.284 [⣷] Pulling schema from database...
+22:52:34.411 [2K[1G[⣯] Pulling schema from database...
+22:52:34.539 [2K[1G[⣟] Pulling schema from database...
+22:52:34.668 [2K[1G[⡿] Pulling schema from database...
+22:52:34.796 [2K[1G[⢿] Pulling schema from database...
+22:52:34.926 [2K[1G[⣻] Pulling schema from database...
+22:52:35.054 [2K[1G[⣽] Pulling schema from database...
+22:52:35.182 [2K[1G[⣷] Pulling schema from database...
+22:52:35.311 [2K[1G[⣯] Pulling schema from database...
+22:52:35.439 [2K[1G[⣟] Pulling schema from database...
+22:52:35.567 [2K[1G[⡿] Pulling schema from database...
+22:52:35.695 [2K[1G[⢿] Pulling schema from database...
+22:52:35.823 [2K[1G[⣻] Pulling schema from database...
+22:52:35.951 [2K[1G[⣽] Pulling schema from database...
+22:52:36.079 [2K[1G[⣷] Pulling schema from database...
+22:52:36.207 [2K[1G[⣯] Pulling schema from database...
+22:52:36.336 [2K[1G[⣟] Pulling schema from database...
+22:52:36.464 [2K[1G[⡿] Pulling schema from database...
+22:52:36.592 [2K[1G[⢿] Pulling schema from database...
+22:52:36.721 [2K[1G[⣻] Pulling schema from database...
+22:52:36.849 [2K[1G[⣽] Pulling schema from database...
+22:52:36.977 [2K[1G[⣷] Pulling schema from database...
+22:52:37.105 [2K[1G[⣯] Pulling schema from database...
+22:52:37.233 [2K[1G[⣟] Pulling schema from database...
+22:52:37.362 [2K[1G[⡿] Pulling schema from database...
+22:52:37.489 [2K[1G[⢿] Pulling schema from database...
+22:52:37.618 [2K[1G[⣻] Pulling schema from database...
+22:52:37.746 [2K[1G[⣽] Pulling schema from database...
+22:52:37.875 [2K[1G[⣷] Pulling schema from database...
+22:52:38.003 [2K[1G[⣯] Pulling schema from database...
+22:52:38.131 [2K[1G[⣟] Pulling schema from database...
+22:52:38.259 [2K[1G[⡿] Pulling schema from database...
+22:52:38.388 [2K[1G[⢿] Pulling schema from database...
+22:52:38.516 [2K[1G[⣻] Pulling schema from database...
+22:52:38.644 [2K[1G[⣽] Pulling schema from database...
+22:52:38.773 [2K[1G[⣷] Pulling schema from database...
+22:52:38.901 [2K[1G[⣯] Pulling schema from database...
+22:52:39.030 [2K[1G[⣟] Pulling schema from database...
+22:52:39.080 [2K[1G[✓] Pulling schema from database...
+22:52:39.090 [i] No changes detected
+22:52:39.899  ⚠ Found lockfile missing swc dependencies, run next locally to automatically patch
+22:52:39.939 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+22:52:39.940 This information is used to shape Next.js' roadmap and prioritize features.
+22:52:39.940 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+22:52:39.940 https://nextjs.org/telemetry
+22:52:39.940 
+22:52:39.994    ▲ Next.js 15.5.2
+22:52:39.995 
+22:52:40.076    Creating an optimized production build ...
+22:52:58.676  ✓ Compiled successfully in 18.5s
+22:52:58.689    Linting and checking validity of types ...
+22:53:05.102 
+22:53:05.104 Failed to compile.
+22:53:05.104 
+22:53:05.104 ./src/app/[username]/projectManagement/page.tsx
+22:53:05.104 2:10  Warning: 'useParams' is defined but never used.  @typescript-eslint/no-unused-vars
+22:53:05.104 
+22:53:05.104 ./src/app/api/storage/check-bucket/route.ts
+22:53:05.104 41:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+22:53:05.104 
+22:53:05.104 ./src/app/layout.tsx
+22:53:05.104 33:9  Warning: A font-display parameter is missing (adding `&display=optional` is recommended). See: https://nextjs.org/docs/messages/google-font-display  @next/next/google-font-display
+22:53:05.104 33:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+22:53:05.104 
+22:53:05.104 ./src/app/projects/page.tsx
+22:53:05.104 1:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
+22:53:05.104 
+22:53:05.105 ./src/app/test-image/page.tsx
+22:53:05.105 74:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+22:53:05.105 97:47  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+22:53:05.105 97:62  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+22:53:05.105 
+22:53:05.105 ./src/components/ImageUploadField.tsx
+22:53:05.105 204:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+22:53:05.105 
+22:53:05.105 ./src/hooks/useSmoothScroll.ts
+22:53:05.105 18:13  Error: 'start' is never reassigned. Use 'const' instead.  prefer-const
+22:53:05.105 
+22:53:05.105 ./src/lib/supabaseStorage.ts
+22:53:05.105 77:20  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+22:53:05.105 132:14  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+22:53:05.105 
+22:53:05.105 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+22:53:05.178 Error: Command "npx drizzle-kit push && next build" exited with 1

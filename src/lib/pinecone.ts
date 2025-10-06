@@ -10,3 +10,25 @@ export const getIndex = () => {
   return pc.index(indexName);
 };
 
+// 新增：用户命名空间管理
+export const getUserNamespace = (userId: string) => {
+  return `user_${userId.replace(/-/g, '_')}`; // 确保namespace格式合规
+};
+
+export const getIndexForUser = (userId: string) => {
+  const index = getIndex();
+  const namespace = getUserNamespace(userId);
+  return index.namespace(namespace);
+};
+
+// 兼容函数：支持session和用户双重模式
+export const getPineconeFilter = (userId?: string, sessionId?: string) => {
+  if (userId) {
+    return { user_id: { '$eq': userId } };
+  }
+  if (sessionId) {
+    return { session_id: { '$eq': sessionId } };
+  }
+  throw new Error('Either userId or sessionId must be provided');
+};
+

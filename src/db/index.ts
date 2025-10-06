@@ -1,17 +1,25 @@
 import 'dotenv/config';
+import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { eq, and, lt } from 'drizzle-orm';
-import { fileTable, sessionsTable } from './schema';
-  
-const db = drizzle(process.env.DATABASE_URL!);
+import * as schema from './schema';
+
+// 🔧 简单稳定的连接池配置
+const sql = postgres(process.env.DATABASE_URL!, {
+  max: 1,          // Serverless: 每个实例1个连接
+  idle_timeout: 20,
+  connect_timeout: 10,
+});
+
+const db = drizzle(sql, { schema });
 
 // Session管理函数
 export const upsertSession = async (sessionId: string, expiresAt: Date) => {
-  return await db.insert(sessionsTable).values({
+  return await db.insert(schema.sessionsTable).values({
     id: sessionId,
     expiresAt
   }).onConflictDoUpdate({
-    target: sessionsTable.id,
+    target: schema.sessionsTable.id,
     set: {
       expiresAt
     }
@@ -19,45 +27,51 @@ export const upsertSession = async (sessionId: string, expiresAt: Date) => {
 };
 
 export const getExpiredSessions = async () => {
-  return await db.select().from(sessionsTable).where(
-    lt(sessionsTable.expiresAt, new Date())
+  return await db.select().from(schema.sessionsTable).where(
+    lt(schema.sessionsTable.expiresAt, new Date())
   );
 };
 
 export const deleteExpiredSessions = async () => {
-  return await db.delete(sessionsTable).where(
-    lt(sessionsTable.expiresAt, new Date())
-  ).returning({ id: sessionsTable.id });
+  return await db.delete(schema.sessionsTable).where(
+    lt(schema.sessionsTable.expiresAt, new Date())
+  ).returning({ id: schema.sessionsTable.id });
 };
 
 // 文件管理函数 (添加session_id支持)
-export const insertFile = async (file_name: string, file_key: string, sessionId: string): Promise<{ id: number }[]> => {
-  return await db.insert(fileTable).values({
+export const insertFile = async (file_name: string, file_key: string, sessionId?: string, userId?: string): Promise<{ id: number }[]> => {
+  const values = {
     file_name,
     file_key,
-    sessionId
-  }).returning({ id: fileTable.id });
+    sessionId: sessionId || null,
+    userId: userId || null,
+  };
+  
+  return await db.insert(schema.fileTable).values(values).returning({ id: schema.fileTable.id });
 };
 
-export const getFile = async (sessionId?: string) => {
-  if (sessionId) {
-    return await db.select().from(fileTable).where(eq(fileTable.sessionId, sessionId));
+export const getFile = async (sessionId?: string, userId?: string) => {
+  if (userId) {
+    return await db.select().from(schema.fileTable).where(eq(schema.fileTable.userId, userId));
   }
-  return await db.select().from(fileTable);
-};
-
-export const deleteFileById = async (id: number, sessionId?: string) => {
   if (sessionId) {
-    // 验证文件属于当前session
-    await db.delete(fileTable).where(
-      and(
-        eq(fileTable.id, id),
-        eq(fileTable.sessionId, sessionId)
-      )
-    );
-  } else {
-    await db.delete(fileTable).where(eq(fileTable.id, id));
+    return await db.select().from(schema.fileTable).where(eq(schema.fileTable.sessionId, sessionId));
   }
+  return await db.select().from(schema.fileTable);
 };
 
-export { db };
+export const deleteFileById = async (id: number, sessionId?: string, userId?: string) => {
+  const conditions = [eq(schema.fileTable.id, id)];
+
+  if (sessionId) {
+    conditions.push(eq(schema.fileTable.sessionId, sessionId));
+  }
+
+  if (userId) {
+    conditions.push(eq(schema.fileTable.userId, userId));
+  }
+
+  await db.delete(schema.fileTable).where(and(...conditions));
+};
+
+export { db, sql };

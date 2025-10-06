@@ -1,76 +1,112 @@
 export const runtime = 'nodejs';
 
-import { cohere } from '@ai-sdk/cohere';
-import { streamText, UIMessage, convertToModelMessages } from 'ai';
-import { getIndex } from '@/lib/pinecone';
+import { streamText, convertToModelMessages } from 'ai';
 import { NextResponse } from 'next/server';
-// 替换本地pipeline为云端embedding服务
+
+import { getAIConfig } from '@/lib/ai-config';
 import { getEmbedding } from '@/lib/custom-embedding';
+import { getIndex } from '@/lib/pinecone';
+import { createClient } from '@/lib/supabase/server';
 
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
+    console.log('\n[CHAT API] ===================');
+    console.log('[CHAT API] 收到个人作品集聊天请求');
+    
     try {
-        // 1. 获取session_id从请求头
-        const sessionId = req.headers.get('X-Session-Id');
-        if (!sessionId) {
-            return NextResponse.json(
-                { error: 'X-Session-Id header is required' }, 
-                { status: 400 }
-            );
-        }
-
-        const { messages }: { messages: UIMessage[] } = await req.json();
+        const { messages, targetUsername } = await req.json();
+        
+        console.log('[CHAT API] 目标用户:', targetUsername);
 
         const lastUserMessage = messages[messages.length - 1];
         if (!lastUserMessage || lastUserMessage.role !== 'user') {
             return NextResponse.json({ error: 'No user message found' }, { status: 400 });
         }
         
-        const textPart = lastUserMessage.parts.find(part => part.type === 'text');
+        const textPart = lastUserMessage.parts.find((part: { type: string; text?: string }) => part.type === 'text');
         const queryText = textPart?.text;
 
-        if (!queryText) {
-            return NextResponse.json({ error: 'No text content found in user message' }, { status: 400 });
+        console.log(`[RAG] User query: "${queryText}"`);
+
+        // Get target user ID from Supabase
+        const supabase = await createClient();
+        const { data: targetUser, error: userError } = await supabase
+          .from('user_profiles')
+          .select('id')
+          .eq('username', targetUsername)
+          .single();
+
+        if (userError || !targetUser) {
+          console.error(`[RAG] Target user not found for username: ${targetUsername}`, userError);
+          return NextResponse.json({ error: 'Target user not found' }, { status: 404 });
         }
 
-        console.log(`\n[RAG Flow] 1. Received user query: "${queryText}" for session: ${sessionId}`);
+        const targetUserId = targetUser.id;
+        console.log(`[RAG] Target user ID: ${targetUserId}`);
 
-        // 使用云端embedding服务
-        const queryVector = await getEmbedding(queryText);
-        console.log("[RAG Flow] 2. Query embedded into vector (first 5 dims):", queryVector.slice(0, 5));
+        // Generate query embedding
+        const queryEmbedding = await getEmbedding(queryText);
 
-        const index = getIndex(); // 使用新的384维索引
+        // Retrieve from main index with user filter
+        console.log('[RAG] Querying Pinecone...');
+        const index = getIndex();
         const queryResult = await index.query({
-            topK: 3,
-            vector: queryVector,
-            includeMetadata: true,
-            // 添加session过滤条件
-            filter: {
-                session_id: { '$eq': sessionId }
-            }
+          vector: queryEmbedding,
+          topK: 5,
+          includeMetadata: true,
+          filter: {
+            user_id: { '$eq': targetUserId }
+          }
         });
-        console.log(`[RAG Flow] 3. Pinecone returned ${queryResult.matches.length} matches for session ${sessionId}`);
+        console.log(`[RAG] Pinecone query returned ${queryResult.matches.length} matches.`);
 
-        const context = queryResult.matches
-            .map(match => match.metadata?.text)
-            .filter(text => text)
-            .join('\n---\n');
-        console.log("[RAG Flow] 4. Constructed context from matches.");
+        // Extract relevant chunks
+        const relevantChunks = queryResult.matches
+          .map((match) => match.metadata?.text || '')
+          .join('\n\n');
+        console.log(`[RAG] Total length of relevant chunks: ${relevantChunks.length}`);
 
-        const systemPrompt = `You are a helpful assistant. Please answer the user's question based on the following context. If the context does not contain the answer, say that you don't know.\n\nContext:\n${context}`;
+        // Check if there's any relevant knowledge
+        const hasKnowledge = relevantChunks.trim().length > 0 && queryResult.matches.length > 0;
+        console.log(`[RAG] Has relevant knowledge: ${hasKnowledge}`);
 
+        // Build enhanced prompt with strict constraints
+        const systemPrompt = hasKnowledge 
+          ? `You are the intelligent assistant for ${targetUsername}. A visitor wants to learn more about ${targetUsername}.
+
+Answer the question based ONLY on the following document excerpts retrieved from the knowledge base:
+
+${relevantChunks}
+
+User question: ${queryText}
+
+CRITICAL RULES:
+1. ONLY use information from the knowledge base above. DO NOT use general knowledge or make assumptions.
+2. If the answer is not in the knowledge base, you MUST say: "抱歉，我的知识库中暂时没有关于这个问题的信息。"
+3. DO NOT fabricate, guess, or invent any information about ${targetUsername}.
+4. Respond in a friendly and professional tone.
+5. Keep your answers concise and relevant.
+6. Answer in the same language as the question.`
+          : `You are the intelligent assistant for ${targetUsername}. A visitor asked: "${queryText}"
+
+IMPORTANT: The knowledge base for ${targetUsername} is currently empty or does not contain information related to this question.
+
+You MUST respond with:
+"抱歉，我的知识库中暂时没有关于这个问题的信息。${targetUsername} 可能还没有上传相关的知识文档，或者这个问题超出了我目前掌握的信息范围。"
+
+DO NOT make up any information. DO NOT use general knowledge to answer.`;
+
+        const aiConfig = getAIConfig();
         const finalPayload = {
-            model: cohere('command-r'),
+            model: aiConfig.chat,
             system: systemPrompt,
             messages: convertToModelMessages(messages),
         };
 
-        // --- THE DECISIVE LOG --- 
-        console.log("[RAG Flow] 5. FINAL PAYLOAD TO AI:", JSON.stringify(finalPayload, null, 2));
+        console.log("[RAG] Calling Cohere with system prompt length:", systemPrompt.length);
 
         const result = await streamText(finalPayload);
-
         return result.toUIMessageStreamResponse();
 
     } catch (error) {

@@ -3,53 +3,29 @@
 import type { UIMessage } from 'ai'; // 导入正确的类型
 import React, { useEffect } from "react";
 import { Button } from "./ui/button";
-import { sessionManager } from '@/lib/session-manager';
-import SessionControl from './SessionControl';
+import { UserProfileModel } from '@/db/schema';
 
-const ChatContainer = () => {
+interface ChatContainerProps {
+    targetUsername: string;
+    userProfile: UserProfileModel | null;
+}
+
+const ChatContainer = ({ targetUsername, userProfile }: ChatContainerProps) => {
     // 手动管理消息状态以支持会话
     const [localMessages, setLocalMessages] = React.useState<UIMessage[]>([]);
     const [input, setInput] = React.useState("");
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+    
 
-    // Initialize session on component mount
+    // Initialize component
     useEffect(() => {
-        sessionManager.getSessionId(); // This will create session if not exists
-        
-        // 监听会话变更
-        const handleSessionChange = () => {
-            setLocalMessages([]); // 清空消息历史
-        };
-        
-        sessionManager.addSessionChangeListener(handleSessionChange);
-        
-        return () => {
-            sessionManager.removeSessionChangeListener(handleSessionChange);
-        };
-    }, []);
+        // Initialize with empty messages
+        setLocalMessages([]);
+    }, [targetUsername, userProfile]);
 
-    // 清除对话历史的函数
+    // Function to clear conversation history
     const clearConversation = async () => {
-        try {
-            // 先调用服务器端清除上下文
-            const response = await fetch('/api/session/clear-context', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...sessionManager.getSessionHeaders()
-                }
-            });
-            
-            if (response.ok) {
-                console.log('Server-side context cleared successfully');
-            } else {
-                console.warn('Failed to clear server-side context');
-            }
-        } catch (error) {
-            console.error('Error clearing server-side context:', error);
-        }
-        
-        // 清除本地消息历史
+        // Clear all messages
         setLocalMessages([]);
     };
 
@@ -75,14 +51,17 @@ const ChatContainer = () => {
         setIsSubmitting(true);
         
         try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+                'X-Target-Username': targetUsername, // 告诉 API 这是关于哪个用户的查询
+            };
+            
             const response = await fetch('/api/chat', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Session-Id': sessionManager.getSessionId(),
-                },
+                headers,
                 body: JSON.stringify({
-                    messages: [...localMessages, userMessage]
+                    messages: [...localMessages, userMessage],
+                    targetUsername: targetUsername
                 })
             });
 
@@ -120,13 +99,25 @@ const ChatContainer = () => {
                             
                             const data = JSON.parse(jsonStr);
                             
+                            let deltaText = '';
+                            
                             // 处理文本增量
                             if (data.type === 'text-delta' && data.delta) {
+                                deltaText = data.delta;
+                            }
+                            // 处理 content-delta with thinking
+                            else if (data.type === 'content-delta' && data.delta?.message?.content) {
+                                const content = data.delta.message.content;
+                                deltaText = content.text || content.thinking || '';
+                            }
+                            
+                            if (deltaText) {
                                 const currentTextPart = assistantMessage.parts[0];
                                 if (currentTextPart.type === 'text') {
+                                    const newText = currentTextPart.text + deltaText;
                                     assistantMessage = {
                                         ...assistantMessage,
-                                        parts: [{ type: 'text', text: currentTextPart.text + data.delta }]
+                                        parts: [{ type: 'text', text: newText }]
                                     };
                                     
                                     if (!hasContent) {
@@ -142,6 +133,8 @@ const ChatContainer = () => {
                                         });
                                     }
                                 }
+                            } else {
+                                console.warn('Unhandled or empty delta:', data.type, data);
                             }
                         } catch (parseError) {
                             console.warn('Failed to parse streaming data:', line, parseError);
@@ -192,70 +185,50 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className="h-full w-full flex flex-col bg-white">
+    <div className="h-full w-full flex flex-col">
             {/* 聊天头部 */}
-            <div className="border-b border-gray-200 p-4 bg-white">
+            <div className="mb-3 sm:mb-4">
                 <div className="flex justify-between items-center">
-                    <div>
-                        <h2 className="text-lg font-semibold text-gray-800">Chat with your documents</h2>
-                        <p className="text-sm text-gray-500">Ask questions about your uploaded PDFs</p>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <SessionControl 
-                            compact 
-                            onRetentionChange={(hours) => {
-                                console.log(`Data retention set to ${hours} hours`);
-                                // 这里可以添加保存设置的逻辑
-                            }}
-                        />
-                        <Button
-                            onClick={clearConversation}
-                            className="text-sm px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-md"
-                        >
-                            Clear Chat
-                        </Button>
-                    </div>
+                    <Button
+                        onClick={clearConversation}
+                        className="text-xs px-2 py-1.5 sm:px-3 sm:py-2 bg-[var(--accent-color)] text-[var(--text-secondary)] hover:bg-[var(--border-color)] rounded-md transition-colors min-h-[36px]"
+                    >
+                        clean
+                    </Button>
                 </div>
             </div>
 
             {/* 消息区域 */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <div className="flex-1 flex flex-col mb-3 sm:mb-4 overflow-y-auto">
                 {localMessages.length === 0 ? (
-                    <div className="flex items-center justify-center h-full">
-                        <div className="text-center space-y-3">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                                💬
-                            </div>
-                            <div>
-                                <p className="text-gray-600 font-medium">Start a conversation</p>
-                                <p className="text-gray-500 text-sm">Upload a PDF and ask questions about it</p>
-                            </div>
-                        </div>
+                    <div className="text-center">
                     </div>
                 ) : (
-                    localMessages.map(message => (
-                        <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`
-                                max-w-[80%] lg:max-w-[70%] p-4 rounded-2xl text-sm leading-relaxed
-                                ${message.role === 'user' 
-                                    ? 'bg-blue-500 text-white rounded-br-md' 
-                                    : 'bg-white text-gray-800 border border-gray-200 rounded-bl-md shadow-sm'
-                                }
-                            `}>
-                                {renderMessageContent(message)}
+                    <div className="flex-1 overflow-y-auto space-y-2 sm:space-y-3">
+                        {localMessages.map(message => (
+                            <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`
+                                    max-w-[90%] sm:max-w-[85%] p-2 sm:p-3 rounded-lg text-xs sm:text-sm leading-relaxed
+                                    ${message.role === 'user' 
+                                        ? 'bg-[var(--primary-color)] text-white' 
+                                        : 'bg-[var(--accent-color)]/50 text-[var(--text-primary)] border border-[var(--border-color)]'
+                                    }
+                                `}>
+                                    {renderMessageContent(message)}
+                                </div>
                             </div>
-                        </div>
-                    ))
+                        ))}
+                    </div>
                 )}
                 
                 {/* 加载指示器 */}
                 {isSubmitting && (
                     <div className="flex justify-start">
-                        <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md p-4 shadow-sm">
+                        <div className="bg-[var(--accent-color)]/50 border border-[var(--border-color)] rounded-2xl rounded-bl-md p-3 sm:p-4 shadow-sm">
                             <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--text-secondary)] rounded-full animate-bounce"></div>
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--text-secondary)] rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--text-secondary)] rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                             </div>
                         </div>
                     </div>
@@ -265,33 +238,36 @@ const ChatContainer = () => {
             </div>
 
             {/* 输入区域 */}
-            <div className="border-t border-gray-200 bg-white p-4">
+            <div className="space-y-2 sm:space-y-3 mt-auto">
                 <form
-                    className='flex flex-row items-center gap-3'
+                    className='flex flex-col sm:flex-row gap-2 sm:gap-3'
                     onSubmit={handleFormSubmit}
                 >
-                    <input
-                        className='flex-1 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500'
-                        name="prompt"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask a question about your documents..."
-                        disabled={isSubmitting}
-                    />
+                    <div className="relative flex-1">
+                        <input
+                            className='w-full rounded-md border-[var(--border-color)] bg-[var(--accent-color)]/50 py-2 sm:py-2.5 pl-3 sm:pl-10 pr-3 sm:pr-4 text-xs sm:text-sm text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500 placeholder-[var(--text-secondary)] min-h-[44px]'
+                            name="prompt"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="ask about my Experience..."
+                            disabled={isSubmitting}
+                            type="text"
+                        />
+                    </div>
 
                     <Button 
                         type="submit" 
                         disabled={isSubmitting || !input.trim()}
                         className={`
-                            px-6 py-3 rounded-xl font-medium transition-all duration-200
+                            px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 shrink-0 min-h-[44px] w-full sm:w-auto
                             ${isSubmitting || !input.trim()
-                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                : 'bg-blue-500 hover:bg-blue-600 text-white shadow-sm hover:shadow-md'
+                                ? 'bg-[var(--accent-color)] text-[var(--text-secondary)] cursor-not-allowed'
+                                : 'bg-[var(--primary-color)] hover:bg-opacity-80 text-white'
                             }
                         `}
                     >
                         {isSubmitting ? (
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
                         ) : (
                             'Send'
                         )}

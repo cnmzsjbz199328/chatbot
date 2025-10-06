@@ -1,0 +1,162 @@
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-color: #1173d4;
+      }
+    </style>
+</head>
+<body class="bg-gray-900 font-sans text-white">
+<div class="relative flex size-full min-h-screen flex-row overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
+<aside class="sticky top-0 h-screen w-64 flex-shrink-0 bg-gray-800 p-6">
+<div class="flex items-center gap-2">
+<svg class="h-8 w-8 text-[var(--primary-color)]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+<h1 class="text-xl font-bold leading-tight tracking-[-0.015em]">管理后台</h1>
+</div>
+<nav class="mt-8 flex flex-col gap-4">
+<a class="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white" href="#">
+<span class="material-symbols-outlined"> folder_managed </span>
+<span>项目管理</span>
+</a>
+<a class="flex items-center gap-3 rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-opacity-80" href="#">
+<span class="material-symbols-outlined"> person </span>
+<span>个人信息</span>
+</a>
+</nav>
+<div class="mt-auto">
+<a class="flex items-center gap-3 rounded-md px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white" href="#">
+<span class="material-symbols-outlined"> logout </span>
+<span>退出log in</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto">
+<header class="sticky top-0 z-10 w-full border-b border-gray-700 bg-gray-900/80 p-4 backdrop-blur-md">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-bold">个人信息编辑</h2>
+<button class="flex items-center gap-2 rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-semibold text-white hover:bg-opacity-80">
+<span class="material-symbols-outlined"> save </span>
+<span>保存更改</span>
+</button>
+</div>
+</header>
+<div class="p-8">
+<div class="space-y-8">
+<div class="rounded-lg bg-gray-800 p-6 shadow-lg">
+<h3 class="mb-6 text-xl font-bold">文件上传</h3>
+<div class="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-600 bg-gray-700/50 hover:bg-gray-700">
+<div class="flex flex-col items-center justify-center pt-5 pb-6">
+<span class="material-symbols-outlined text-4xl text-gray-400"> cloud_upload </span>
+<p class="mb-2 text-sm text-gray-400"><span class="font-semibold">点击上传</span> 或拖拽文件至此</p>
+<p class="text-xs text-gray-500">支持PDF、DOCX、MD等文件格式</p>
+</div>
+</div>
+<p class="mt-4 text-sm text-gray-400">已上传文件：</p>
+<ul class="mt-2 list-disc list-inside space-y-1 text-gray-300">
+<li>my_resume_v3.pdf <button class="ml-2 text-red-500 hover:text-red-400"><span class="material-symbols-outlined text-sm">delete</span></button></li>
+</ul>
+</div>
+<div class="rounded-lg bg-gray-800 p-6 shadow-lg">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold">教育经历</h3>
+<button class="flex items-center gap-2 rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600">
+<span class="material-symbols-outlined"> add </span>
+<span>添加教育经历</span>
+</button>
+</div>
+<div class="mt-6 space-y-6">
+<div class="rounded-md border border-gray-700 p-4">
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="school-1">学校</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="school-1" type="text" value="北京大学"/>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="major-1">专业</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="major-1" type="text" value="计算机科学与技术"/>
+</div>
+</div>
+<div class="mt-4">
+<label class="mb-2 block text-sm font-medium text-gray-300" for="edu-time-1">时间</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="edu-time-1" type="text" value="2018年9月 - 2022年6月"/>
+</div>
+<div class="mt-4 flex justify-end gap-2">
+<button class="text-gray-400 hover:text-white"><span class="material-symbols-outlined">edit</span></button>
+<button class="text-red-500 hover:text-red-400"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-lg bg-gray-800 p-6 shadow-lg">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold">工作经历</h3>
+<button class="flex items-center gap-2 rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600">
+<span class="material-symbols-outlined"> add </span>
+<span>添加工作经历</span>
+</button>
+</div>
+<div class="mt-6 space-y-6">
+<div class="rounded-md border border-gray-700 p-4">
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="company-1">公司</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="company-1" type="text" value="某科技有限公司"/>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-gray-300" for="position-1">职位</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="position-1" type="text" value="前端开发工程师"/>
+</div>
+</div>
+<div class="mt-4">
+<label class="mb-2 block text-sm font-medium text-gray-300" for="work-time-1">时间</label>
+<input class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="work-time-1" type="text" value="2022年7月 - 至今"/>
+</div>
+<div class="mt-4">
+<label class="mb-2 block text-sm font-medium text-gray-300" for="responsibilities-1">职责</label>
+<textarea class="w-full rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" id="responsibilities-1" rows="3">负责公司核心产品的前端开发和维护工作，使用Vue.js和React进行组件化开发，优化页面性能和用户体验。</textarea>
+</div>
+<div class="mt-4 flex justify-end gap-2">
+<button class="text-gray-400 hover:text-white"><span class="material-symbols-outlined">edit</span></button>
+<button class="text-red-500 hover:text-red-400"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-lg bg-gray-800 p-6 shadow-lg">
+<h3 class="mb-6 text-xl font-bold">兴趣爱好</h3>
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-2 rounded-full bg-gray-700 py-1 px-3">
+<span class="text-sm">编程</span>
+<button class="text-gray-400 hover:text-white"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+<div class="flex items-center gap-2 rounded-full bg-gray-700 py-1 px-3">
+<span class="text-sm">篮球</span>
+<button class="text-gray-400 hover:text-white"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+<div class="flex items-center gap-2 rounded-full bg-gray-700 py-1 px-3">
+<span class="text-sm">音乐</span>
+<button class="text-gray-400 hover:text-white"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<input class="w-full max-w-xs rounded-md border-gray-600 bg-gray-700/50 py-2 px-4 text-white focus:border-primary-500 focus:ring-primary-500" placeholder="添加新的兴趣爱好" type="text"/>
+<button class="flex items-center gap-2 rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600">
+<span class="material-symbols-outlined"> add </span>
+<span>添加</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>
