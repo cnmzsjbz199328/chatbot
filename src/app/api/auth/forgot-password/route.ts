@@ -14,9 +14,13 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
     
-    // 获取当前域名
-    const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'https://resume.futurebutnow.xyz';
+    // 优先使用环境变量，确保使用生产域名
+    // 即使在本地开发，也使用生产域名以便邮件链接正确
+    const origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://resume.futurebutnow.xyz';
     const resetUrl = `${origin}/reset-password`;
+
+    console.log('[Forgot Password] Using origin:', origin);
+    console.log('[Forgot Password] Reset URL:', resetUrl);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: resetUrl,
