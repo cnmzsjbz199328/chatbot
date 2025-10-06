@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
 export default function RegisterForm() {
@@ -12,7 +11,6 @@ export default function RegisterForm() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const router = useRouter();
-  const supabase = createClient();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,17 +25,19 @@ export default function RegisterForm() {
     }
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { 
-          emailRedirectTo: `${window.location.origin}/auth/callback` 
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (error) {
-        setError(error.message);
-      } else if (data.user) {
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Registration failed');
+      } else {
         setMessage('sign up success！Please check your email to verify your account.');
         // 可选：几秒后跳转到log in页面
         setTimeout(() => {
