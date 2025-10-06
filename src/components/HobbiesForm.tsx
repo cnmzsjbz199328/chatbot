@@ -148,7 +148,7 @@ export default function HobbiesForm() {
       {hobbiesList.length === 0 ? (
         <div className="text-center py-8 text-[var(--text-secondary)]">
           <span className="material-symbols-outlined text-4xl mb-2 block">favorite</span>
-          <p>暂无兴趣爱好，点击下方按钮添加</p>
+          <p>No hobbies added yet. Click the button below to add.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -169,7 +169,7 @@ export default function HobbiesForm() {
               <div className="space-y-3">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    爱好名称 *
+                    Hobby Name *
                   </label>
                   <input
                     type="text"
@@ -177,13 +177,13 @@ export default function HobbiesForm() {
                     value={hobby.name}
                     onChange={(e) => handleHobbyChange(index, 'name', e.target.value)}
                     className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 min-h-[44px] text-[var(--text-primary)]"
-                    placeholder="篮球"
+                    placeholder="Basketball"
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    图标 *
+                    Icon *
                   </label>
                   <div className="flex gap-2">
                     <select
@@ -204,14 +204,14 @@ export default function HobbiesForm() {
                     </div>
                   </div>
                   <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                    或手动输入Material Icons图标名称
+                    or enter a Material Icons name manually
                   </p>
                   <input
                     type="text"
                     value={hobby.icon}
                     onChange={(e) => handleHobbyChange(index, 'icon', e.target.value)}
                     className="w-full mt-2 rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2 text-sm text-[var(--text-primary)]"
-                    placeholder="自定义图标名称"
+                    placeholder="Custom Icon Name"
                   />
                 </div>
               </div>
@@ -227,7 +227,7 @@ export default function HobbiesForm() {
           className="flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[var(--border-color)] px-4 py-3 min-h-[44px] text-sm font-semibold text-[var(--text-secondary)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all"
         >
           <span className="material-symbols-outlined text-xl">add</span>
-          <span>添加兴趣爱好</span>
+          <span>Add Hobby</span>
         </button>
 
         <button
@@ -238,7 +238,7 @@ export default function HobbiesForm() {
           <span className="material-symbols-outlined text-xl">
             {isLoading ? 'hourglass_empty' : 'save'}
           </span>
-          <span>{isLoading ? '保存中...' : '保存更改'}</span>
+          <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
         </button>
       </div>
     </form>

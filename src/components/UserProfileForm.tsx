@@ -286,11 +286,11 @@ export default function UserProfileForm() {
 
       {/* 社交链接 */}
       <div className="rounded-lg bg-[var(--secondary-color)] p-4 sm:p-5 lg:p-6 shadow-lg">
-        <h3 className="mb-4 sm:mb-5 lg:mb-6 text-lg sm:text-xl font-bold">社交链接</h3>
+        <h3 className="mb-4 sm:mb-5 lg:mb-6 text-lg sm:text-xl font-bold">Social Links</h3>
         <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="website">
-              个人网站
+              Personal Website
             </label>
             <input
               className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
@@ -345,7 +345,7 @@ export default function UserProfileForm() {
           <span className="material-symbols-outlined text-lg sm:text-xl">
             {isLoading ? 'hourglass_empty' : 'save'}
           </span>
-          <span>{isLoading ? '保存中...' : '保存更改'}</span>
+          <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
         </button>
       </div>
     </form>

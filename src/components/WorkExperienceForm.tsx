@@ -162,7 +162,7 @@ export default function WorkExperienceForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    公司名称 *
+                    Company Name *
                   </label>
                   <input
                     type="text"
@@ -170,13 +170,13 @@ export default function WorkExperienceForm() {
                     value={work.company}
                     onChange={(e) => handleWorkChange(workIndex, 'company', e.target.value)}
                     className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 min-h-[44px] text-[var(--text-primary)]"
-                    placeholder="腾讯科技有限公司"
+                    placeholder="Tencent Technology Co., Ltd."
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    职位 *
+                    Position *
                   </label>
                   <input
                     type="text"
@@ -184,7 +184,7 @@ export default function WorkExperienceForm() {
                     value={work.position}
                     onChange={(e) => handleWorkChange(workIndex, 'position', e.target.value)}
                     className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 min-h-[44px] text-[var(--text-primary)]"
-                    placeholder="高级前端工程师"
+                    placeholder="Senior Frontend Engineer"
                   />
                 </div>
               </div>
@@ -192,7 +192,7 @@ export default function WorkExperienceForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    开始日期 *
+                    Start Date *
                   </label>
                   <input
                     type="text"
@@ -206,7 +206,7 @@ export default function WorkExperienceForm() {
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    结束日期 *
+                    End Date *
                   </label>
                   <input
                     type="text"
@@ -222,7 +222,7 @@ export default function WorkExperienceForm() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="block text-sm font-medium text-[var(--text-secondary)]">
-                    工作描述
+                    Job Description
                   </label>
                   <button
                     type="button"
@@ -230,7 +230,7 @@ export default function WorkExperienceForm() {
                     className="text-xs text-[var(--primary-color)] hover:underline flex items-center gap-1"
                   >
                     <span className="material-symbols-outlined text-sm">add</span>
-                    添加描述项
+                    Add Description
                   </button>
                 </div>
 
@@ -241,14 +241,14 @@ export default function WorkExperienceForm() {
                       value={desc}
                       onChange={(e) => handleDescriptionChange(workIndex, descIndex, e.target.value)}
                       className="flex-1 rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 min-h-[44px] text-[var(--text-primary)]"
-                      placeholder="负责前端架构设计和技术选型..."
+                      placeholder="Responsible for frontend architecture design and technology selection..."
                     />
                     {work.description.length > 1 && (
                       <button
                         type="button"
                         onClick={() => handleRemoveDescription(workIndex, descIndex)}
                         className="text-red-400 hover:text-red-300 px-2"
-                        aria-label="删除描述"
+                        aria-label="Delete Description"
                       >
                         <span className="material-symbols-outlined">close</span>
                       </button>
@@ -268,7 +268,7 @@ export default function WorkExperienceForm() {
           className="flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[var(--border-color)] px-4 py-3 min-h-[44px] text-sm font-semibold text-[var(--text-secondary)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all"
         >
           <span className="material-symbols-outlined text-xl">add</span>
-          <span>添加工作经历</span>
+          <span>Add Work Experience</span>
         </button>
 
         <button
@@ -279,7 +279,7 @@ export default function WorkExperienceForm() {
           <span className="material-symbols-outlined text-xl">
             {isLoading ? 'hourglass_empty' : 'save'}
           </span>
-          <span>{isLoading ? '保存中...' : '保存更改'}</span>
+          <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
         </button>
       </div>
     </form>

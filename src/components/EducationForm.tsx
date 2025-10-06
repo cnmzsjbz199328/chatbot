@@ -136,7 +136,7 @@ export default function EducationForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    学校名称 *
+                    School Name *
                   </label>
                   <input
                     type="text"
@@ -144,13 +144,13 @@ export default function EducationForm() {
                     value={edu.school}
                     onChange={(e) => handleEducationChange(index, 'school', e.target.value)}
                     className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 min-h-[44px] text-[var(--text-primary)]"
-                    placeholder="北京大学"
+                    placeholder="Beijing University"
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    学位/专业 *
+                    Degree / Major *
                   </label>
                   <input
                     type="text"
@@ -158,7 +158,7 @@ export default function EducationForm() {
                     value={edu.degree}
                     onChange={(e) => handleEducationChange(index, 'degree', e.target.value)}
                     className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 min-h-[44px] text-[var(--text-primary)]"
-                    placeholder="计算机科学与技术 本科"
+                    placeholder="Computer Science and Technology, Bachelor's"
                   />
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function EducationForm() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    开始年份 *
+                    Start Year *
                   </label>
                   <input
                     type="number"
@@ -181,7 +181,7 @@ export default function EducationForm() {
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-                    结束年份 *
+                    End Year *
                   </label>
                   <input
                     type="number"
@@ -206,7 +206,7 @@ export default function EducationForm() {
           className="flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-[var(--border-color)] px-4 py-3 min-h-[44px] text-sm font-semibold text-[var(--text-secondary)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] transition-all"
         >
           <span className="material-symbols-outlined text-xl">add</span>
-          <span>添加教育经历</span>
+          <span>Add Education</span>
         </button>
 
         <button
@@ -217,7 +217,7 @@ export default function EducationForm() {
           <span className="material-symbols-outlined text-xl">
             {isLoading ? 'hourglass_empty' : 'save'}
           </span>
-          <span>{isLoading ? '保存中...' : '保存更改'}</span>
+          <span>{isLoading ? 'Saving...' : 'Save Changes'}</span>
         </button>
       </div>
     </form>

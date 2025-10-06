@@ -37,54 +37,45 @@ export default function AIProfileAssistant({ onSuccess }: { onSuccess?: () => vo
   const { user } = useAuth();
   const [inputText, setInputText] = useState('');
   const [isExtracting, setIsExtracting] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [extractedData, setExtractedData] = useState<ExtractedProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const supabase = createClient();
 
-  const handleExtract = async () => {
+  const handleExtractAndSave = async () => {
     if (!inputText.trim()) {
-      setError('Please enter some text to extract information from');
+      setError('请输入一些文本以提取信息');
+      return;
+    }
+
+    if (!user) {
+      setError('请先登录');
       return;
     }
 
     setIsExtracting(true);
     setError(null);
-    setExtractedData(null);
+    setMessage(null);
 
     try {
-      const response = await fetch('/api/ai-profile-extract', {
+      // 步骤1: 提取信息
+      console.log('[AI Profile] Step 1: Extracting information...');
+      const extractResponse = await fetch('/api/ai-profile-extract', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: inputText }),
       });
 
-      const result = await response.json();
+      const extractResult = await extractResponse.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to extract information');
+      if (!extractResponse.ok) {
+        throw new Error(extractResult.error || 'Failed to extract information');
       }
 
-      setExtractedData(result.data);
-      setMessage('✅ Information extracted successfully! Review and save below.');
-    } catch (err) {
-      console.error('Extract error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to extract information');
-    } finally {
-      setIsExtracting(false);
-    }
-  };
+      const extractedData: ExtractedProfile = extractResult.data;
+      console.log('[AI Profile] Step 1: Extraction successful');
 
-  const handleSave = async () => {
-    if (!user || !extractedData) return;
-
-    setIsSaving(true);
-    setError(null);
-    setMessage(null);
-
-    try {
-      // 转换字段名：驼峰 -> 下划线（匹配数据库schema）
+      // 步骤2: 直接保存到数据库（无需用户确认）
+      console.log('[AI Profile] Step 2: Saving to database...');
       const profileData = {
         id: user.id,
         display_name: extractedData.displayName,
@@ -92,54 +83,51 @@ export default function AIProfileAssistant({ onSuccess }: { onSuccess?: () => vo
         bio: extractedData.bio,
         location: extractedData.location,
         phone: extractedData.phone,
-        contact_email: extractedData.email, // AI提取的email保存到contact_email
+        contact_email: extractedData.email,
         website: extractedData.website,
         github: extractedData.github,
         linkedin: extractedData.linkedin,
         skills: extractedData.skills,
         education: extractedData.education,
-        work_experience: extractedData.workExperience, // 驼峰 -> 下划线
+        work_experience: extractedData.workExperience,
         hobbies: extractedData.hobbies,
         updated_at: new Date().toISOString(),
       };
 
-      console.log('[AI Profile] Saving data:', profileData);
-
-      const { data: savedData, error: upsertError } = await supabase
+      const { error: upsertError } = await supabase
         .from('user_profiles')
         .upsert(profileData, {
           onConflict: 'id',
           ignoreDuplicates: false,
-        })
-        .select();
+        });
 
       if (upsertError) {
         console.error('[AI Profile] Save error:', upsertError);
-        console.error('[AI Profile] Error code:', upsertError.code);
-        console.error('[AI Profile] Error details:', upsertError.details);
-        console.error('[AI Profile] Error hint:', upsertError.hint);
-        throw new Error(`保存失败: ${upsertError.message} (${upsertError.code})`);
+        throw new Error(`保存失败: ${upsertError.message}`);
       }
 
-      console.log('[AI Profile] Save successful:', savedData);
-      setMessage('✅ Profile saved successfully!');
-      setInputText('');
-      setExtractedData(null);
+      console.log('[AI Profile] Step 2: Save successful');
       
+      // 成功提示
+      setMessage('✅ 信息已成功填充！如需调整细节，请使用下方的高级设置。');
+      setInputText('');
+      
+      // 延迟回调以显示成功消息
       if (onSuccess) {
-        setTimeout(() => onSuccess(), 1500);
+        setTimeout(() => {
+          onSuccess();
+        }, 2000);
       }
     } catch (err) {
-      console.error('Save error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save profile');
+      console.error('[AI Profile] Error:', err);
+      setError(err instanceof Error ? err.message : '智能填充失败，请重试');
     } finally {
-      setIsSaving(false);
+      setIsExtracting(false);
     }
   };
 
   const handleReset = () => {
     setInputText('');
-    setExtractedData(null);
     setError(null);
     setMessage(null);
   };
@@ -169,106 +157,56 @@ export default function AIProfileAssistant({ onSuccess }: { onSuccess?: () => vo
         <textarea
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder="Example:
-My name is John Doe, email: john@example.com
-I'm a Full Stack Developer based in Adelaide, Australia
-Skills: React, Node.js, TypeScript, Python
-Education: Bachelor of Computer Science, University of Adelaide, 2018-2022
-Work: Software Engineer at Tech Company from 2022.05 to now
-..."
-          className="w-full min-h-[200px] sm:min-h-[300px] rounded-lg border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-3 sm:px-4 sm:py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)] font-mono"
-          disabled={isExtracting || isSaving}
+          placeholder="Paste your text here to let AI extract profile info for you..."
+          className="w-full min-h-[200px] sm:min-h-[300px] rounded-lg border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-3 sm:px-4 sm:py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:ring-1 focus:ring-[var(--primary-color)]"
+          disabled={isExtracting}
         />
         <p className="mt-2 text-xs text-[var(--text-secondary)]">
-          {inputText.length} characters • Any format accepted
+          {inputText.length} txt
         </p>
       </div>
 
-      {/* Extract Button */}
+      {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <button
-          onClick={handleExtract}
-          disabled={isExtracting || isSaving || !inputText.trim()}
-          className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-[var(--primary-color)] text-white rounded-lg hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all min-h-[44px] text-sm sm:text-base font-medium"
+          onClick={handleExtractAndSave}
+          disabled={isExtracting || !inputText.trim()}
+          className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-[var(--primary-color)] text-white rounded-lg hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all min-h-[44px] text-sm sm:text-base font-medium shadow-lg"
         >
           {isExtracting ? (
             <>
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Extracting...
+                extracting...
             </>
           ) : (
             <>
               <span className="material-symbols-outlined">auto_awesome</span>
-              Extract Information with AI
+              One-click import
             </>
           )}
         </button>
 
-        {inputText && !extractedData && (
+        {inputText && !isExtracting && (
           <button
             onClick={handleReset}
-            disabled={isExtracting || isSaving}
+            disabled={isExtracting}
             className="px-4 sm:px-6 py-2.5 sm:py-3 border border-[var(--border-color)] text-[var(--text-secondary)] rounded-lg hover:bg-[var(--accent-color)] disabled:opacity-50 disabled:cursor-not-allowed transition-all min-h-[44px] text-sm sm:text-base"
           >
-            Clear
+            empty
           </button>
         )}
       </div>
 
-      {/* Extracted Data Preview */}
-      {extractedData && (
-        <div className="rounded-lg border border-[var(--primary-color)] bg-[var(--primary-color)]/10 p-4 sm:p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <span className="material-symbols-outlined text-green-400">check_circle</span>
-              Extracted Information
-            </h3>
-            <button
-              onClick={handleReset}
-              className="text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-            >
-              Reset
-            </button>
-          </div>
-
-          <div className="bg-[var(--accent-color)]/30 rounded-lg p-3 sm:p-4 max-h-[400px] overflow-y-auto">
-            <pre className="text-xs sm:text-sm text-[var(--text-primary)] whitespace-pre-wrap break-words font-mono">
-              {JSON.stringify(extractedData, null, 2)}
-            </pre>
-          </div>
-
-          <div className="flex items-start gap-2 text-xs sm:text-sm text-[var(--text-secondary)]">
-            <span className="material-symbols-outlined text-yellow-400 text-lg flex-shrink-0">
-              warning
-            </span>
-            <p>
-              Review the extracted data carefully. You can manually edit it later using the advanced form below.
-              This will bypass form validation and save directly to the database.
-            </p>
-          </div>
-
-          {/* Save Button */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all min-h-[44px] text-sm sm:text-base font-medium"
-            >
-              {isSaving ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <span className="material-symbols-outlined">save</span>
-                  Save to Database
-                </>
-              )}
-            </button>
-          </div>
+      {/* Info Tip */}
+      <div className="flex items-start gap-2 p-3 sm:p-4 rounded-lg bg-blue-900/20 border border-blue-500/30">
+        <span className="material-symbols-outlined text-blue-400 text-lg flex-shrink-0 mt-0.5">
+          info
+        </span>
+        <div className="text-xs sm:text-sm text-blue-300 space-y-1">
+          <p>AI can extract and save profile information for you.</p>
+          <p>To adjust details or add content, please use the <span className="font-semibold">Advanced Settings</span> below.</p>
         </div>
-      )}
+      </div>
     </div>
   );
 }
