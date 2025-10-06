@@ -67,22 +67,35 @@ export async function POST(req: Request) {
           .join('\n\n');
         console.log(`[RAG] Total length of relevant chunks: ${relevantChunks.length}`);
 
-        // Build enhanced prompt
-        const systemPrompt = `You are the intelligent assistant for ${targetUsername}. A visitor wants to learn more about ${targetUsername}.
+        // Check if there's any relevant knowledge
+        const hasKnowledge = relevantChunks.trim().length > 0 && queryResult.matches.length > 0;
+        console.log(`[RAG] Has relevant knowledge: ${hasKnowledge}`);
 
-Answer the question based on the following document excerpts retrieved from the knowledge base:
+        // Build enhanced prompt with strict constraints
+        const systemPrompt = hasKnowledge 
+          ? `You are the intelligent assistant for ${targetUsername}. A visitor wants to learn more about ${targetUsername}.
+
+Answer the question based ONLY on the following document excerpts retrieved from the knowledge base:
 
 ${relevantChunks}
 
 User question: ${queryText}
 
-Please note:
-1. Respond in a friendly and professional tone, as if you are this person's assistant.
-2. Focus on the content from the knowledge base; do not repeat personal profile or project information.
-3. If the requested information is not available in the knowledge base, honestly state "This information is not currently provided."
-4. Proactively recommend related knowledge points to the visitor if appropriate.
+CRITICAL RULES:
+1. ONLY use information from the knowledge base above. DO NOT use general knowledge or make assumptions.
+2. If the answer is not in the knowledge base, you MUST say: "抱歉，我的知识库中暂时没有关于这个问题的信息。"
+3. DO NOT fabricate, guess, or invent any information about ${targetUsername}.
+4. Respond in a friendly and professional tone.
 5. Keep your answers concise and relevant.
-6. Answer in the language used by the questioner.`;
+6. Answer in the same language as the question.`
+          : `You are the intelligent assistant for ${targetUsername}. A visitor asked: "${queryText}"
+
+IMPORTANT: The knowledge base for ${targetUsername} is currently empty or does not contain information related to this question.
+
+You MUST respond with:
+"抱歉，我的知识库中暂时没有关于这个问题的信息。${targetUsername} 可能还没有上传相关的知识文档，或者这个问题超出了我目前掌握的信息范围。"
+
+DO NOT make up any information. DO NOT use general knowledge to answer.`;
 
         const aiConfig = getAIConfig();
         const finalPayload = {
