@@ -5,9 +5,16 @@ import StackedFeatureCard from '@/components/StackedFeatureCard';
 export default function Home() {
   const features = [
     {
-      icon: 'web',
-      title: 'Personalized Domain Name',
-      description: 'Get an exclusive personalized URL, like yourname.techportfolio.com, to make your portfolio more professional.',
+      icon: 'auto_awesome',
+      title: 'AI-Powered Smart Resume',
+      description: 'Upload your resume and let AI automatically extract and fill in your information - education, work experience, skills - all done in one click. Save time and eliminate repetitive data entry.',
+      highlight: true,
+    },
+    {
+      icon: 'chat',
+      title: 'Intelligent AI Q&A',
+      description: 'Built-in AI assistant answers visitor questions about your projects and skills 24/7. Provide instant responses even when you\'re unavailable.',
+      highlight: true,
     },
     {
       icon: 'dashboard',
@@ -20,19 +27,14 @@ export default function Home() {
       description: 'Complete personal profile management, including education, work experience, skills showcase, and contact information.',
     },
     {
-      icon: 'chat',
-      title: 'AI Assistant',
-      description: 'A built-in AI chat assistant helps visitors understand your projects and skills, providing intelligent Q&A services.',
+      icon: 'web',
+      title: 'Personalized Domain Name',
+      description: 'Get an exclusive personalized URL, like yourname.techportfolio.com, to make your portfolio more professional.',
     },
     {
       icon: 'phone_android',
       title: 'Responsive Design',
       description: 'Perfectly adapts to desktop, tablet, and mobile devices, ensuring your portfolio is beautiful and functional on any device.',
-    },
-    {
-      icon: 'security',
-      title: 'Secure and Reliable',
-      description: 'Uses modern security technologies to protect your data and supports secure user authentication and authorization.',
     },
   ];
 
@@ -41,11 +43,15 @@ export default function Home() {
           {/* Hero Section */}
           <section className="relative overflow-hidden bg-[var(--background)] py-24 sm:py-16">
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--primary-color)]/10 px-4 py-2 text-sm font-semibold text-[var(--primary-color)]">
+                <span className="material-symbols-outlined text-base">auto_awesome</span>
+                AI-Powered Portfolio Builder
+              </div>
               <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
-                Showcase Your Technical Work
+                Build Your Portfolio with AI
               </h1>
               <p className="mt-6 text-lg text-[var(--text-secondary)] sm:text-xl max-w-3xl mx-auto">
-                Create a professional personal portfolio website to showcase your projects, skills, and achievements. Let employers and clients better understand your technical strength.
+                Upload your resume and let AI automatically fill in your information. Built-in AI assistant answers visitor questions 24/7. Create a professional portfolio in minutes, not hours.
               </p>
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
@@ -68,9 +74,9 @@ export default function Home() {
           <section id="features" className="py-24 sm:py-16 relative">
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-2xl text-center mb-16">
-                <h2 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">Powerful Features</h2>
+                <h2 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">AI-Powered Features</h2>
                 <p className="mt-4 text-lg text-gray-400">
-                  We provide all the features you need to build a professional portfolio website
+                  Leverage artificial intelligence to build your portfolio faster and smarter
                 </p>
               </div>
               
@@ -83,6 +89,7 @@ export default function Home() {
                     title={feature.title}
                     description={feature.description}
                     index={index}
+                    highlight={feature.highlight}
                   />
                 ))}
               </div>

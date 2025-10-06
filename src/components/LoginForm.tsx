@@ -136,9 +136,9 @@ export default function LoginForm() {
               
               <div className="flex items-center justify-end">
                 <div className="text-xs sm:text-sm">
-                  <a className="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors min-h-[44px] inline-flex items-center" href="#">
+                  <Link className="font-medium text-[var(--primary-color)] hover:text-[#0c5ab2] transition-colors min-h-[44px] inline-flex items-center" href="/forgot-password">
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
               </div>
               
