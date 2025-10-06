@@ -132,17 +132,16 @@ export default function UserProfileForm() {
 
       {/* 基本信息 */}
       <div className="rounded-lg bg-[var(--secondary-color)] p-4 sm:p-5 lg:p-6 shadow-lg">
-        <h3 className="mb-4 sm:mb-5 lg:mb-6 text-lg sm:text-xl font-bold">基本信息</h3>
         
         {/* 头像上传 */}
         <div className="mb-4 sm:mb-5 lg:mb-6">
           <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">
-            头像
+            avatar
           </label>
           <ImageUploadField
             value={profile.avatar || ''}
             onChange={(imageUrl) => setProfile(prev => ({ ...prev, avatar: imageUrl }))}
-            placeholder="点击上传头像..."
+            placeholder="click to upload..."
             className="w-full sm:max-w-xs"
           />
         </div>
@@ -150,7 +149,7 @@ export default function UserProfileForm() {
         <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="display_name">
-              显示名称
+              display name
             </label>
             <input
               className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
@@ -159,13 +158,13 @@ export default function UserProfileForm() {
               type="text"
               value={profile.display_name || ''}
               onChange={handleInputChange}
-              placeholder="输入您的显示名称"
+              placeholder="Your Name"
             />
           </div>
           
           <div>
             <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="email">
-              邮箱地址
+              email address
             </label>
             <input
               className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-secondary)] cursor-not-allowed"
@@ -179,7 +178,7 @@ export default function UserProfileForm() {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="location">
-              所在地
+              location
             </label>
             <input
               className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
@@ -188,13 +187,13 @@ export default function UserProfileForm() {
               type="text"
               value={profile.location || ''}
               onChange={handleInputChange}
-              placeholder="北京市朝阳区"
+              placeholder="Adelaide, Australia"
             />
           </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="phone">
-              联系电话
+              phone number
             </label>
             <input
               className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
@@ -209,7 +208,7 @@ export default function UserProfileForm() {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="contactEmail">
-              公开邮箱 <span className="text-xs text-[var(--text-secondary)]">(用于展示)</span>
+              Public Email <span className="text-xs text-[var(--text-secondary)]">(for display)</span>
             </label>
             <input
               className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
@@ -221,73 +220,10 @@ export default function UserProfileForm() {
               placeholder="contact@example.com"
             />
             <p className="mt-1 text-xs text-[var(--text-secondary)]">
-              💡 建议：使用专门的工作邮箱，不要使用登录账号邮箱
+              💡 Use a work email, not your login email
             </p>
           </div>
-        </div>
 
-        <div className="mt-4 sm:mt-5 lg:mt-6">
-          <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="bio">
-            个人简介
-          </label>
-          <textarea
-            className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[88px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
-            id="bio"
-            name="bio"
-            rows={4}
-            value={profile.bio || ''}
-            onChange={handleInputChange}
-            placeholder="简单介绍一下自己..."
-          />
-        </div>
-      </div>
-
-      {/* 技能标签 */}
-      <div className="rounded-lg bg-[var(--secondary-color)] p-4 sm:p-5 lg:p-6 shadow-lg">
-        <h3 className="mb-4 sm:mb-5 lg:mb-6 text-lg sm:text-xl font-bold">技能标签</h3>
-        <div>
-          <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="skills">
-            技能列表（用逗号分隔）
-          </label>
-          <input
-            className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
-            id="skills"
-            type="text"
-            value={skills}
-            onChange={(e) => setSkills(e.target.value)}
-            placeholder="JavaScript, React, Node.js, Python, SQL"
-          />
-          <p className="mt-2 text-xs sm:text-sm text-[var(--text-secondary)]">
-            输入您掌握的技能，用逗号分隔
-          </p>
-        </div>
-
-        {/* 技能预览 */}
-        {skills && (
-          <div className="mt-3 sm:mt-4">
-            <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">预览：</p>
-            <div className="flex flex-wrap gap-2">
-              {skills.split(',').map((skill, index) => {
-                const trimmedSkill = skill.trim();
-                if (!trimmedSkill) return null;
-                return (
-                  <span
-                    key={index}
-                    className="rounded-full bg-[var(--primary-color)]/20 px-3 py-1.5 text-xs sm:text-sm text-[var(--primary-color)]"
-                  >
-                    {trimmedSkill}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 社交链接 */}
-      <div className="rounded-lg bg-[var(--secondary-color)] p-4 sm:p-5 lg:p-6 shadow-lg">
-        <h3 className="mb-4 sm:mb-5 lg:mb-6 text-lg sm:text-xl font-bold">Social Links</h3>
-        <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="website">
               Personal Website
@@ -314,7 +250,7 @@ export default function UserProfileForm() {
               type="text"
               value={profile.github || ''}
               onChange={handleInputChange}
-              placeholder="yourusername"
+              placeholder="https://github.com/yourusername"
             />
           </div>
 
@@ -329,10 +265,67 @@ export default function UserProfileForm() {
               type="text"
               value={profile.linkedin || ''}
               onChange={handleInputChange}
-              placeholder="yourprofile"
+              placeholder="https://linkedin.com/in/yourprofile"
             />
           </div>
         </div>
+
+        <div className="mt-4 sm:mt-5 lg:mt-6">
+          <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="bio">
+            Bio
+          </label>
+          <textarea
+            className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[88px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
+            id="bio"
+            name="bio"
+            rows={4}
+            value={profile.bio || ''}
+            onChange={handleInputChange}
+            placeholder="Tell us about yourself..."
+          />
+        </div>
+      </div>
+
+      {/* Skills */}
+      <div className="rounded-lg bg-[var(--secondary-color)] p-4 sm:p-5 lg:p-6 shadow-lg">
+        <h3 className="mb-4 sm:mb-5 lg:mb-6 text-lg sm:text-xl font-bold">Skills</h3>
+        <div>
+          <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]" htmlFor="skills">
+            Skills (use commas to separate)
+          </label>
+          <input
+            className="w-full rounded-md border border-[var(--border-color)] bg-[var(--accent-color)]/50 px-3 py-2.5 sm:px-4 sm:py-3 min-h-[44px] text-[var(--text-primary)] focus:border-primary-500 focus:ring-primary-500"
+            id="skills"
+            type="text"
+            value={skills}
+            onChange={(e) => setSkills(e.target.value)}
+            placeholder="JavaScript, React, Node.js, Python, SQL"
+          />
+          <p className="mt-2 text-xs sm:text-sm text-[var(--text-secondary)]">
+            Enter your skills, separated by commas
+          </p>
+        </div>
+
+        {/* Skills Preview */}
+        {skills && (
+          <div className="mt-3 sm:mt-4">
+            <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">预览：</p>
+            <div className="flex flex-wrap gap-2">
+              {skills.split(',').map((skill, index) => {
+                const trimmedSkill = skill.trim();
+                if (!trimmedSkill) return null;
+                return (
+                  <span
+                    key={index}
+                    className="rounded-full bg-[var(--primary-color)]/20 px-3 py-1.5 text-xs sm:text-sm text-[var(--primary-color)]"
+                  >
+                    {trimmedSkill}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 提交按钮 */}

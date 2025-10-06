@@ -68,10 +68,13 @@ export default function ImageUploadField({
 
       const result = await response.json();
 
-      if (response.ok) {
+      if (response.ok && result.imageUrl) {
+        // 立即更新图片 URL
+        console.log('Upload successful, new image URL:', result.imageUrl);
         onChange(result.imageUrl);
         setTimeout(() => setUploadProgress(0), 1000);
       } else {
+        console.error('Upload failed:', result.error);
         setError(result.error || 'Upload failed');
         setUploadProgress(0);
       }
@@ -199,16 +202,17 @@ export default function ImageUploadField({
             </div>
           </div>
         ) : value ? (
-          // 已上传图片
+          // 已上传图片 - Avatar 优化预览
           <div className="flex flex-col items-center">
-            <div className="relative mb-4">
-              <div className="relative w-full h-48">
+            <div className="relative mb-3">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[var(--primary-color)]">
                 <Image
                   src={value}
-                  alt="Uploaded"
-                  layout="fill"
-                  objectFit="contain"
-                  className="rounded-lg shadow-md"
+                  alt="Uploaded avatar"
+                  fill
+                  className="object-cover"
+                  unoptimized
+                  key={value}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';
@@ -218,18 +222,19 @@ export default function ImageUploadField({
               {!disabled && (
                 <button
                   onClick={handleRemoveImage}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm hover:bg-red-600 transition-colors"
+                  className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm hover:bg-red-600 transition-colors shadow-md"
                   type="button"
+                  title="Remove avatar"
                 >
                   ×
                 </button>
               )}
             </div>
             <p className="text-sm text-green-600 dark:text-green-400">
-              ✓ Image uploaded successfully
+              ✓ Avatar uploaded
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Click to change image
+              Click to change
             </p>
           </div>
         ) : (

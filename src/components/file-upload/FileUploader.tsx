@@ -37,10 +37,10 @@ export default function FileUploader({
           {uploading ? 'sync' : 'cloud_upload'}
         </span>
         <p className="mb-2 text-sm text-[var(--text-secondary)]">
-          <span className="font-semibold">点击上传</span> 或拖拽文件至此
+          <span className="font-semibold">click</span> or drag files here
         </p>
         <p className="text-xs text-gray-500">
-          支持PDF格式，用于AI个人资料学习（最大10MB）
+          Supports PDF format for AI profile learning (max 10MB)
         </p>
       </div>
       <input

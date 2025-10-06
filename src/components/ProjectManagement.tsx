@@ -198,7 +198,7 @@ export default function ProjectManagement() {
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">项目描述</label>
+              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">project description</label>
               <textarea 
                 name="description" 
                 value={formData.description || ''} 
@@ -220,7 +220,7 @@ export default function ProjectManagement() {
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">技术栈 (用逗号分隔)</label>
+              <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">technologies (use commas to separate)</label>
               <input 
                 type="text" 
                 value={formData.technologies?.join(', ') || ''} 
@@ -231,7 +231,7 @@ export default function ProjectManagement() {
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">GitHub 链接</label>
+                <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">GitHub link</label>
                 <input 
                   type="url" 
                   name="githubUrl" 
@@ -241,7 +241,7 @@ export default function ProjectManagement() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">演示链接</label>
+                <label className="mb-2 block text-sm font-medium text-[var(--text-secondary)]">Live Demo</label>
                 <input 
                   type="url" 
                   name="liveUrl" 
