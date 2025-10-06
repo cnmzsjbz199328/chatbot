@@ -1,9 +1,17 @@
 import 'dotenv/config';
+import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { eq, and, lt } from 'drizzle-orm';
 import * as schema from './schema';
 
-const db = drizzle(process.env.DATABASE_URL!, { schema });
+// 🔧 简单稳定的连接池配置
+const sql = postgres(process.env.DATABASE_URL!, {
+  max: 1,          // Serverless: 每个实例1个连接
+  idle_timeout: 20,
+  connect_timeout: 10,
+});
+
+const db = drizzle(sql, { schema });
 
 // Session管理函数
 export const upsertSession = async (sessionId: string, expiresAt: Date) => {
@@ -66,4 +74,4 @@ export const deleteFileById = async (id: number, sessionId?: string, userId?: st
   await db.delete(schema.fileTable).where(and(...conditions));
 };
 
-export { db };
+export { db, sql };
