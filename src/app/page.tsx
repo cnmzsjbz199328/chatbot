@@ -8,13 +8,11 @@ export default function Home() {
       icon: 'auto_awesome',
       title: 'AI-Powered Smart Resume',
       description: 'Upload your resume and let AI automatically extract and fill in your information - education, work experience, skills - all done in one click. Save time and eliminate repetitive data entry.',
-      highlight: true,
     },
     {
       icon: 'chat',
       title: 'Intelligent AI Q&A',
       description: 'Built-in AI assistant answers visitor questions about your projects and skills 24/7. Provide instant responses even when you\'re unavailable.',
-      highlight: true,
     },
     {
       icon: 'dashboard',
@@ -89,7 +87,6 @@ export default function Home() {
                     title={feature.title}
                     description={feature.description}
                     index={index}
-                    highlight={feature.highlight}
                   />
                 ))}
               </div>

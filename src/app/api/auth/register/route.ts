@@ -21,13 +21,13 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
     
-    // 获取当前域名，优先使用环境变量，然后是请求头
-    const origin = 
-      process.env.NEXT_PUBLIC_SITE_URL || 
-      request.headers.get('origin') || 
-      'https://resume.futurebutnow.xyz';
-    
+    // 优先使用环境变量，确保使用生产域名
+    // 即使在本地开发，也使用生产域名以便邮件链接正确
+    const origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://resume.futurebutnow.xyz';
     const callbackUrl = `${origin}/auth/callback`;
+
+    console.log('[Register] Using origin:', origin);
+    console.log('[Register] Callback URL:', callbackUrl);
 
     const { data, error } = await supabase.auth.signUp({
       email,
