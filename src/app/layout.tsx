@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   description: "Personal portfolio website to showcase project experience and provide AI assistant services. Supports document uploading, intelligent conversation, and other features.",
   keywords: "Personal Website, Portfolio, AI Assistant, Full-Stack Development, Project Showcase",
   authors: [{ name: "Zhang San" }],
+  icons: {
+    icon: '/resume-logo.svg',
+    shortcut: '/resume-logo.svg',
+    apple: '/resume-logo.svg',
+  },
 };
 
 export const viewport: Viewport = {
@@ -35,6 +40,7 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" 
         />
+        <link rel="icon" href="/resume-logo.svg" type="image/svg+xml" />
       </head>
       <body
         className={`${inter.variable} font-inter antialiased`}
